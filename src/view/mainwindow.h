@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "QtWidgets/qlabel.h"
 #include <QMainWindow>
 #include <QShortcut>
 
@@ -18,9 +19,10 @@ public:
 
 private:
     Ui::MainWindow *ui_;
+    QLabel *label_;
 
 private slots:
-    void activateLineEdit();
+    void activateLabelX();
     void activateLabel();
     void typeChars();
     void typeFunctions();

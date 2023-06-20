@@ -13,7 +13,6 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
@@ -64,11 +63,11 @@ public:
     QPushButton *butt_op_div;
     QLabel *label_result;
     QLabel *label_size;
-    QLineEdit *lineEdit_x;
     QLabel *label;
-    QLabel *label_result_2;
-    QPushButton *lineedit_activate;
+    QLabel *label_additional;
     QPushButton *label_activate;
+    QLabel *label_x;
+    QPushButton *label_x_activate;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -409,132 +408,48 @@ public:
         sizePolicy1.setHeightForWidth(label_size->sizePolicy().hasHeightForWidth());
         label_size->setSizePolicy(sizePolicy1);
         label_size->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        lineEdit_x = new QLineEdit(centralwidget);
-        lineEdit_x->setObjectName(QString::fromUtf8("lineEdit_x"));
-        lineEdit_x->setEnabled(false);
-        lineEdit_x->setGeometry(QRect(570, 10, 161, 20));
-        QPalette palette1;
-        QBrush brush2(QColor(255, 255, 255, 255));
-        brush2.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        QBrush brush3(QColor(0, 0, 0, 0));
-        brush3.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Button, brush3);
-        QBrush brush4(QColor(96, 97, 99, 0));
-        brush4.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Light, brush4);
-        QBrush brush5(QColor(80, 81, 82, 0));
-        brush5.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Midlight, brush5);
-        QBrush brush6(QColor(32, 32, 33, 0));
-        brush6.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Dark, brush6);
-        QBrush brush7(QColor(43, 43, 44, 0));
-        brush7.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Mid, brush7);
-        palette1.setBrush(QPalette::Active, QPalette::Text, brush2);
-        palette1.setBrush(QPalette::Active, QPalette::BrightText, brush2);
-        palette1.setBrush(QPalette::Active, QPalette::ButtonText, brush2);
-        palette1.setBrush(QPalette::Active, QPalette::Base, brush3);
-        palette1.setBrush(QPalette::Active, QPalette::Window, brush3);
-        QBrush brush8(QColor(0, 0, 0, 255));
-        brush8.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Shadow, brush8);
-        QBrush brush9(QColor(32, 32, 33, 127));
-        brush9.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::AlternateBase, brush9);
-        QBrush brush10(QColor(255, 255, 220, 255));
-        brush10.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::ToolTipBase, brush10);
-        palette1.setBrush(QPalette::Active, QPalette::ToolTipText, brush8);
-        QBrush brush11(QColor(208, 208, 208, 255));
-        brush11.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Inactive, QPalette::WindowText, brush11);
-        palette1.setBrush(QPalette::Inactive, QPalette::Button, brush3);
-        QBrush brush12(QColor(55, 55, 55, 255));
-        brush12.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Inactive, QPalette::Light, brush12);
-        QBrush brush13(QColor(52, 52, 52, 255));
-        brush13.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Inactive, QPalette::Midlight, brush13);
-        palette1.setBrush(QPalette::Inactive, QPalette::Dark, brush1);
-        QBrush brush14(QColor(160, 160, 160, 255));
-        brush14.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Inactive, QPalette::Mid, brush14);
-        palette1.setBrush(QPalette::Inactive, QPalette::Text, brush11);
-        QBrush brush15(QColor(255, 51, 51, 255));
-        brush15.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Inactive, QPalette::BrightText, brush15);
-        palette1.setBrush(QPalette::Inactive, QPalette::ButtonText, brush11);
-        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush3);
-        palette1.setBrush(QPalette::Inactive, QPalette::Window, brush3);
-        palette1.setBrush(QPalette::Inactive, QPalette::Shadow, brush8);
-        QBrush brush16(QColor(53, 54, 55, 255));
-        brush16.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush16);
-        palette1.setBrush(QPalette::Inactive, QPalette::ToolTipBase, brush1);
-        palette1.setBrush(QPalette::Inactive, QPalette::ToolTipText, brush11);
-        palette1.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
-        palette1.setBrush(QPalette::Disabled, QPalette::Button, brush3);
-        palette1.setBrush(QPalette::Disabled, QPalette::Light, brush4);
-        palette1.setBrush(QPalette::Disabled, QPalette::Midlight, brush5);
-        palette1.setBrush(QPalette::Disabled, QPalette::Dark, brush6);
-        palette1.setBrush(QPalette::Disabled, QPalette::Mid, brush7);
-        palette1.setBrush(QPalette::Disabled, QPalette::Text, brush6);
-        palette1.setBrush(QPalette::Disabled, QPalette::BrightText, brush2);
-        palette1.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
-        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush3);
-        palette1.setBrush(QPalette::Disabled, QPalette::Window, brush3);
-        palette1.setBrush(QPalette::Disabled, QPalette::Shadow, brush8);
-        palette1.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush16);
-        palette1.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush1);
-        palette1.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush11);
-        lineEdit_x->setPalette(palette1);
-        lineEdit_x->setCursor(QCursor(Qt::IBeamCursor));
-        lineEdit_x->setLayoutDirection(Qt::LeftToRight);
-        lineEdit_x->setStyleSheet(QString::fromUtf8("background-color: rgba(0, 0, 0, 0);\n"
-""));
-        lineEdit_x->setMaxLength(13);
-        lineEdit_x->setFrame(false);
-        lineEdit_x->setCursorMoveStyle(Qt::VisualMoveStyle);
         label = new QLabel(centralwidget);
         label->setObjectName(QString::fromUtf8("label"));
         label->setGeometry(QRect(550, 10, 21, 16));
-        label_result_2 = new QLabel(centralwidget);
-        label_result_2->setObjectName(QString::fromUtf8("label_result_2"));
-        label_result_2->setGeometry(QRect(543, 10, 191, 21));
-        label_result_2->setFont(font);
-        label_result_2->setTabletTracking(false);
-        label_result_2->setLayoutDirection(Qt::LeftToRight);
-        label_result_2->setStyleSheet(QString::fromUtf8("QLabel {\n"
+        label_additional = new QLabel(centralwidget);
+        label_additional->setObjectName(QString::fromUtf8("label_additional"));
+        label_additional->setGeometry(QRect(543, 10, 191, 21));
+        label_additional->setFont(font);
+        label_additional->setTabletTracking(false);
+        label_additional->setLayoutDirection(Qt::LeftToRight);
+        label_additional->setStyleSheet(QString::fromUtf8("QLabel {\n"
 "  qproperty-alignment: 'AlignVCenter | AlignRight';\n"
 "  border: 1px solid gray;\n"
 "}\n"
 "background-color : white;"));
-        label_result_2->setScaledContents(false);
-        label_result_2->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        label_result_2->setMargin(8);
-        lineedit_activate = new QPushButton(centralwidget);
-        lineedit_activate->setObjectName(QString::fromUtf8("lineedit_activate"));
-        lineedit_activate->setGeometry(QRect(550, 10, 181, 20));
-        lineedit_activate->setStyleSheet(QString::fromUtf8("background-color: transparent; border: 0px"));
+        label_additional->setScaledContents(false);
+        label_additional->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_additional->setMargin(8);
         label_activate = new QPushButton(centralwidget);
         label_activate->setObjectName(QString::fromUtf8("label_activate"));
         label_activate->setGeometry(QRect(30, 30, 701, 71));
         label_activate->setStyleSheet(QString::fromUtf8("background-color: transparent; border: 0px"));
+        label_x = new QLabel(centralwidget);
+        label_x->setObjectName(QString::fromUtf8("label_x"));
+        label_x->setEnabled(false);
+        label_x->setGeometry(QRect(573, 12, 151, 16));
+        label_x_activate = new QPushButton(centralwidget);
+        label_x_activate->setObjectName(QString::fromUtf8("label_x_activate"));
+        label_x_activate->setGeometry(QRect(545, 10, 186, 20));
+        label_x_activate->setStyleSheet(QString::fromUtf8("background-color: transparent; border: 0px"));
         MainWindow->setCentralWidget(centralwidget);
         label_result->raise();
-        label_result_2->raise();
+        label_additional->raise();
         label_size_2->raise();
         layoutWidget->raise();
         label_size->raise();
-        lineEdit_x->raise();
         label->raise();
-        lineedit_activate->raise();
         label_activate->raise();
+        label_x->raise();
+        label_x_activate->raise();
 #if QT_CONFIG(shortcut)
         label_result->setBuddy(label_result);
-        label_result_2->setBuddy(label_result);
+        label_additional->setBuddy(label_result);
 #endif // QT_CONFIG(shortcut)
 
         retranslateUi(MainWindow);
@@ -586,7 +501,10 @@ public:
 #if QT_CONFIG(shortcut)
         butt_op_result->setShortcut(QCoreApplication::translate("MainWindow", "Return", nullptr));
 #endif // QT_CONFIG(shortcut)
-        butt_fn_op_x->setText(QCoreApplication::translate("MainWindow", "x                ", nullptr));
+        butt_fn_op_x->setText(QCoreApplication::translate("MainWindow", "x", nullptr));
+#if QT_CONFIG(shortcut)
+        butt_fn_op_x->setShortcut(QCoreApplication::translate("MainWindow", "X", nullptr));
+#endif // QT_CONFIG(shortcut)
         butt_bracket_cl->setText(QCoreApplication::translate("MainWindow", ")", nullptr));
 #if QT_CONFIG(shortcut)
         butt_bracket_cl->setShortcut(QCoreApplication::translate("MainWindow", ")", nullptr));
@@ -697,12 +615,11 @@ public:
 #endif // QT_CONFIG(shortcut)
         label_result->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:18pt;\">0</span></p></body></html>", nullptr));
         label_size->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
-        lineEdit_x->setInputMask(QString());
-        lineEdit_x->setText(QString());
         label->setText(QCoreApplication::translate("MainWindow", "x =", nullptr));
-        label_result_2->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><br/></p></body></html>", nullptr));
-        lineedit_activate->setText(QString());
+        label_additional->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><br/></p></body></html>", nullptr));
         label_activate->setText(QString());
+        label_x->setText(QString());
+        label_x_activate->setText(QString());
     } // retranslateUi
 
 };

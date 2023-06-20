@@ -6,8 +6,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o.d"
   "CMakeFiles/TameCalc.dir/main.cc.o"
   "CMakeFiles/TameCalc.dir/main.cc.o.d"
-  "CMakeFiles/TameCalc.dir/mainwindow.cc.o"
-  "CMakeFiles/TameCalc.dir/mainwindow.cc.o.d"
+  "CMakeFiles/TameCalc.dir/view/mainwindow.cc.o"
+  "CMakeFiles/TameCalc.dir/view/mainwindow.cc.o.d"
   "TameCalc.app/Contents/MacOS/TameCalc"
   "TameCalc.pdb"
 )

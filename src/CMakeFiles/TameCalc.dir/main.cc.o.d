@@ -1,8 +1,7 @@
 CMakeFiles/TameCalc.dir/main.cc.o: \
   /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/main.cc \
-  /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/mainwindow.h \
-  /usr/local/lib/QtWidgets.framework/Headers/QMainWindow \
-  /usr/local/lib/QtWidgets.framework/Headers/qmainwindow.h \
+  /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/view/mainwindow.h \
+  /usr/local/include/QtWidgets/qlabel.h \
   /usr/local/include/QtWidgets/qtwidgetsglobal.h \
   /usr/local/include/QtGui/qtguiglobal.h \
   /usr/local/include/QtCore/qglobal.h \
@@ -196,6 +195,7 @@ CMakeFiles/TameCalc.dir/main.cc.o: \
   /usr/local/include/QtCore/qversiontagging.h \
   /usr/local/include/QtGui/qtgui-config.h \
   /usr/local/include/QtWidgets/qtwidgets-config.h \
+  /usr/local/include/QtWidgets/qframe.h \
   /usr/local/include/QtWidgets/qwidget.h \
   /usr/local/include/QtGui/qwindowdefs.h \
   /usr/local/include/QtCore/qobjectdefs.h \
@@ -278,6 +278,19 @@ CMakeFiles/TameCalc.dir/main.cc.o: \
   /usr/local/include/QtWidgets/qsizepolicy.h \
   /usr/local/include/QtGui/qcursor.h /usr/local/include/QtGui/qbitmap.h \
   /usr/local/include/QtGui/qkeysequence.h \
+  /usr/local/include/QtGui/qpicture.h \
+  /usr/local/include/QtCore/qiodevice.h \
+  /usr/local/include/QtGui/qtextdocument.h \
+  /usr/local/include/QtCore/qvariant.h /usr/local/include/QtCore/qmap.h \
+  /usr/local/include/QtCore/qshareddata_impl.h \
+  /usr/local/include/QtCore/qhash.h /usr/local/include/QtCore/qdebug.h \
+  /usr/local/include/QtCore/qtextstream.h \
+  /usr/local/include/QtCore/qstringconverter.h \
+  /usr/local/include/QtCore/qset.h \
+  /usr/local/include/QtCore/qcontiguouscache.h \
+  /usr/local/include/QtCore/qurl.h \
+  /usr/local/lib/QtWidgets.framework/Headers/QMainWindow \
+  /usr/local/lib/QtWidgets.framework/Headers/qmainwindow.h \
   /usr/local/include/QtWidgets/qtabwidget.h \
   /usr/local/include/QtGui/qicon.h \
   /usr/local/lib/QtGui.framework/Headers/QShortcut \
@@ -288,16 +301,8 @@ CMakeFiles/TameCalc.dir/main.cc.o: \
   /usr/local/include/QtCore/qcoreevent.h \
   /usr/local/include/QtCore/qeventloop.h \
   /usr/local/include/QtCore/qnativeinterface.h \
-  /usr/local/include/QtCore/qdebug.h /usr/local/include/QtCore/qhash.h \
-  /usr/local/include/QtCore/qmap.h \
-  /usr/local/include/QtCore/qshareddata_impl.h \
-  /usr/local/include/QtCore/qtextstream.h \
-  /usr/local/include/QtCore/qstringconverter.h \
-  /usr/local/include/QtCore/qset.h \
-  /usr/local/include/QtCore/qcontiguouscache.h \
   /usr/local/include/QtCore/qcoreapplication_platform.h \
   /usr/local/include/QtGui/qguiapplication.h \
   /usr/local/include/QtGui/qinputmethod.h \
   /usr/local/include/QtCore/qlocale.h \
-  /usr/local/include/QtCore/qvariant.h \
   /usr/local/include/QtGui/qguiapplication_platform.h

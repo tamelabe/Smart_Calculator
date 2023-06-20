@@ -10,7 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/TameCalc_autogen/mocs_compilation.cpp" "CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o" "gcc" "CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o.d"
   "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/main.cc" "CMakeFiles/TameCalc.dir/main.cc.o" "gcc" "CMakeFiles/TameCalc.dir/main.cc.o.d"
-  "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/mainwindow.cc" "CMakeFiles/TameCalc.dir/mainwindow.cc.o" "gcc" "CMakeFiles/TameCalc.dir/mainwindow.cc.o.d"
+  "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/view/mainwindow.cc" "CMakeFiles/TameCalc.dir/view/mainwindow.cc.o" "gcc" "CMakeFiles/TameCalc.dir/view/mainwindow.cc.o.d"
   )
 
 # Targets to which this target links.

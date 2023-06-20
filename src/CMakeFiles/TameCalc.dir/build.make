@@ -97,32 +97,32 @@ CMakeFiles/TameCalc.dir/main.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TameCalc.dir/main.cc.s"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/main.cc -o CMakeFiles/TameCalc.dir/main.cc.s
 
-CMakeFiles/TameCalc.dir/mainwindow.cc.o: CMakeFiles/TameCalc.dir/flags.make
-CMakeFiles/TameCalc.dir/mainwindow.cc.o: mainwindow.cc
-CMakeFiles/TameCalc.dir/mainwindow.cc.o: CMakeFiles/TameCalc.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TameCalc.dir/mainwindow.cc.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/TameCalc.dir/mainwindow.cc.o -MF CMakeFiles/TameCalc.dir/mainwindow.cc.o.d -o CMakeFiles/TameCalc.dir/mainwindow.cc.o -c /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/mainwindow.cc
+CMakeFiles/TameCalc.dir/view/mainwindow.cc.o: CMakeFiles/TameCalc.dir/flags.make
+CMakeFiles/TameCalc.dir/view/mainwindow.cc.o: view/mainwindow.cc
+CMakeFiles/TameCalc.dir/view/mainwindow.cc.o: CMakeFiles/TameCalc.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TameCalc.dir/view/mainwindow.cc.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/TameCalc.dir/view/mainwindow.cc.o -MF CMakeFiles/TameCalc.dir/view/mainwindow.cc.o.d -o CMakeFiles/TameCalc.dir/view/mainwindow.cc.o -c /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/view/mainwindow.cc
 
-CMakeFiles/TameCalc.dir/mainwindow.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TameCalc.dir/mainwindow.cc.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/mainwindow.cc > CMakeFiles/TameCalc.dir/mainwindow.cc.i
+CMakeFiles/TameCalc.dir/view/mainwindow.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TameCalc.dir/view/mainwindow.cc.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/view/mainwindow.cc > CMakeFiles/TameCalc.dir/view/mainwindow.cc.i
 
-CMakeFiles/TameCalc.dir/mainwindow.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TameCalc.dir/mainwindow.cc.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/mainwindow.cc -o CMakeFiles/TameCalc.dir/mainwindow.cc.s
+CMakeFiles/TameCalc.dir/view/mainwindow.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TameCalc.dir/view/mainwindow.cc.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/view/mainwindow.cc -o CMakeFiles/TameCalc.dir/view/mainwindow.cc.s
 
 # Object files for target TameCalc
 TameCalc_OBJECTS = \
 "CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o" \
 "CMakeFiles/TameCalc.dir/main.cc.o" \
-"CMakeFiles/TameCalc.dir/mainwindow.cc.o"
+"CMakeFiles/TameCalc.dir/view/mainwindow.cc.o"
 
 # External object files for target TameCalc
 TameCalc_EXTERNAL_OBJECTS =
 
 TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o
 TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/main.cc.o
-TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/mainwindow.cc.o
+TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/view/mainwindow.cc.o
 TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/build.make
 TameCalc.app/Contents/MacOS/TameCalc: resources/libqcustomplot.2.1.1.1.dylib
 TameCalc.app/Contents/MacOS/TameCalc: /usr/local/lib/QtPrintSupport.framework/Versions/A/QtPrintSupport

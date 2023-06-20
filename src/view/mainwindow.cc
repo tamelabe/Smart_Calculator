@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui_->setupUi(this);
     ui_->label_result->setText("0");
+    label_ = ui_ ->label_result;
     ;
     this->setFixedSize(760, 327);
     QShortcut *sc_backspace = new QShortcut(QKeySequence(Qt::Key_Backspace), this);
@@ -28,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui_->butt_bracket_op, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_bracket_cl, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_point, SIGNAL(clicked()), this, SLOT(typeChars()));
+    connect(ui_->butt_fn_op_x, SIGNAL(clicked()), this, SLOT(typeChars()));
 
     connect(ui_->butt_fn_cos, SIGNAL(clicked()), this, SLOT(typeFunctions()));
     connect(ui_->butt_fn_sin, SIGNAL(clicked()), this, SLOT(typeFunctions()));
@@ -45,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui_->butt_mode_graph, SIGNAL(clicked()), this, SLOT(initGraph()));
 
     connect(ui_->label_activate, SIGNAL(clicked()), this, SLOT(activateLabel()));
-    connect(ui_->lineedit_activate, SIGNAL(clicked()), this, SLOT(activateLineEdit()));
+    connect(ui_->label_x_activate, SIGNAL(clicked()), this, SLOT(activateLabelX()));
 }
 
 MainWindow::~MainWindow()
@@ -53,16 +55,16 @@ MainWindow::~MainWindow()
     delete ui_;
 }
 
-void MainWindow::activateLineEdit() {
+void MainWindow::activateLabelX() {
     ui_->label_result->setEnabled(false);
-    ui_->lineEdit_x->setEnabled(true);
-    ui_->lineEdit_x->setFocus();
+    ui_->label_x->setEnabled(true);
+    label_ = ui_->label_x;
 }
 
 void MainWindow::activateLabel() {
-    ui_->lineEdit_x->setEnabled(false);
+    ui_->label_x->setEnabled(false);
     ui_->label_result->setEnabled(true);
-    ui_->lineEdit_x->setFocus();
+    label_ = ui_->label_result;
 }
 
 void MainWindow::initGraph() {
@@ -71,11 +73,11 @@ void MainWindow::initGraph() {
 
 void MainWindow::typeChars() {
     QPushButton *button = (QPushButton *)sender();
-    if (ui_->label_result->text() == "0") {
-        ui_->label_result->setText(button->text());
+    if (label_->text() == "0") {
+        label_->setText(button->text());
     } else {
-        QString new_result = ui_->label_result->text() + button->text();
-        ui_->label_result->setText(new_result);
+        QString new_result = label_->text() + button->text();
+        label_->setText(new_result);
     }
     ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
 }
@@ -87,19 +89,18 @@ void MainWindow::typeFunctions() {
     QTextDocument doc;
     doc.setHtml(new_result);
     new_result = doc.toPlainText();
-    if (ui_->label_result->text() != "0") {
-        new_result = ui_->label_result->text() + new_result;
-    }
-    ui_->label_result->setText(new_result);
+    if (label_->text() != "0")
+        new_result = label_->text() + new_result;
+    label_->setText(new_result);
     ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
 }
 
 void MainWindow::deleteLastSym() {
-    if (ui_->label_result->text() == "0")
+    if (label_->text() == "0" || label_->text() == "")
         return;
-    QString new_result = ui_->label_result->text();
+    QString new_result = label_->text();
     new_result = new_result.left(new_result.length() - 1);
-    ui_->label_result->setText(new_result);
+    label_->setText(new_result);
     ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
     if (ui_->label_result->text() == "")
         ui_->label_result->setText("0");
@@ -107,5 +108,6 @@ void MainWindow::deleteLastSym() {
 
 void MainWindow::clearInput() {
     ui_->label_result->setText("0");
+    ui_->label_x->setText("");
     ui_->label_size->setText("0");
 }

@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/TameCalc_autogen"
-  "TameCalc_autogen/include/ui_mainwindow.h"
+  "TameCalc_autogen/include/view/ui_mainwindow.h"
   "TameCalc_autogen/mocs_compilation.cpp"
 )
 

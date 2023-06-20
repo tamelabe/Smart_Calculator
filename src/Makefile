@@ -216,29 +216,29 @@ main.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/main.cc.s
 .PHONY : main.cc.s
 
-mainwindow.o: mainwindow.cc.o
-.PHONY : mainwindow.o
+view/mainwindow.o: view/mainwindow.cc.o
+.PHONY : view/mainwindow.o
 
 # target to build an object file
-mainwindow.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/mainwindow.cc.o
-.PHONY : mainwindow.cc.o
+view/mainwindow.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/view/mainwindow.cc.o
+.PHONY : view/mainwindow.cc.o
 
-mainwindow.i: mainwindow.cc.i
-.PHONY : mainwindow.i
+view/mainwindow.i: view/mainwindow.cc.i
+.PHONY : view/mainwindow.i
 
 # target to preprocess a source file
-mainwindow.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/mainwindow.cc.i
-.PHONY : mainwindow.cc.i
+view/mainwindow.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/view/mainwindow.cc.i
+.PHONY : view/mainwindow.cc.i
 
-mainwindow.s: mainwindow.cc.s
-.PHONY : mainwindow.s
+view/mainwindow.s: view/mainwindow.cc.s
+.PHONY : view/mainwindow.s
 
 # target to generate assembly for a file
-mainwindow.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/mainwindow.cc.s
-.PHONY : mainwindow.cc.s
+view/mainwindow.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/view/mainwindow.cc.s
+.PHONY : view/mainwindow.cc.s
 
 # Help Target
 help:
@@ -258,9 +258,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... mainwindow.o"
-	@echo "... mainwindow.i"
-	@echo "... mainwindow.s"
+	@echo "... view/mainwindow.o"
+	@echo "... view/mainwindow.i"
+	@echo "... view/mainwindow.s"
 .PHONY : help
 
 

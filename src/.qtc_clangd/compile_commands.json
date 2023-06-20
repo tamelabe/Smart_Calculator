@@ -7,7 +7,7 @@
         "-I",
         "/Volumes/89823065724/apps/Qt Creator.app/Contents/Resources/cplusplus/wrappedQtHeaders/QtCore",
         "-I",
-        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-MnQBAt/clang-uiheader-KMndYh",
+        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-qdTNVW/clang-uiheader-qLUnWi",
         "-nostdinc",
         "-nostdinc++",
         "-g",
@@ -78,7 +78,7 @@
         "-I",
         "/Volumes/89823065724/apps/Qt Creator.app/Contents/Resources/cplusplus/wrappedQtHeaders/QtCore",
         "-I",
-        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-MnQBAt/clang-uiheader-KMndYh",
+        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-qdTNVW/clang-uiheader-qLUnWi",
         "-nostdinc",
         "-nostdinc++",
         "-g",
@@ -136,10 +136,10 @@
         "-Wno-unknown-pragmas",
         "-Wno-unknown-warning-option",
         "-Wno-documentation-unknown-command",
-        "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/mainwindow.cc"
+        "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/view/mainwindow.cc"
     ],
     "directory": "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/.qtc_clangd",
-    "file": "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/mainwindow.cc"
+    "file": "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/view/mainwindow.cc"
 },
 {
     "arguments": [
@@ -149,7 +149,7 @@
         "-I",
         "/Volumes/89823065724/apps/Qt Creator.app/Contents/Resources/cplusplus/wrappedQtHeaders/QtCore",
         "-I",
-        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-MnQBAt/clang-uiheader-KMndYh",
+        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-qdTNVW/clang-uiheader-qLUnWi",
         "-nostdinc",
         "-nostdinc++",
         "-g",
@@ -207,10 +207,10 @@
         "-Wno-unknown-pragmas",
         "-Wno-unknown-warning-option",
         "-Wno-documentation-unknown-command",
-        "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/mainwindow.h"
+        "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/view/mainwindow.h"
     ],
     "directory": "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/.qtc_clangd",
-    "file": "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/mainwindow.h"
+    "file": "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/view/mainwindow.h"
 },
 {
     "arguments": [
@@ -220,7 +220,7 @@
         "-I",
         "/Volumes/89823065724/apps/Qt Creator.app/Contents/Resources/cplusplus/wrappedQtHeaders/QtCore",
         "-I",
-        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-MnQBAt/clang-uiheader-KMndYh",
+        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-qdTNVW/clang-uiheader-qLUnWi",
         "-nostdinc",
         "-nostdinc++",
         "-g",
@@ -291,7 +291,7 @@
         "-I",
         "/Volumes/89823065724/apps/Qt Creator.app/Contents/Resources/cplusplus/wrappedQtHeaders/QtCore",
         "-I",
-        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-MnQBAt/clang-uiheader-KMndYh",
+        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-qdTNVW/clang-uiheader-qLUnWi",
         "-nostdinc",
         "-nostdinc++",
         "-g",
@@ -362,7 +362,7 @@
         "-I",
         "/Volumes/89823065724/apps/Qt Creator.app/Contents/Resources/cplusplus/wrappedQtHeaders/QtCore",
         "-I",
-        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-MnQBAt/clang-uiheader-KMndYh",
+        "/private/var/folders/zz/zyxvpxvq6csfxvn_n003vrr000yy60/T/QtCreator-qdTNVW/clang-uiheader-qLUnWi",
         "-nostdinc",
         "-nostdinc++",
         "-g",

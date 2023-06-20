@@ -18,9 +18,9 @@ set(PROJECT_ARCH_TARGET "amd64")    # x64
 
 set(PROJECT_SOURCES
         main.cc
-        mainwindow.cc
-        mainwindow.h
-        mainwindow.ui
+        view/mainwindow.cc
+        view/mainwindow.h
+        view/mainwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
