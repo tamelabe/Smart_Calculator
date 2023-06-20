@@ -1,0 +1,8 @@
+/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/CMakeFiles/TameCalc.dir
+/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/CMakeFiles/edit_cache.dir
+/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/CMakeFiles/rebuild_cache.dir
+/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/CMakeFiles/TameCalc_autogen.dir
+/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources/CMakeFiles/qcustomplot.dir
+/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources/CMakeFiles/edit_cache.dir
+/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources/CMakeFiles/rebuild_cache.dir
+/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources/CMakeFiles/qcustomplot_autogen.dir
