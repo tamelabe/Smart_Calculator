@@ -1,16 +1,19 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+//using namespace s21;
+
+s21::MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui_(new Ui::MainWindow)
 {
     ui_->setupUi(this);
     ui_->label_result->setText("0");
-    label_ = ui_ ->label_result;
+    label_ = ui_->label_result;
     ;
     this->setFixedSize(760, 327);
     QShortcut *sc_backspace = new QShortcut(QKeySequence(Qt::Key_Backspace), this);
+    QShortcut *sc_space = new QShortcut(QKeySequence(Qt::Key_Space), this);
 
     connect(ui_->butt_num_0, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_num_1, SIGNAL(clicked()), this, SLOT(typeChars()));
@@ -44,34 +47,41 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui_->butt_ac, SIGNAL(clicked()), this, SLOT(clearInput()));
     connect(sc_backspace, SIGNAL(activated()), this, SLOT(deleteLastSym()));
+    connect(sc_space, SIGNAL(activated()), this, SLOT(addSpace()));
     connect(ui_->butt_mode_graph, SIGNAL(clicked()), this, SLOT(initGraph()));
 
     connect(ui_->label_activate, SIGNAL(clicked()), this, SLOT(activateLabel()));
     connect(ui_->label_x_activate, SIGNAL(clicked()), this, SLOT(activateLabelX()));
+
+    connect(ui_->butt_op_result, SIGNAL(clicked()), this, SLOT(calculate()));
 }
 
-MainWindow::~MainWindow()
+s21::MainWindow::~MainWindow()
 {
     delete ui_;
 }
 
-void MainWindow::activateLabelX() {
+void s21::MainWindow::activateLabelX() {
     ui_->label_result->setEnabled(false);
     ui_->label_x->setEnabled(true);
     label_ = ui_->label_x;
 }
 
-void MainWindow::activateLabel() {
+void s21::MainWindow::activateLabel() {
     ui_->label_x->setEnabled(false);
     ui_->label_result->setEnabled(true);
     label_ = ui_->label_result;
 }
 
-void MainWindow::initGraph() {
+void s21::MainWindow::initGraph() {
     this->setFixedSize(760, 700);
 }
 
-void MainWindow::typeChars() {
+void s21::MainWindow::typeChars() {
+    if ((ui_->label_size->text()) == "255" && label_ == ui_->label_result)
+        return;
+    if ((label_->text().size()) >= 22 && label_ == ui_->label_x)
+        return;
     QPushButton *button = (QPushButton *)sender();
     if (label_->text() == "0") {
         label_->setText(button->text());
@@ -83,19 +93,35 @@ void MainWindow::typeChars() {
 }
 
 
-void MainWindow::typeFunctions() {
+void s21::MainWindow::typeFunctions() {
     QPushButton *button = (QPushButton *)sender();
     QString new_result = button->toolTip();
     QTextDocument doc;
     doc.setHtml(new_result);
     new_result = doc.toPlainText();
+    if ((ui_->label_size->text().toInt() + (new_result.size())) > 255)
+        return;
     if (label_->text() != "0")
         new_result = label_->text() + new_result;
     label_->setText(new_result);
     ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
 }
 
-void MainWindow::deleteLastSym() {
+void s21::MainWindow::addSpace() {
+    if ((ui_->label_size->text()) == "255" && label_ == ui_->label_result)
+        return;
+    if ((label_->text().size()) >= 22 && label_ == ui_->label_x)
+        return;
+    if (label_->text() == "0") {
+        return;
+    } else {
+        QString new_result = label_->text() + " ";
+        label_->setText(new_result);
+    }
+    ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
+}
+
+void s21::MainWindow::deleteLastSym() {
     if (label_->text() == "0" || label_->text() == "")
         return;
     QString new_result = label_->text();
@@ -106,7 +132,16 @@ void MainWindow::deleteLastSym() {
         ui_->label_result->setText("0");
 }
 
-void MainWindow::clearInput() {
+void s21::MainWindow::calculate() {
+    if (ui_->label_result->text() == "0")
+        return;
+    std::string expr = ui_->label_result->text().toStdString();
+    std::string expr_x = ui_->label_x->text().toStdString();
+    controller_.calculate(expr, expr_x);
+    ui_->label_result->setText(QString::fromStdString(expr));
+}
+
+void s21::MainWindow::clearInput() {
     ui_->label_result->setText("0");
     ui_->label_x->setText("");
     ui_->label_size->setText("0");

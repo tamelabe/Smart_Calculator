@@ -1,0 +1,121 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-c3c131b1bc555f4a5a0b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				},
+				{
+					"build" : "resources",
+					"jsonFile" : "directory-resources-Debug-c7f6e081d69c45024728.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "resources",
+					"targetIndexes" : 
+					[
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "TameCalc",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "qcustomplot",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "TameCalc::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-TameCalc-Debug-950d45cfd7a1d8d2857b.json",
+					"name" : "TameCalc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "TameCalc_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-TameCalc_autogen-Debug-aef7ed0ad26f6cc59a91.json",
+					"name" : "TameCalc_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "qcustomplot::@0c8d8ab3459368375fe6",
+					"jsonFile" : "target-qcustomplot-Debug-c0b0994b3d70c182bef5.json",
+					"name" : "qcustomplot",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "qcustomplot_autogen::@0c8d8ab3459368375fe6",
+					"jsonFile" : "target-qcustomplot_autogen-Debug-885953b435027963914f.json",
+					"name" : "qcustomplot_autogen",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src",
+		"source" : "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

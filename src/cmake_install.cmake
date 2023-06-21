@@ -37,6 +37,16 @@ if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/." TYPE DIRECTORY FILES "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/build/output/amd64/Debug/resources/TameCalc.app" USE_SOURCE_PERMISSIONS)
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/./TameCalc.app/Contents/MacOS/TameCalc" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/./TameCalc.app/Contents/MacOS/TameCalc")
+    execute_process(COMMAND /usr/bin/install_name_tool
+      -delete_rpath "/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/build/output/amd64/Debug/resources"
+      "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/./TameCalc.app/Contents/MacOS/TameCalc")
+  endif()
+endif()
+
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources/cmake_install.cmake")

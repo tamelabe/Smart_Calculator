@@ -8,8 +8,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/TameCalc.dir/main.cc.o.d"
   "CMakeFiles/TameCalc.dir/view/mainwindow.cc.o"
   "CMakeFiles/TameCalc.dir/view/mainwindow.cc.o.d"
-  "TameCalc.app/Contents/MacOS/TameCalc"
-  "TameCalc.pdb"
+  "build/output/amd64/Debug/resources/TameCalc.app/Contents/MacOS/TameCalc"
+  "build/output/amd64/Debug/resources/TameCalc.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

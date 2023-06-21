@@ -401,7 +401,7 @@ public:
         label_result->setMargin(8);
         label_size = new QLabel(centralwidget);
         label_size->setObjectName(QString::fromUtf8("label_size"));
-        label_size->setGeometry(QRect(682, 35, 16, 16));
+        label_size->setGeometry(QRect(668, 35, 32, 16));
         QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Preferred);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
@@ -540,7 +540,7 @@ public:
         butt_mod->setShortcut(QCoreApplication::translate("MainWindow", "M", nullptr));
 #endif // QT_CONFIG(shortcut)
 #if QT_CONFIG(tooltip)
-        butt_sq_root->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>\342\210\232(</p></body></html>", nullptr));
+        butt_sq_root->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>sqrt(</p></body></html>", nullptr));
 #endif // QT_CONFIG(tooltip)
         butt_sq_root->setText(QCoreApplication::translate("MainWindow", "root", nullptr));
 #if QT_CONFIG(shortcut)

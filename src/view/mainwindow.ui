@@ -357,7 +357,7 @@ QPushButton:pressed {
      <item row="3" column="2">
       <widget class="QPushButton" name="butt_sq_root">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;√(&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;sqrt(&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>root</string>
@@ -716,9 +716,9 @@ background-color : white;</string>
    <widget class="QLabel" name="label_size">
     <property name="geometry">
      <rect>
-      <x>682</x>
+      <x>668</x>
       <y>35</y>
-      <width>16</width>
+      <width>32</width>
       <height>16</height>
      </rect>
     </property>

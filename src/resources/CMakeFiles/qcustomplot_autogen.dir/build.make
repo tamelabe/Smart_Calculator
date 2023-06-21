@@ -44,10 +44,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /Applications/CMake.app/Contents/bin/cmake
+CMAKE_COMMAND = /usr/local/bin/cmake
 
 # The command to remove a file.
-RM = /Applications/CMake.app/Contents/bin/cmake -E rm -f
+RM = /usr/local/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -68,7 +68,7 @@ include resources/CMakeFiles/qcustomplot_autogen.dir/progress.make
 
 resources/CMakeFiles/qcustomplot_autogen:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target qcustomplot"
-	cd /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources && /Applications/CMake.app/Contents/bin/cmake -E cmake_autogen /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources/CMakeFiles/qcustomplot_autogen.dir/AutogenInfo.json Debug
+	cd /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources && /usr/local/bin/cmake -E cmake_autogen /Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources/CMakeFiles/qcustomplot_autogen.dir/AutogenInfo.json Debug
 
 qcustomplot_autogen: resources/CMakeFiles/qcustomplot_autogen
 qcustomplot_autogen: resources/CMakeFiles/qcustomplot_autogen.dir/build.make

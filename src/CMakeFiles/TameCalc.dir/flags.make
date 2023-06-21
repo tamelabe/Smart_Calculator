@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/clang++
 CXX_DEFINES = -DQCUSTOMPLOT_USE_LIBRARY -DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB
 
-CXX_INCLUDES = -I/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src -I/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/TameCalc_autogen/include -I/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources -iframework /usr/local/lib -isystem /usr/local/lib/QtCore.framework/Headers -isystem /usr/local/share/qt/mkspecs/macx-clang -isystem /usr/local/include -isystem /usr/local/lib/QtWidgets.framework/Headers -isystem /usr/local/lib/QtGui.framework/Headers -isystem /usr/local/lib/QtPrintSupport.framework/Headers
+CXX_INCLUDES = -I/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src -I/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/TameCalc_autogen/include -I/Users/tamelabe/Documents/repo/CPP3_SmartCalc/src/resources -iframework /usr/local/lib -isystem /usr/local/lib/QtCore.framework/Headers -isystem /usr/local/share/qt/mkspecs/macx-clang -isystem /usr/local/lib/QtWidgets.framework/Headers -isystem /usr/local/lib/QtGui.framework/Headers -isystem /usr/local/lib/QtPrintSupport.framework/Headers
 
 CXX_FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.6 -fPIC -std=gnu++17
 
