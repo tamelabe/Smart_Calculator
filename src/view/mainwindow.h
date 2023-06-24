@@ -34,6 +34,7 @@ private slots:
     void typeChars();
     void typeFunctions();
     void addSpace();
+    void addESym();
     void deleteLastSym();
     void clearInput();
     void initGraph();

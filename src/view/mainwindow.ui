@@ -346,6 +346,9 @@ QPushButton:pressed {
      </item>
      <item row="0" column="2">
       <widget class="QPushButton" name="butt_mod">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;mod&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>mod</string>
        </property>

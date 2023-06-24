@@ -535,6 +535,9 @@ public:
 #if QT_CONFIG(shortcut)
         butt_op_mul->setShortcut(QCoreApplication::translate("MainWindow", "*", nullptr));
 #endif // QT_CONFIG(shortcut)
+#if QT_CONFIG(tooltip)
+        butt_mod->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>mod</p></body></html>", nullptr));
+#endif // QT_CONFIG(tooltip)
         butt_mod->setText(QCoreApplication::translate("MainWindow", "mod", nullptr));
 #if QT_CONFIG(shortcut)
         butt_mod->setShortcut(QCoreApplication::translate("MainWindow", "M", nullptr));

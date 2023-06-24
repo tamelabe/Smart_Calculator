@@ -14,6 +14,7 @@ s21::MainWindow::MainWindow(QWidget *parent)
     this->setFixedSize(760, 327);
     QShortcut *sc_backspace = new QShortcut(QKeySequence(Qt::Key_Backspace), this);
     QShortcut *sc_space = new QShortcut(QKeySequence(Qt::Key_Space), this);
+    QShortcut *sc_e = new QShortcut(QKeySequence(Qt::Key_E), this);
 
     connect(ui_->butt_num_0, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_num_1, SIGNAL(clicked()), this, SLOT(typeChars()));
@@ -32,8 +33,8 @@ s21::MainWindow::MainWindow(QWidget *parent)
     connect(ui_->butt_bracket_op, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_bracket_cl, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_point, SIGNAL(clicked()), this, SLOT(typeChars()));
-    connect(ui_->butt_fn_op_x, SIGNAL(clicked()), this, SLOT(typeChars()));
 
+    connect(ui_->butt_fn_op_x, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_fn_cos, SIGNAL(clicked()), this, SLOT(typeFunctions()));
     connect(ui_->butt_fn_sin, SIGNAL(clicked()), this, SLOT(typeFunctions()));
     connect(ui_->butt_fn_tan, SIGNAL(clicked()), this, SLOT(typeFunctions()));
@@ -44,11 +45,14 @@ s21::MainWindow::MainWindow(QWidget *parent)
     connect(ui_->butt_ln, SIGNAL(clicked()), this, SLOT(typeFunctions()));
     connect(ui_->butt_log, SIGNAL(clicked()), this, SLOT(typeFunctions()));
     connect(ui_->butt_degree, SIGNAL(clicked()), this, SLOT(typeFunctions()));
+    connect(ui_->butt_mod, SIGNAL(clicked()), this, SLOT(typeFunctions()));
 
     connect(ui_->butt_ac, SIGNAL(clicked()), this, SLOT(clearInput()));
+    connect(ui_->butt_mode_graph, SIGNAL(clicked()), this, SLOT(initGraph()));
     connect(sc_backspace, SIGNAL(activated()), this, SLOT(deleteLastSym()));
     connect(sc_space, SIGNAL(activated()), this, SLOT(addSpace()));
-    connect(ui_->butt_mode_graph, SIGNAL(clicked()), this, SLOT(initGraph()));
+    connect(sc_e, SIGNAL(activated()), this, SLOT(addESym()));
+
 
     connect(ui_->label_activate, SIGNAL(clicked()), this, SLOT(activateLabel()));
     connect(ui_->label_x_activate, SIGNAL(clicked()), this, SLOT(activateLabelX()));
@@ -56,8 +60,7 @@ s21::MainWindow::MainWindow(QWidget *parent)
     connect(ui_->butt_op_result, SIGNAL(clicked()), this, SLOT(calculate()));
 }
 
-s21::MainWindow::~MainWindow()
-{
+s21::MainWindow::~MainWindow() {
     delete ui_;
 }
 
@@ -112,12 +115,22 @@ void s21::MainWindow::addSpace() {
         return;
     if ((label_->text().size()) >= 22 && label_ == ui_->label_x)
         return;
-    if (label_->text() == "0") {
+    if (label_->text() == "0")
         return;
-    } else {
-        QString new_result = label_->text() + " ";
-        label_->setText(new_result);
-    }
+    QString new_result = label_->text() + " ";
+    label_->setText(new_result);
+    ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
+}
+
+void s21::MainWindow::addESym() {
+    if ((ui_->label_size->text()) == "255" && label_ == ui_->label_result)
+        return;
+    if ((label_->text().size()) >= 22 && label_ == ui_->label_x)
+        return;
+    if (label_->text() == "0")
+        return;
+    QString new_result = label_->text() + "e";
+    label_->setText(new_result);
     ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
 }
 
@@ -135,6 +148,10 @@ void s21::MainWindow::deleteLastSym() {
 void s21::MainWindow::calculate() {
     if (ui_->label_result->text() == "0")
         return;
+    if (ui_->label_result->text() == "Error") {
+        ui_->label_result->setText("0");
+        return;
+    }
     std::string expr = ui_->label_result->text().toStdString();
     std::string expr_x = ui_->label_x->text().toStdString();
     controller_.calculate(expr, expr_x);
