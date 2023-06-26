@@ -18,11 +18,28 @@ namespace s21 {
 //        std::string expr;
 //        std::string expr_x;
         void infixToPrefix(const std::string &expr) {
-            std::stack<std::string> op_stack;
-            std::queue<std::string> qu_output;
+            std::stack<std::string> operators;
+            std::queue<std::string> rpn;
+            for (auto i = 0; i < expr.length(); ++i) {
+                if (std::isdigit(expr[i])) {
+                    rpn.push(expr.substr(start, i));
+                } else if (expr[i] == '(') {
+                    while (!operators.empty() && operators.top() != '(') {
+                        rpn.push(operators.top());
+                        operators.pop();
 
+                    }
+
+                } else if (expr[i] == ')') {
+
+                }
+            }
         }
-
+        int extractDigit(const std::string &expr, int &i) {
+            int start = i;
+            for (;i < expr.length() && (std::isdigit(expr[i]) || expr[i] == '.'); ++i) {}
+            return expr.substr(start, --i);
+        }
         int priority() {
 
         }
