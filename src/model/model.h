@@ -9,40 +9,77 @@ namespace s21 {
     class Model {
     public:
         void calculate(std::string &expr, const std::string &x_def) {
-//            this->expr = expr;
-//            this->expr_x = x_def;
             if (!validate(expr)) return;
+            infixToPrefix(expr);
         }
-    private:
-//        std::string res_;
-//        std::string expr;
-//        std::string expr_x;
-        void infixToPrefix(const std::string &expr) {
+//    private:
+        std::map<std::string, int> priorities_ {
+          {"sin", 0}, {"cos", 0}, {"tan", 0}, {"asin", 0}, {"acos", 0}, {"atan", 0}, {"sqrt", 0}, {"ln", 0}, {"log", 0},
+          {"(", 1}, {")", 1},
+          {"^", 2},
+          {"*", 4}, {"/", 4}, {"%", 4},
+          {"+", 5}, {"-", 5}
+        };
+        std::string functions_ = "sin cos tan asin acos atan sqrt ln log";
+
+        void infixToPrefix(std::string &expr) {
             std::stack<std::string> operators;
             std::queue<std::string> rpn;
-            for (auto i = 0; i < expr.length(); ++i) {
-                if (std::isdigit(expr[i])) {
-                    rpn.push(expr.substr(start, i));
+            for (auto i = 0; i < expr.length();) {
+                if (std::isdigit(expr[i]) || expr[i] == '.') {
+                    rpn.push(extractDigit(expr, i));
+
+                } else if (int str_len = detFunction(expr, i)) {
+                    operators.push(expr.substr(i, str_len));
+                    i += str_len;
                 } else if (expr[i] == '(') {
-                    while (!operators.empty() && operators.top() != '(') {
+                    operators.push(std::string(1, expr[i++]));
+                } else if (expr[i] == ')') {
+                    std::cout << expr[i] << '\n';
+                    while (!operators.empty() && operators.top() != "(") {
                         rpn.push(operators.top());
                         operators.pop();
-
                     }
-
-                } else if (expr[i] == ')') {
-
+                    if (!operators.empty() && operators.top() == "(") {
+                        operators.pop();
+                    }
+                    i++;
+                } else {
+                    while (!operators.empty() && operators.top() != "(" && getPriority(operators.top()) <= getPriority(std::string(1, expr[i]))) {
+                        rpn.push(operators.top());
+                        operators.pop();
+                    }
+                    operators.push(std::string(1, expr[i]));
+                    i++;
+                    }
                 }
+            while (!operators.empty()) {
+                rpn.push(operators.top());
+                operators.pop();
+            }
+            expr = "";
+            while (!rpn.empty()) {
+                expr.append(rpn.front());
+                rpn.pop();
             }
         }
-        int extractDigit(const std::string &expr, int &i) {
+        std::string extractDigit(const std::string &expr, int &i) {
             int start = i;
-            for (;i < expr.length() && (std::isdigit(expr[i]) || expr[i] == '.'); ++i) {}
-            return expr.substr(start, --i);
+            for (;i < expr.length() && (std::isdigit(expr[i]) || expr[i] == '.'); ++i) {
+            }
+            return expr.substr(start, i - start);
         }
-        int priority() {
+        size_t detFunction(const std::string &expr, int pos) {
+            std::string f_name;
+            for (;std::isalpha(expr[pos]); ++pos) { f_name.push_back(expr[pos]); }
+            if (functions_.find(f_name) == std::string::npos)
+                 return false;
+             return f_name.length();
+         }
+        int getPriority(std::string token) {
+            return priorities_.at(token);
+        }
 
-        }
         bool validate(std::string &expr) {
             size_t pos = expr.find("mod");
             while (pos != std::string::npos) {
@@ -65,7 +102,7 @@ namespace s21 {
 //                expr = std::to_string(expression.value());
                 return 1;
             } else {
-                expr =  "Error";
+                expr = "Error";
                 return 0;
             }
         }
