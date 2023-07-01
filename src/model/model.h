@@ -11,22 +11,14 @@ namespace s21 {
     class Model {
     public:
         Model() {
-            functions_call_["sin"] = static_cast<double(*)(double)>(std::sin);
-            functions_call_["cos"] = static_cast<double(*)(double)>(std::cos);
-            functions_call_["tan"] = static_cast<double(*)(double)>(std::tan);
-            functions_call_["asin"] = static_cast<double(*)(double)>(std::asin);
-            functions_call_["acos"] = static_cast<double(*)(double)>(std::acos);
-            functions_call_["atan"] = static_cast<double(*)(double)>(std::atan);
-            functions_call_["sqrt"] = static_cast<double(*)(double)>(std::sqrt);
-            functions_call_["log"] = static_cast<double(*)(double)>(std::log);
-            functions_call_["log10"] = static_cast<double(*)(double)>(std::log10);
+
         }
         void calculate(std::string &expr, const std::string &x_def) {
             if (!validate(expr)) return;
             infixToPostfix(expr);
-            calculaton(expr);
+            postfixCalc(expr);
         }
-//    private:
+    private:
         std::map<std::string, int> priorities_ {
           {"sin", 0}, {"cos", 0}, {"tan", 0}, {"asin", 0}, {"acos", 0}, {"atan", 0}, {"sqrt", 0}, {"log", 0}, {"log10", 0},
           {"(", 1}, {")", 1},
@@ -35,8 +27,7 @@ namespace s21 {
           {"+", 5}, {"-", 5}, {"~", 5}
         };
         std::string functions_ = "sin cos tan asin acos atan sqrt log10 log";
-        std::map<std::string, std::function<double(double)>> functions_call_;
-        std::queue<std::string> rpn_;
+        std::queue<std::string> postfix_q_;
 
         void infixToPostfix(std::string &expr) {
             std::stack<std::string> operators;
@@ -44,12 +35,12 @@ namespace s21 {
             for (auto i = 0; i < expr.length();) {
                 if (unary_ind && expr[i] == '-') {
                     operators.emplace(1, '~');
-                    i++;
+                    ++i;
                 } else if (unary_ind && expr[i] == '+') {
                     ++i;
                 }
                 if (std::isdigit(expr[i]) || expr[i] == '.' || expr[i] == 'e') {
-                    rpn_.push(extractDigit(expr, i));
+                    postfix_q_.push(extractDigit(expr, i));
                     unary_ind = false;
                 } else if (int str_len = detFunction(expr, i)) {
                     operators.push(expr.substr(i, str_len));
@@ -60,7 +51,7 @@ namespace s21 {
                     unary_ind = true;
                 } else if (expr[i] == ')') {
                     while (!operators.empty() && operators.top() != "(") {
-                        rpn_.push(operators.top());
+                        postfix_q_.push(operators.top());
                         operators.pop();
                     }
                     if (!operators.empty() && operators.top() == "(") {
@@ -73,7 +64,7 @@ namespace s21 {
                         if (expr[i] == '^' && operators.top() == "^") {
                             break;
                         }
-                        rpn_.push(operators.top());
+                        postfix_q_.push(operators.top());
                         operators.pop();
                     }
                     operators.emplace(1, expr[i]);
@@ -82,49 +73,41 @@ namespace s21 {
                     }
                 }
             while (!operators.empty()) {
-                rpn_.push(operators.top());
+                postfix_q_.push(operators.top());
                 operators.pop();
             }
-//            expr = "";
-//            while (!rpn_.empty()) {
-//                expr.append(rpn_.front());
-//            expr.append(" ");
-//                rpn_.pop();
-//            }
         }
-        void calculaton(std::string &expr) {
+
+        void postfixCalc(std::string &expr) {
             std::stack<double> nums;
             bool is_number = false;
-            while (!rpn_.empty()) {
+            while (!postfix_q_.empty()) {
                 try {
-                    nums.push(std::stod(rpn_.front()));
+                    nums.push(std::stod(postfix_q_.front()));
                     is_number = true;
-                    rpn_.pop();
+                    postfix_q_.pop();
                 } catch (const std::exception& e) {
                     is_number = false;
                 }
                 if (!is_number) {
-                    double num_frst = nums.top();
-                    if (detFunction(rpn_.front())) {
-                        auto iter = functions_call_.find(rpn_.front());
-                        nums.pop();
-                        nums.push(iter->second(num_frst));
-                        rpn_.pop();
-                    } else if (rpn_.front() == "~") {
-                        num_frst *= -1;
-                        nums.pop();
-                        nums.push(num_frst);
-                        rpn_.pop();
+                    double num_first = nums.top();
+                    if (detFunction(postfix_q_.front())) {
+                        pushNumToStack(nums, calcFunctions(num_first));
+                    } else if (postfix_q_.front() == "~") {
+                        num_first *= -1;
+                        pushNumToStack(nums, num_first);
                     } else if (nums.size() > 1) {
                         nums.pop();
-                        double num_sec = nums.top();
-                        nums.pop();
-//                        std::cout << "First: " << num_sec << "\nSecond: " << num_frst << "\nOperator" << rpn_.front() << '\n';
-                        nums.push(execute(num_sec, num_frst, rpn_.front()));
-                        rpn_.pop();
+                        double value = nums.top();
+                        value = calcOperators(value, num_first, postfix_q_.front());
+                        pushNumToStack(nums, value);
                     }
                 }
             }
+            strToDouble(nums, expr);
+        }
+
+        void strToDouble(const std::stack<double> &nums, std::string &expr) {
             std::ostringstream stream;
             stream.precision(8);
             stream << std::fixed << nums.top();
@@ -133,7 +116,29 @@ namespace s21 {
             if (expr[iter] == '.') { --iter; }
             expr = expr.substr(0, ++iter);
         }
-        double execute(const double &lhs, const double &rhs, const std::string &op) {
+
+        void pushNumToStack(std::stack<double> &nums, double value) {
+            nums.pop();
+            nums.push(value);
+            postfix_q_.pop();
+        }
+
+        double calcFunctions(const int &num) {
+            std::map<std::string, std::function<double(double)>> functions_call_;
+            functions_call_["sin"] = static_cast<double(*)(double)>(std::sin);
+            functions_call_["cos"] = static_cast<double(*)(double)>(std::cos);
+            functions_call_["tan"] = static_cast<double(*)(double)>(std::tan);
+            functions_call_["asin"] = static_cast<double(*)(double)>(std::asin);
+            functions_call_["acos"] = static_cast<double(*)(double)>(std::acos);
+            functions_call_["atan"] = static_cast<double(*)(double)>(std::atan);
+            functions_call_["sqrt"] = static_cast<double(*)(double)>(std::sqrt);
+            functions_call_["log"] = static_cast<double(*)(double)>(std::log);
+            functions_call_["log10"] = static_cast<double(*)(double)>(std::log10);
+            auto iter = functions_call_.find(postfix_q_.front());
+            return iter->second(num);
+        }
+        
+        double calcOperators(const double &lhs, const double &rhs, const std::string &op) {
             if (op == "+") {
                 return lhs + rhs;
             } else if (op == "-") {
@@ -188,7 +193,7 @@ namespace s21 {
             replace(expr, "log", "log10");
             replace(expr, "ln", "log");
             replace(expr, "mod", "%");
-//            std::cout << expr << '\n';
+
             exprtk::symbol_table<double> symbol_table;
             exprtk::expression<double> expression;
             exprtk::parser<double> parser;
@@ -201,7 +206,6 @@ namespace s21 {
 
             if (parser.compile(expr, expression))
             {
-//                expr = std::to_string(expression.value());
                 return true;
             } else {
                 expr = "Error";

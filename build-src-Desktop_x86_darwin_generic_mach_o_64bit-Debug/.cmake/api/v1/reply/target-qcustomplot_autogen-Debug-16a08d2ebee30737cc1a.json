@@ -1,0 +1,58 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"resources/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"id" : "qcustomplot_autogen::@0c8d8ab3459368375fe6",
+	"isGeneratorProvided" : true,
+	"name" : "qcustomplot_autogen",
+	"paths" : 
+	{
+		"build" : "resources",
+		"source" : "resources"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/Volumes/89823065724/Projects/CPP3_SmartCalc/build-src-Desktop_x86_darwin_generic_mach_o_64bit-Debug/resources/CMakeFiles/qcustomplot_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/Volumes/89823065724/Projects/CPP3_SmartCalc/build-src-Desktop_x86_darwin_generic_mach_o_64bit-Debug/resources/CMakeFiles/qcustomplot_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}
