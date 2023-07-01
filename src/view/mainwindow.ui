@@ -336,6 +336,9 @@ QPushButton:pressed {
      </item>
      <item row="2" column="6">
       <widget class="QPushButton" name="butt_op_mul">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;*&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>x</string>
        </property>
@@ -663,6 +666,9 @@ QPushButton:pressed {
      </item>
      <item row="1" column="6">
       <widget class="QPushButton" name="butt_op_div">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;/&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>÷</string>
        </property>

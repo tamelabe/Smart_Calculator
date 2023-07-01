@@ -531,6 +531,9 @@ public:
 #if QT_CONFIG(shortcut)
         butt_fn_cos->setShortcut(QCoreApplication::translate("MainWindow", "C", nullptr));
 #endif // QT_CONFIG(shortcut)
+#if QT_CONFIG(tooltip)
+        butt_op_mul->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>*</p></body></html>", nullptr));
+#endif // QT_CONFIG(tooltip)
         butt_op_mul->setText(QCoreApplication::translate("MainWindow", "x", nullptr));
 #if QT_CONFIG(shortcut)
         butt_op_mul->setShortcut(QCoreApplication::translate("MainWindow", "*", nullptr));
@@ -612,6 +615,9 @@ public:
         butt_num_5->setShortcut(QCoreApplication::translate("MainWindow", "5", nullptr));
 #endif // QT_CONFIG(shortcut)
         butt_mode_credit->setText(QCoreApplication::translate("MainWindow", "credit", nullptr));
+#if QT_CONFIG(tooltip)
+        butt_op_div->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>/</p></body></html>", nullptr));
+#endif // QT_CONFIG(tooltip)
         butt_op_div->setText(QCoreApplication::translate("MainWindow", "\303\267", nullptr));
 #if QT_CONFIG(shortcut)
         butt_op_div->setShortcut(QCoreApplication::translate("MainWindow", "/", nullptr));

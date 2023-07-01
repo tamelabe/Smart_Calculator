@@ -374,6 +374,8 @@ CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o: TameCalc_autoge
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/istream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/filesystem \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iomanip \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/queue \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/sstream \
   /usr/local/lib/QtGui.framework/Headers/qtextcursor.h \
   /usr/local/lib/QtGui.framework/Headers/qtextformat.h \
   /usr/local/lib/QtGui.framework/Headers/qpen.h \
@@ -751,6 +753,8 @@ CMakeFiles/TameCalc.dir/main.cc.o: main.cc \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/istream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/filesystem \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iomanip \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/queue \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/sstream \
   /usr/local/lib/QtWidgets.framework/Headers/QApplication \
   /usr/local/lib/QtWidgets.framework/Headers/qapplication.h \
   /usr/local/lib/QtCore.framework/Headers/qcoreapplication.h \
@@ -1135,6 +1139,8 @@ CMakeFiles/TameCalc.dir/view/mainwindow.cc.o: view/mainwindow.cc \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/istream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/filesystem \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iomanip \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/queue \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/sstream \
   TameCalc_autogen/include/ui_mainwindow.h \
   /usr/local/lib/QtCore.framework/Headers/QVariant \
   /usr/local/lib/QtWidgets.framework/Headers/QApplication \
@@ -1166,6 +1172,8 @@ CMakeFiles/TameCalc.dir/view/mainwindow.cc.o: view/mainwindow.cc \
 
 /usr/local/lib/QtWidgets.framework/Headers/QLabel:
 
+/usr/local/lib/QtWidgets.framework/Headers/qboxlayout.h:
+
 /usr/local/lib/QtWidgets.framework/Headers/qlayout.h:
 
 /usr/local/lib/QtWidgets.framework/Headers/qgridlayout.h:
@@ -1185,6 +1193,10 @@ TameCalc_autogen/include/ui_mainwindow.h:
 /usr/local/lib/QtCore.framework/Headers/qcoreapplication.h:
 
 /usr/local/lib/QtWidgets.framework/Headers/QApplication:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/stack:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/sstream:
 
 /usr/local/lib/QtGui.framework/Headers/qrgb.h:
 
@@ -1329,8 +1341,6 @@ controller/controller.h:
 /usr/local/lib/QtCore.framework/Headers/qpoint.h:
 
 /usr/local/lib/QtGui.framework/Headers/qpaintdevice.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/stack:
 
 /usr/local/lib/QtGui.framework/Headers/qicon.h:
 
@@ -1497,6 +1507,8 @@ controller/controller.h:
 /usr/local/lib/QtCore.framework/Headers/qmargins.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__bits:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/queue:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/memory:
 
@@ -1795,8 +1807,6 @@ model/model.h:
 view/mainwindow.cc:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/ctype.h:
-
-/usr/local/lib/QtWidgets.framework/Headers/qboxlayout.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_wint_t.h:
 

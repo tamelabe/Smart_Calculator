@@ -28,8 +28,8 @@ s21::MainWindow::MainWindow(QWidget *parent)
     connect(ui_->butt_num_9, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_op_sum, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_op_sub, SIGNAL(clicked()), this, SLOT(typeChars()));
-    connect(ui_->butt_op_mul, SIGNAL(clicked()), this, SLOT(typeChars()));
-    connect(ui_->butt_op_div, SIGNAL(clicked()), this, SLOT(typeChars()));
+    connect(ui_->butt_op_mul, SIGNAL(clicked()), this, SLOT(typeFunctions()));
+    connect(ui_->butt_op_div, SIGNAL(clicked()), this, SLOT(typeFunctions()));
     connect(ui_->butt_bracket_op, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_bracket_cl, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_point, SIGNAL(clicked()), this, SLOT(typeChars()));
