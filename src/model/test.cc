@@ -3,7 +3,7 @@
 #include "model.h"
 
 int main() {
-  std::string str = "(132+sin(asin(sqrt(ln(log(228.11)))))-4*5^6*(123))";
+  std::string str = "1+1";
   int i = 0;
   s21::Model model;
   //    model.infixToPostfix(str);

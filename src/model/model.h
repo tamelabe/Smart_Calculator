@@ -5,6 +5,7 @@
 #include <queue>
 #include <sstream>
 #include <stack>
+#include <unordered_map>
 
 #include "../resources/exprtk.hpp"
 
@@ -19,52 +20,107 @@ class Model {
   }
 
  private:
-  std::string functions_ = "sin cos tan asin acos atan sqrt log10 log";
-  std::queue<std::string> postfix_q_;
+  enum class Lexem : int {
+    sin = 1,
+    cos,
+    tan,
+    aSin,
+    aCos,
+    aTan,
+    sqrt,
+    log,
+    log10,
+    braceOp,
+    braceCl,
+    deg,
+    mul,
+    div,
+    plus,
+    minus,
+    mod,
+    unary,
+    num
+  };
   
+  enum class LType : int {
+    num,
+    func,
+    op
+  };
+
+  class Token {
+   public:
+    Token(LType type, Lexem name) : name_(name), type_(type), value_{} {}
+    Token(LType type, Lexem name, double value) : name_(name), type_(type), value_(value) {}
+    LType getType() const { return type_; }
+    Lexem getName() const { return name_; }
+    double getValue() const { return value_; }
+
+   private:
+    LType type_;
+    Lexem name_;
+    double value_;
+  };
+
+  std::unordered_map<std::string, Lexem> functions_{
+      {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
+      {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
+      {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}};
+
+  std::unordered_map<char, Lexem> operators_{
+      {'^', Lexem::deg}, {'*', Lexem::mul},  {'/', Lexem::div},
+      {'%', Lexem::mod}, {'+', Lexem::plus}, {'-', Lexem::minus}};
+
+  std::unordered_map<Lexem, int> priorities_{
+      {Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
+      {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
+      {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
+      {Lexem::braceOp, 1}, {Lexem::braceCl, 1}, {Lexem::deg, 2},
+      {Lexem::mul, 4},     {Lexem::div, 4},     {Lexem::mod, 4},
+      {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 5}};
+  
+  std::queue<Token> postfix_q_;
 
   void infixToPostfix(std::string &expr) {
-    std::stack<std::string> operators;
+    std::stack<Token> operators;
     bool unary_ind = true;
-    for (auto i = 0; i < expr.length();) {
-      if (unary_ind && expr[i] == '-') {
-        operators.emplace(1, '~');
-        ++i;
-      } else if (unary_ind && expr[i] == '+') {
+    for (size_t i = 0; i < expr.length();) {
+      if (unary_ind && (expr[i] == '-' || expr[i] == '+')) {
+        if (expr[i] == '-') operators.emplace(LType::op, Lexem::unary);
         ++i;
       }
       if (std::isdigit(expr[i]) || expr[i] == '.' || expr[i] == 'e') {
-        postfix_q_.push(extractDigit(expr, i));
+        postfix_q_.emplace(LType::num, Lexem::num, extractDigit(expr, i));
         unary_ind = false;
-      } else if (int str_len = detFunction(expr, i)) {
-        operators.push(expr.substr(i, str_len));
-        i += str_len;
+      } else if (int func_type = detFunction(expr, i)) {
+        operators.emplace(LType::func, static_cast<Lexem>(func_type));
         unary_ind = false;
-      } else if (expr[i] == '(') {
-        operators.emplace(1, expr[i++]);
+      } else if (expr[i++] == '(') {
+        operators.emplace(LType::op, Lexem::braceOp);
         unary_ind = true;
-      } else if (expr[i] == ')') {
-        while (!operators.empty() && operators.top() != "(") {
+      } else if (expr[i++] == ')') {
+        while (!operators.empty() &&
+               operators.top().getName() != Lexem::braceOp) {
           postfix_q_.push(operators.top());
           operators.pop();
         }
-        if (!operators.empty() && operators.top() == "(") {
+        if (!operators.empty() &&
+            operators.top().getName() == Lexem::braceOp) {
           operators.pop();
         }
-        i++;
         unary_ind = false;
       } else {
-        while (!operators.empty() && operators.top() != "(" &&
-               getPriority(operators.top()) <=
-                   getPriority(std::string(1, expr[i]))) {
-          if (expr[i] == '^' && operators.top() == "^") {
+        Lexem op = operators_.at(expr[i++]);
+        while (!operators.empty() &&
+               operators.top().getName() != Lexem::braceOp &&
+               getPriority(operators.top().getName()) <= getPriority(op)) {
+          if (op == Lexem::deg && operators.top().getName() == Lexem::deg) {
             break;
           }
           postfix_q_.push(operators.top());
           operators.pop();
         }
-        operators.emplace(1, expr[i]);
-        i++;
+        operators.emplace(LType::op, op);
         unary_ind = true;
       }
     }
@@ -74,36 +130,73 @@ class Model {
     }
   }
 
+  int getPriority(const Lexem &lexem) {
+    try {
+      return priorities_.at(lexem);
+    } catch (const std::exception &e) {
+      return -1;
+    }
+  }
+
+  int detFunction(const std::string &expr, size_t &pos) const {
+    if (pos + 4 < expr.length() && expr.substr(pos, pos + 5) == "log10") {
+      pos += 5;
+      return static_cast<int>(Lexem::log10);
+    }
+    for (const auto &function : functions_) {
+      const std::string &func_str = function.first;
+      if (pos + func_str.length() <= expr.length()) {
+        if (expr.substr(pos, func_str.length()) == func_str) {
+          pos += func_str.length();
+          return static_cast<int>(function.second);
+        }
+      }
+    }
+    return 0;
+  }
+
   void postfixCalc(std::string &expr) {
     std::stack<double> nums;
     bool is_number = false;
     while (!postfix_q_.empty()) {
-      try {
-        nums.push(std::stod(postfix_q_.front()));
-        is_number = true;
+      if (postfix_q_.front().getType() == LType::num) {
+        nums.push(postfix_q_.front().getValue());
         postfix_q_.pop();
-      } catch (const std::exception &e) {
-        is_number = false;
-      }
-      if (!is_number) {
-        double num_first = nums.top();
-        if (detFunction(postfix_q_.front())) {
-          pushNumToStack(nums, calcFunctions(num_first));
-        } else if (postfix_q_.front() == "~") {
-          num_first *= -1;
-          pushNumToStack(nums, num_first);
+      } else if (postfix_q_.front().getType() == LType::func) {
+        pushNumToStack(nums, calcFunctions(nums.top()));
+      } else if (postfix_q_.front().getType() == LType::op) {
+        double top_num = nums.top();
+        if (postfix_q_.front().getName() == Lexem::unary) {
+          pushNumToStack(nums, top_num * -1);
         } else if (nums.size() > 1) {
           nums.pop();
-          double value = nums.top();
-          value = calcOperators(value, num_first, postfix_q_.front());
-          pushNumToStack(nums, value);
+          double res = calcOperators(nums.top(), top_num, postfix_q_.front().getName());
+          pushNumToStack(nums, res);
         }
       }
     }
-    strToDouble(nums, expr);
+    doubleToString(nums, expr);
   }
 
-  void strToDouble(const std::stack<double> &nums, std::string &expr) {
+//      if (!is_number) {
+//        double num_first = nums.top();
+//        if (detFunction(postfix_q_.front())) {
+//          pushNumToStack(nums, calcFunctions(num_first));
+//        } else if (postfix_q_.front() == "~") {
+//          num_first *= -1;
+//          pushNumToStack(nums, num_first);
+//        } else if (nums.size() > 1) {
+//          nums.pop();
+//          double value = nums.top();
+//          value = calcOperators(value, num_first, postfix_q_.front());
+//          pushNumToStack(nums, value);
+//        }
+//      }
+//    }
+//    doubleToString(nums, expr);
+//  }
+
+  void doubleToString(const std::stack<double> &nums, std::string &expr) {
     std::ostringstream stream;
     stream.precision(8);
     stream << std::fixed << nums.top();
@@ -122,23 +215,23 @@ class Model {
   }
 
   double calcFunctions(const double &num) {
-    if (postfix_q_.front() == "sqrt") {
+    if (postfix_q_.front().getName() == Lexem::sqrt) {
       return std::sqrt(num);
-    } else if (postfix_q_.front() == "log") {
+    } else if (postfix_q_.front().getName() == Lexem::log) {
       return std::log(num);
-    } else if (postfix_q_.front() == "log10") {
+    } else if (postfix_q_.front().getName() == Lexem::log10) {
       return std::log10(num);
-    } else if (postfix_q_.front() == "sin") {
+    } else if (postfix_q_.front().getName() == Lexem::sin) {
       return std::sin(num);
-    } else if (postfix_q_.front() == "cos") {
-      return std::sin(cos);
-    } else if (postfix_q_.front() == "tan") {
-      return std::sin(tan);
-    } else if (postfix_q_.front() == "asin") {
+    } else if (postfix_q_.front().getName() == Lexem::cos) {
+      return std::cos(num);
+    } else if (postfix_q_.front().getName() == Lexem::tan) {
+      return std::tan(num);
+    } else if (postfix_q_.front().getName() == Lexem::aSin) {
       return std::asin(num);
-    } else if (postfix_q_.front() == "acos") {
+    } else if (postfix_q_.front().getName() == Lexem::aCos) {
       return std::acos(num);
-    } else if (postfix_q_.front() == "atan") {
+    } else if (postfix_q_.front().getName() == Lexem::aTan) {
       return std::atan(num);
     } else {
       return 0;
@@ -146,72 +239,32 @@ class Model {
   }
 
   double calcOperators(const double &lhs, const double &rhs,
-                       const std::string &op) {
-    if (op == "+") {
+                       const Lexem &op) {
+    if (op == Lexem::plus) {
       return lhs + rhs;
-    } else if (op == "-") {
+    } else if (op == Lexem::minus) {
       return lhs - rhs;
-    } else if (op == "*") {
+    } else if (op == Lexem::mul) {
       return lhs * rhs;
-    } else if (op == "/") {
+    } else if (op == Lexem::div) {
       return lhs / rhs;
-    } else if (op == "%") {
+    } else if (op == Lexem::mod) {
       return std::fmod(lhs, rhs);
-    } else if (op == "^") {
+    } else if (op == Lexem::deg) {
       return pow(lhs, rhs);
     } else {
       return 0;
     }
   }
 
-  double extractDigit(const std::string &expr, int &i) {
-    int start = i;
-    for (; i < expr.length() && (std::isdigit(expr[i]) || expr[i] == '.');
-         ++i) {
-    }
-    return expr.substr(start, i - start);
+  double extractDigit(const std::string &expr, size_t &i) {
+    size_t start = i;
+    while (i < expr.length() && (std::isdigit(expr[i]) || expr[i] == '.'))
+         ++i;
+    return std::stod(expr.substr(start, i - start));
   }
 
-  int detFunction(const std::string &expr, size_t pos = 0) const {
-    std::string f_name;
-    int size = 0;
-    for (; pos < expr.size() && std::isalpha(expr[pos]); ++pos)
-      f_name.push_back(expr[pos]);
-    if (expr.size() > pos + 1 && expr.substr(pos, 2) == "10") size = 2;
-    if (functions_.find(f_name) == std::string::npos) return 0;
-    return static_cast<int>(f_name.length()) + size;
-  }
-
-  enum Lexems : int {
-      SIN, COS, TAN, ASIN, ACOS, ATAN, SQRT, LOG, LOG10, BRACE_OP, BRACE_CL, DEG, MUL, DIV, PLUS, MINUS, UNARY, NUM
-  };
-
-  class Token {
-  public:
-      Token(int name, double value) : name_(name), value_(value) {}
-      int getName { return name_ };
-      int getValue { return value_ };
-  private:
-      int name_;
-      double value_;
-  };
-
-
-
-  int getPriority(std::string token) {
-    std::map<std::string, int> priorities_{
-        {"sin", 0},  {"cos", 0},  {"tan", 0}, {"asin", 0},  {"acos", 0},
-        {"atan", 0}, {"sqrt", 0}, {"log", 0}, {"log10", 0}, {"(", 1},
-        {")", 1},    {"^", 2},    {"*", 4},   {"/", 4},     {"%", 4},
-        {"+", 5},    {"-", 5},    {"~", 5}};
-    try {
-      return priorities_.at(token);
-    } catch (const std::exception &e) {
-      return -1;
-    }
-  }
-
-  void replace(std::string &expr, std::string old_s, std::string new_s) {
+  void replace(std::string &expr, const std::string &old_s, const std::string &new_s) {
     size_t pos = expr.find(old_s);
     while (pos != std::string::npos) {
       expr.replace(pos, old_s.length(), new_s);
