@@ -81,6 +81,7 @@ class Model {
   
   std::queue<Token> postfix_q_;
 
+
   void infixToPostfix(std::string &expr) {
     std::stack<Token> operators;
     bool unary_ind = true;
