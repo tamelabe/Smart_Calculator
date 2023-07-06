@@ -14,8 +14,10 @@ class Model {
   enum class Lexem;
   enum class LType;
   class Token;
+
  public:
   Model() : expr_({}), expr_address(nullptr), x_expr_({}), x_expr_address(nullptr) {
+    status_ = {0, "***Begin***\n-Init:      Success"};
     functions_ = {
         {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
         {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
@@ -32,24 +34,73 @@ class Model {
         {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 5}};
   }
 
-  void setExpr(std::string &expr) {
+  std::pair<int, std::string> getStatus() {
+    return status_;
+  };
+
+  void setExpr(std::string &expr, std::string &x_expr) {
+    if (expr.empty()) {
+      status_ = {10, "-Set:      Fail (empty string)"};
+      return;
+    }
     expr_ = expr;
     expr_address = &expr;
-  }
-  void setExprX(std::string &x_expr) {
-    x_expr_ = x_expr;
-    x_expr_address = &x_expr;
+    status_ = {11, "-Set:       Success (main string)"};
+    if (!x_expr.empty()) {
+      x_expr_ = x_expr;
+      x_expr_address = &x_expr;
+      status_ = {12, "-Set:       Success (main and x strings)"};
+    }
   }
 
-  void calculate(std::string &expr, std::string &expr_x) {
-    if (!validate()) return;
-    infixToPostfix(expr_);
-    postfixCalc(expr_);
-    std::cout << expr_ << '\n';
-//    *expr_address = expr_;
+  void prepareExpr() {
+    if (status_.first % 10 == 0) { return; }
+    if (status_.first == 12)
+      replace("x", x_expr_);
+    replace("log", "log10");
+    replace("ln", "log");
+    replace("mod", "%");
+    status_ = {21, "-Prepare:   Success"};
+  }
+
+  void validateExpr() {
+    if (status_.first % 10 == 0) { return; }
+    exprtk::symbol_table<double> symbol_table;
+    exprtk::expression<double> expression;
+    exprtk::parser<double> parser;
+
+    symbol_table.add_constants();
+    expression.register_symbol_table(symbol_table);
+    expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
+
+    if (parser.compile(expr_, expression)) {
+      status_ = {22, "-Validate:  Success"};
+    } else {
+      status_ = {20, "-Validate:  Fail"};
+    }
+  }
+
+  void calculateExpr() {
+    if (status_.first % 10 == 0) { return; }
+    infixToPostfix();
+    postfixCalc();
+    if (status_.first % 10 != 0) {
+      status_ = {31, "-Calculate: Success"};
+    }
+  }
+
+  void replaceStr() {
+    if (status_.first % 10 == 0) {
+      *expr_address = "Error";
+    } else {
+      *expr_address = expr_;
+      status_ = {41, "-Replace:   Success\n***Finish!***"};
+    }
   }
 
  private:
+  std::pair<int, std::string> status_;
+
   std::string expr_;
   std::string x_expr_;
 
@@ -82,50 +133,43 @@ class Model {
     unary,
     num
   };
-  
   enum class LType : int {
     num,
     func,
     op
   };
-
   class Token {
    public:
     Token(LType type, Lexem name) : name_(name), type_(type), value_{} {}
     Token(LType type, Lexem name, double value) : name_(name), type_(type), value_(value) {}
-    LType getType() const { return type_; }
-    Lexem getName() const { return name_; }
-    double getValue() const { return value_; }
-
+    [[nodiscard]] LType getType() const { return type_; }
+    [[nodiscard]] Lexem getName() const { return name_; }
+    [[nodiscard]] double getValue() const { return value_; }
    private:
     LType type_;
     Lexem name_;
     double value_;
   };
 
-//  void prepareExpr() {
-//
-//  }
-
-  void infixToPostfix(std::string &expr) {
+  void infixToPostfix() {
     std::stack<Token> operators;
     bool unary_ind = true;
-    for (size_t i = 0; i < expr.length();) {
-      if (unary_ind && (expr[i] == '-' || expr[i] == '+')) {
-        if (expr[i] == '-') operators.emplace(LType::op, Lexem::unary);
+    for (size_t i = 0; i < expr_.length();) {
+      if (unary_ind && (expr_[i] == '-' || expr_[i] == '+')) {
+        if (expr_[i] == '-') operators.emplace(LType::op, Lexem::unary);
         ++i;
       }
-      if (std::isdigit(expr[i]) || expr[i] == '.' || expr[i] == 'e') {
-        postfix_q_.emplace(LType::num, Lexem::num, extractDigit(expr, i));
+      if (std::isdigit(expr_[i]) || expr_[i] == '.' || expr_[i] == 'e') {
+        postfix_q_.emplace(LType::num, Lexem::num, extractDigit(expr_, i));
         unary_ind = false;
-      } else if (int func_type = detFunction(expr, i)) {
+      } else if (int func_type = detFunction(expr_, i)) {
         operators.emplace(LType::func, static_cast<Lexem>(func_type));
         unary_ind = false;
-      } else if (expr[i] == '(') {
+      } else if (expr_[i] == '(') {
         operators.emplace(LType::op, Lexem::braceOp);
         unary_ind = true;
         ++i;
-      } else if (expr[i] == ')') {
+      } else if (expr_[i] == ')') {
         ++i;
         while (!operators.empty() &&
                operators.top().getName() != Lexem::braceOp) {
@@ -138,7 +182,7 @@ class Model {
         }
         unary_ind = false;
       } else {
-        Lexem op = operators_.at(expr[i++]);
+        Lexem op = operators_.at(expr_[i++]);
         while (!operators.empty() &&
                operators.top().getName() != Lexem::braceOp &&
                getPriority(operators.top().getName()) <= getPriority(op)) {
@@ -156,21 +200,8 @@ class Model {
       postfix_q_.push(operators.top());
       operators.pop();
     }
-//    while (!postfix_q_.empty()) {
-//      Lexem out = postfix_q_.front().getName();
-//      std::string res;
-//      if (out == Lexem::plus) {
-//        res = "+";
-//      } else if (out == Lexem::minus) {
-//        res = "-";
-//      } else if (out == Lexem::num) {
-//        res = std::to_string(postfix_q_.front().getValue());
-//      }
-//      std::cout << res << ' ';
-//      std::cout << "hello";
-//      postfix_q_.pop();
-//    }
   }
+
 
   int getPriority(const Lexem &lexem) {
     try {
@@ -197,7 +228,7 @@ class Model {
     return 0;
   }
 
-  void postfixCalc(std::string &expr) {
+  void postfixCalc() {
     std::stack<double> nums;
     bool is_number = false;
     while (!postfix_q_.empty()) {
@@ -217,37 +248,19 @@ class Model {
         }
       }
     }
-    doubleToString(nums, expr);
+    doubleToString(nums);
   }
 
-//      if (!is_number) {
-//        double num_first = nums.top();
-//        if (detFunction(postfix_q_.front())) {
-//          pushNumToStack(nums, calcFunctions(num_first));
-//        } else if (postfix_q_.front() == "~") {
-//          num_first *= -1;
-//          pushNumToStack(nums, num_first);
-//        } else if (nums.size() > 1) {
-//          nums.pop();
-//          double value = nums.top();
-//          value = calcOperators(value, num_first, postfix_q_.front());
-//          pushNumToStack(nums, value);
-//        }
-//      }
-//    }
-//    doubleToString(nums, expr);
-//  }
-
-  void doubleToString(const std::stack<double> &nums, std::string &expr) {
+  void doubleToString(const std::stack<double> &nums) {
     std::ostringstream stream;
     stream.precision(8);
     stream << std::fixed << nums.top();
-    expr = stream.str();
-    size_t iter = expr.find_last_not_of('0');
-    if (expr[iter] == '.') {
+    expr_ = stream.str();
+    size_t iter = expr_.find_last_not_of('0');
+    if (expr_[iter] == '.') {
       --iter;
     }
-    expr = expr.substr(0, ++iter);
+    expr_ = expr_.substr(0, ++iter);
   }
 
   void pushNumToStack(std::stack<double> &nums, double value) {
@@ -313,28 +326,7 @@ class Model {
       pos = expr_.find(old_s, pos + 1);
     }
   }
-  bool validate() {
-    replace("log", "log10");
-    replace("ln", "log");
-    replace("mod", "%");
 
-    exprtk::symbol_table<double> symbol_table;
-    exprtk::expression<double> expression;
-    exprtk::parser<double> parser;
-
-    symbol_table.add_constants();
-    double x;
-    symbol_table.add_variable("x", x);
-    expression.register_symbol_table(symbol_table);
-    expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
-
-    if (parser.compile(expr_, expression)) {
-      return true;
-    } else {
-      expr_ = "Error";
-      return false;
-    }
-  }
 };
 }  // namespace s21
 
