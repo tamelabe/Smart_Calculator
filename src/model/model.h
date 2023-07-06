@@ -7,7 +7,7 @@
 #include <stack>
 #include <unordered_map>
 
-//#include "../resources/exprtk.hpp"
+#include "../resources/exprtk.hpp"
 
 namespace s21 {
 class Model {
@@ -23,9 +23,11 @@ class Model {
         {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
         {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
         {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}};
-    operators_ = {{'^', Lexem::deg},    {'*', Lexem::mul},  {'/', Lexem::div},
-                  {'%', Lexem::mod},    {'+', Lexem::plus}, {'-', Lexem::minus},
-                  {')', Lexem::braceCl}, {'(', Lexem::braceOp}};
+    operators_ = {{'^', Lexem::deg},     {'*', Lexem::mul},
+                  {'/', Lexem::div},     {'%', Lexem::mod},
+                  {'+', Lexem::plus},    {'-', Lexem::minus},
+                  {')', Lexem::braceCl}, {'(', Lexem::braceOp},
+                  {'~', Lexem::unary}};
     priorities_ = {{Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
                    {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
                    {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
@@ -62,24 +64,24 @@ class Model {
     status_ = {21, "-Prepare:   Success"};
   }
 
-//  void validateExpr() {
-//    if (status_.first % 10 == 0) {
-//      return;
-//    }
-//    exprtk::symbol_table<double> symbol_table;
-//    exprtk::expression<double> expression;
-//    exprtk::parser<double> parser;
-//
-//    symbol_table.add_constants();
-//    expression.register_symbol_table(symbol_table);
-//    expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
-//
-//    if (parser.compile(expr_, expression)) {
-//      status_ = {22, "-Validate:  Success"};
-//    } else {
-//      status_ = {20, "-Validate:  Fail"};
-//    }
-//  }
+    void validateExpr() {
+      if (status_.first % 10 == 0) {
+        return;
+      }
+      exprtk::symbol_table<double> symbol_table;
+      exprtk::expression<double> expression;
+      exprtk::parser<double> parser;
+
+      symbol_table.add_constants();
+      expression.register_symbol_table(symbol_table);
+      expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
+
+      if (parser.compile(expr_, expression)) {
+        status_ = {22, "-Validate:  Success"};
+      } else {
+        status_ = {20, "-Validate:  Fail"};
+      }
+    }
 
   void calculateExpr() {
     if (status_.first % 10 == 0) {
@@ -117,20 +119,20 @@ class Model {
 
   enum class Lexem : int {
     sin = 1,
-    cos, // 2
-    tan, // 3
-    aSin, // 4
-    aCos, // 5
-    aTan, // 6
-    sqrt, // 7
-    log, // 8
-    log10, // 9
-    braceOp, // 10
-    braceCl, // 11
-    deg, // 12
-    mul, // 13
-    div, // 14
-    plus, // 15
+    cos,
+    tan,
+    aSin,
+    aCos,
+    aTan,
+    sqrt,
+    log,
+    log10,
+    braceOp,
+    braceCl,
+    deg,
+    mul,
+    div,
+    plus,
     minus,
     mod,
     unary,
@@ -157,13 +159,11 @@ class Model {
     std::stack<Token> operators;
     bool unary_ind = true;
     size_t expr_length = expr_.length();
-
     for (size_t i = 0; i < expr_length;) {
       if (unary_ind && (expr_[i] == '-' || expr_[i] == '+')) {
         if (expr_[i] == '-') operators.emplace(LType::op, Lexem::unary);
         ++i;
-      }
-      if (std::isdigit(expr_[i]) || expr_[i] == '.' || expr_[i] == 'e') {
+      } else if (std::isdigit(expr_[i]) || expr_[i] == '.' || expr_[i] == 'e') {
         postfix_q_.emplace(LType::num, Lexem::num, extractDigit(expr_, i));
         unary_ind = false;
       } else if (int func_type = detFunction(expr_, i)) {
@@ -176,61 +176,72 @@ class Model {
       } else if (expr_[i] == ')') {
         ++i;
         while (!operators.empty() &&
-            operators.top().getName() != Lexem::braceOp) {
-          postfix_q_.push(operators.top());
-          operators.pop();
+               operators.top().getName() != Lexem::braceOp) {
+          stackToQueue(operators);
         }
-        if (!operators.empty() &&
-            operators.top().getName() == Lexem::braceOp) {
+        if (!operators.empty() && operators.top().getName() == Lexem::braceOp)
           operators.pop();
-        }
         unary_ind = false;
       } else {
         Lexem op = operators_.at(expr_[i++]);
         while (!operators.empty() &&
-            operators.top().getName() != Lexem::braceOp &&
-            getPriority(operators.top().getName()) <= getPriority(op)) {
-          if (op == Lexem::deg && operators.top().getName() == Lexem::deg) {
+               operators.top().getName() != Lexem::braceOp &&
+               getPriority(operators.top().getName()) <= getPriority(op)) {
+          if (op == Lexem::deg && operators.top().getName() == Lexem::deg)
             break;
-          }
-          postfix_q_.push(operators.top());
-          operators.pop();
+          stackToQueue(operators);
         }
         operators.emplace(LType::op, op);
         unary_ind = true;
       }
     }
     while (!operators.empty()) {
-      postfix_q_.push(operators.top());
-      operators.pop();
+      stackToQueue(operators);
     }
+    printQueueDebug();
   }
 
-// Удалить!!!
-//  void printQueueDebug() {
-//    std::unordered_map<Lexem, std::string> dec_map;
-//    std::queue<Token> postf_cpy = postfix_q_;
-//    for (const auto& pair : functions_) {
-//      dec_map.emplace(pair.second, pair.first);
+//   Удалить!!!
+  std::string dTS(const double &num) {
+    std::ostringstream stream;
+    stream.precision(8);
+    stream << std::fixed << num;
+    std::string res = stream.str();
+    size_t iter = res.find_last_not_of('0');
+    if (res[iter] == '.') --iter;
+    res = res.substr(0, ++iter);
+    return res;
+  }
+  void printQueueDebug() {
+
+    std::unordered_map<Lexem, std::string> dec_map;
+    std::queue<Token> postf_cpy = postfix_q_;
+    for (const auto& pair : functions_) {
+      dec_map.emplace(pair.second, pair.first);
+    }
+    for (const auto& pair : operators_) {
+      dec_map.emplace(pair.second, std::string(1, pair.first));
+    }
+//    for (const auto& pair : dec_map) {
+//      std::cout << static_cast<int>(pair.first) << ": " << pair.second << std::endl;
 //    }
-//    for (const auto& pair : operators_) {
-//      dec_map.emplace(pair.second, std::string(1, pair.first));
-//    }
-////    for (const auto& pair : dec_map) {
-////      std::cout << static_cast<int>(pair.first) << ": " << pair.second << std::endl;
-////    }
-//    expr_.erase();
-//    while (!postf_cpy.empty()) {
-//      if (postf_cpy.front().getType() == LType::num) {
-//        expr_.append(doubleToString(postf_cpy.front().getValue()));
-//      } else {
-//        expr_.append(dec_map.at(postf_cpy.front().getName()));
-//      }
-//      expr_.push_back(' ');
-//      postf_cpy.pop();
-//    }
-//    std::cout << "Postfix:\n" << expr_ << '\n';
-//  }
+    expr_.erase();
+    while (!postf_cpy.empty()) {
+      if (postf_cpy.front().getType() == LType::num) {
+        expr_.append(dTS(postf_cpy.front().getValue()));
+      } else {
+        expr_.append(dec_map.at(postf_cpy.front().getName()));
+      }
+      expr_.push_back(' ');
+      postf_cpy.pop();
+    }
+    std::cout << "Postfix:\n" << expr_ << '\n';
+  }
+
+  void stackToQueue(std::stack<Token> &operators) {
+    postfix_q_.push(operators.top());
+    operators.pop();
+  }
 
   int getPriority(const Lexem &lexem) {
     try {
@@ -277,7 +288,7 @@ class Model {
         }
       }
     }
-//    std::cout << nums.top() << '\n';
+    //    std::cout << nums.top() << '\n';
     doubleToString(nums.top());
   }
 

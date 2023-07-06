@@ -3,7 +3,7 @@
 #include "model.h"
 
 int main() {
-  std::string str = "15/(7-(1+1))*3-(2+(1+1))*15/(7-(200+1))*3-(2+(1+1))*(15/(7-(1+1))*3-(2+(1+1))+15/(7-(1+1))*3-(2+(1+1)))";
+  std::string str = "2+-+2";
   int i = 0;
   s21::Model model;
 //  std::cout << model.getStatus().second << '\n';
