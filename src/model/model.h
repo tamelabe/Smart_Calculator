@@ -7,7 +7,7 @@
 #include <stack>
 #include <unordered_map>
 
-#include "../resources/exprtk.hpp"
+//#include "../resources/exprtk.hpp"
 
 namespace s21 {
 class Model {
@@ -16,27 +16,25 @@ class Model {
   class Token;
 
  public:
-  Model() : expr_({}), expr_address(nullptr), x_expr_({}), x_expr_address(nullptr) {
+  Model()
+      : expr_({}), expr_address(nullptr), x_expr_({}), x_expr_address(nullptr) {
     status_ = {0, "***Begin***\n-Init:      Success"};
     functions_ = {
         {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
         {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
         {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}};
-    operators_ = {
-        {'^', Lexem::deg}, {'*', Lexem::mul},  {'/', Lexem::div},
-        {'%', Lexem::mod}, {'+', Lexem::plus}, {'-', Lexem::minus}};
-    priorities_ = {
-        {Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
-        {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
-        {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
-        {Lexem::braceOp, 1}, {Lexem::braceCl, 1}, {Lexem::deg, 2},
-        {Lexem::mul, 4},     {Lexem::div, 4},     {Lexem::mod, 4},
-        {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 5}};
+    operators_ = {{'^', Lexem::deg},    {'*', Lexem::mul},  {'/', Lexem::div},
+                  {'%', Lexem::mod},    {'+', Lexem::plus}, {'-', Lexem::minus},
+                  {')', Lexem::braceCl}, {'(', Lexem::braceOp}};
+    priorities_ = {{Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
+                   {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
+                   {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
+                   {Lexem::braceOp, 1}, {Lexem::braceCl, 2}, {Lexem::deg, 3},
+                   {Lexem::mul, 4},     {Lexem::div, 4},     {Lexem::mod, 4},
+                   {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 5}};
   }
 
-  std::pair<int, std::string> getStatus() {
-    return status_;
-  };
+  std::pair<int, std::string> getStatus() { return status_; };
 
   void setExpr(std::string &expr, std::string &x_expr) {
     if (expr.empty()) {
@@ -54,34 +52,39 @@ class Model {
   }
 
   void prepareExpr() {
-    if (status_.first % 10 == 0) { return; }
-    if (status_.first == 12)
-      replace("x", x_expr_);
+    if (status_.first % 10 == 0) {
+      return;
+    }
+    if (status_.first == 12) replace("x", x_expr_);
     replace("log", "log10");
     replace("ln", "log");
     replace("mod", "%");
     status_ = {21, "-Prepare:   Success"};
   }
 
-  void validateExpr() {
-    if (status_.first % 10 == 0) { return; }
-    exprtk::symbol_table<double> symbol_table;
-    exprtk::expression<double> expression;
-    exprtk::parser<double> parser;
-
-    symbol_table.add_constants();
-    expression.register_symbol_table(symbol_table);
-    expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
-
-    if (parser.compile(expr_, expression)) {
-      status_ = {22, "-Validate:  Success"};
-    } else {
-      status_ = {20, "-Validate:  Fail"};
-    }
-  }
+//  void validateExpr() {
+//    if (status_.first % 10 == 0) {
+//      return;
+//    }
+//    exprtk::symbol_table<double> symbol_table;
+//    exprtk::expression<double> expression;
+//    exprtk::parser<double> parser;
+//
+//    symbol_table.add_constants();
+//    expression.register_symbol_table(symbol_table);
+//    expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
+//
+//    if (parser.compile(expr_, expression)) {
+//      status_ = {22, "-Validate:  Success"};
+//    } else {
+//      status_ = {20, "-Validate:  Fail"};
+//    }
+//  }
 
   void calculateExpr() {
-    if (status_.first % 10 == 0) { return; }
+    if (status_.first % 10 == 0) {
+      return;
+    }
     infixToPostfix();
     postfixCalc();
     if (status_.first % 10 != 0) {
@@ -104,8 +107,8 @@ class Model {
   std::string expr_;
   std::string x_expr_;
 
-  std::string* expr_address;
-  std::string* x_expr_address;
+  std::string *expr_address;
+  std::string *x_expr_address;
 
   std::unordered_map<std::string, Lexem> functions_;
   std::unordered_map<char, Lexem> operators_;
@@ -114,37 +117,35 @@ class Model {
 
   enum class Lexem : int {
     sin = 1,
-    cos,
-    tan,
-    aSin,
-    aCos,
-    aTan,
-    sqrt,
-    log,
-    log10,
-    braceOp,
-    braceCl,
-    deg,
-    mul,
-    div,
-    plus,
+    cos, // 2
+    tan, // 3
+    aSin, // 4
+    aCos, // 5
+    aTan, // 6
+    sqrt, // 7
+    log, // 8
+    log10, // 9
+    braceOp, // 10
+    braceCl, // 11
+    deg, // 12
+    mul, // 13
+    div, // 14
+    plus, // 15
     minus,
     mod,
     unary,
     num
   };
-  enum class LType : int {
-    num,
-    func,
-    op
-  };
+  enum class LType : int { num, func, op };
   class Token {
    public:
     Token(LType type, Lexem name) : name_(name), type_(type), value_{} {}
-    Token(LType type, Lexem name, double value) : name_(name), type_(type), value_(value) {}
+    Token(LType type, Lexem name, double value)
+        : name_(name), type_(type), value_(value) {}
     [[nodiscard]] LType getType() const { return type_; }
     [[nodiscard]] Lexem getName() const { return name_; }
     [[nodiscard]] double getValue() const { return value_; }
+
    private:
     LType type_;
     Lexem name_;
@@ -152,9 +153,12 @@ class Model {
   };
 
   void infixToPostfix() {
+    std::unordered_map<Lexem, std::string> dec_map;
     std::stack<Token> operators;
     bool unary_ind = true;
-    for (size_t i = 0; i < expr_.length();) {
+    size_t expr_length = expr_.length();
+
+    for (size_t i = 0; i < expr_length;) {
       if (unary_ind && (expr_[i] == '-' || expr_[i] == '+')) {
         if (expr_[i] == '-') operators.emplace(LType::op, Lexem::unary);
         ++i;
@@ -172,7 +176,7 @@ class Model {
       } else if (expr_[i] == ')') {
         ++i;
         while (!operators.empty() &&
-               operators.top().getName() != Lexem::braceOp) {
+            operators.top().getName() != Lexem::braceOp) {
           postfix_q_.push(operators.top());
           operators.pop();
         }
@@ -184,8 +188,8 @@ class Model {
       } else {
         Lexem op = operators_.at(expr_[i++]);
         while (!operators.empty() &&
-               operators.top().getName() != Lexem::braceOp &&
-               getPriority(operators.top().getName()) <= getPriority(op)) {
+            operators.top().getName() != Lexem::braceOp &&
+            getPriority(operators.top().getName()) <= getPriority(op)) {
           if (op == Lexem::deg && operators.top().getName() == Lexem::deg) {
             break;
           }
@@ -202,6 +206,31 @@ class Model {
     }
   }
 
+// Удалить!!!
+//  void printQueueDebug() {
+//    std::unordered_map<Lexem, std::string> dec_map;
+//    std::queue<Token> postf_cpy = postfix_q_;
+//    for (const auto& pair : functions_) {
+//      dec_map.emplace(pair.second, pair.first);
+//    }
+//    for (const auto& pair : operators_) {
+//      dec_map.emplace(pair.second, std::string(1, pair.first));
+//    }
+////    for (const auto& pair : dec_map) {
+////      std::cout << static_cast<int>(pair.first) << ": " << pair.second << std::endl;
+////    }
+//    expr_.erase();
+//    while (!postf_cpy.empty()) {
+//      if (postf_cpy.front().getType() == LType::num) {
+//        expr_.append(doubleToString(postf_cpy.front().getValue()));
+//      } else {
+//        expr_.append(dec_map.at(postf_cpy.front().getName()));
+//      }
+//      expr_.push_back(' ');
+//      postf_cpy.pop();
+//    }
+//    std::cout << "Postfix:\n" << expr_ << '\n';
+//  }
 
   int getPriority(const Lexem &lexem) {
     try {
@@ -230,7 +259,6 @@ class Model {
 
   void postfixCalc() {
     std::stack<double> nums;
-    bool is_number = false;
     while (!postfix_q_.empty()) {
       if (postfix_q_.front().getType() == LType::num) {
         nums.push(postfix_q_.front().getValue());
@@ -243,23 +271,23 @@ class Model {
           pushNumToStack(nums, top_num * -1);
         } else if (nums.size() > 1) {
           nums.pop();
-          double res = calcOperators(nums.top(), top_num, postfix_q_.front().getName());
+          double res =
+              calcOperators(nums.top(), top_num, postfix_q_.front().getName());
           pushNumToStack(nums, res);
         }
       }
     }
-    doubleToString(nums);
+//    std::cout << nums.top() << '\n';
+    doubleToString(nums.top());
   }
 
-  void doubleToString(const std::stack<double> &nums) {
+  void doubleToString(const double &num) {
     std::ostringstream stream;
     stream.precision(8);
-    stream << std::fixed << nums.top();
+    stream << std::fixed << num;
     expr_ = stream.str();
     size_t iter = expr_.find_last_not_of('0');
-    if (expr_[iter] == '.') {
-      --iter;
-    }
+    if (expr_[iter] == '.') --iter;
     expr_ = expr_.substr(0, ++iter);
   }
 
@@ -293,8 +321,7 @@ class Model {
     }
   }
 
-  double calcOperators(const double &lhs, const double &rhs,
-                       const Lexem &op) {
+  double calcOperators(const double &lhs, const double &rhs, const Lexem &op) {
     if (op == Lexem::plus) {
       return lhs + rhs;
     } else if (op == Lexem::minus) {
@@ -314,8 +341,7 @@ class Model {
 
   double extractDigit(const std::string &expr, size_t &i) {
     size_t start = i;
-    while (i < expr.length() && (std::isdigit(expr[i]) || expr[i] == '.'))
-         ++i;
+    while (i < expr.length() && (std::isdigit(expr[i]) || expr[i] == '.')) ++i;
     return std::stod(expr.substr(start, i - start));
   }
 
@@ -326,7 +352,6 @@ class Model {
       pos = expr_.find(old_s, pos + 1);
     }
   }
-
 };
 }  // namespace s21
 

@@ -3,7 +3,7 @@
 #include "model.h"
 
 int main() {
-  std::string str = "1+1";
+  std::string str = "1+(2+3)";
   int i = 0;
   s21::Model model;
   //    model.infixToPostfix(str);
