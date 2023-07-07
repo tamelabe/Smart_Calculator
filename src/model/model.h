@@ -14,7 +14,6 @@ class Model {
   enum class Lexem;
   enum class LType;
   class Token;
-
  public:
   Model()
       : expr_({}), expr_address(nullptr), x_expr_({}), x_expr_address(nullptr) {
@@ -183,7 +182,7 @@ class Model {
           operators.pop();
         unary_ind = false;
       } else {
-        Lexem op = operators_.at(expr_[i++]);
+        Lexem op = charToLexem(expr_[i++]);
         while (!operators.empty() &&
                operators.top().getName() != Lexem::braceOp &&
                getPriority(operators.top().getName()) <= getPriority(op)) {
@@ -201,6 +200,17 @@ class Model {
     printQueueDebug();
   }
 
+  Lexem charToLexem(const char oper) {
+    Lexem lex;
+    try {
+      lex = operators_.at(oper);
+    } catch (const std::exception &e) {
+      status_ = {40, "-Calculate: Fail (unknown lexem)"};
+      lex = static_cast<Lexem>(0);
+    }
+    return lex;
+  }
+
 //   Удалить!!!
   std::string dTS(const double &num) {
     std::ostringstream stream;
@@ -213,7 +223,6 @@ class Model {
     return res;
   }
   void printQueueDebug() {
-
     std::unordered_map<Lexem, std::string> dec_map;
     std::queue<Token> postf_cpy = postfix_q_;
     for (const auto& pair : functions_) {
@@ -247,6 +256,7 @@ class Model {
     try {
       return priorities_.at(lexem);
     } catch (const std::exception &e) {
+      status_ = {40, "-Calculate: Fail (priority error)"};
       return -1;
     }
   }
