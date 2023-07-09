@@ -1,4 +1,4 @@
-#include "model.h"
+#include "main_model.h"
 
 s21::Model::Model() : expr_({}), expr_address(nullptr), x_expr_({}) {
   status_ = {0, "***Begin***\n-Init:      Success"};
@@ -18,6 +18,11 @@ s21::Model::Model() : expr_({}), expr_address(nullptr), x_expr_({}) {
                  {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 5}};
 }
 
+/**
+ * Expression setter
+ * @param expr - main expression
+ * @param x_expr - X field expression
+ */
 void s21::Model::setExpr(std::string &expr, std::string &x_expr) {
   if (expr.empty()) {
     status_ = {10, "-Set:      Fail (empty string)"};
@@ -32,6 +37,11 @@ void s21::Model::setExpr(std::string &expr, std::string &x_expr) {
   }
 }
 
+/**
+ * Prepares expression:
+ *  - replaces 'x' chars with an x field expression
+ *  - replaces "log", "ln" functions and "mod" operator to validator understandable names
+ */
 void s21::Model::prepareExpr() {
   if (status_.first % 10 == 0) return;
   if (status_.first == 12) replace("x", x_expr_);
@@ -42,6 +52,9 @@ void s21::Model::prepareExpr() {
   status_ = {21, "-Prepare:   Success"};
 }
 
+/**
+ * Validates expression
+ */
 void s21::Model::validateExpr() {
   if (status_.first % 10 == 0) return;
   exprtk::symbol_table<double> symbol_table;
@@ -56,6 +69,9 @@ void s21::Model::validateExpr() {
   }
 }
 
+/**
+ * Calculates expression as a method of translation and further calculation of the postfix notation
+ */
 void s21::Model::calculateExpr() {
   if (status_.first % 10 == 0) return;
   infixToPostfix();
@@ -71,6 +87,9 @@ void s21::Model::calculateExpr() {
   }
 }
 
+/**
+ * Assigns result to original string
+ */
 void s21::Model::replaceStr() {
   if (status_.first % 10 == 0) {
     *expr_address = "Error";
@@ -80,6 +99,9 @@ void s21::Model::replaceStr() {
     status_ = {41, "-Replace:   Success\n***Finish!***"};
 }
 
+/**
+ * Converts infix math expression to postfix notation
+ */
 void s21::Model::infixToPostfix() {
   std::unordered_map<Lexem, std::string> dec_map;
   std::stack<Token> operators;
@@ -90,9 +112,9 @@ void s21::Model::infixToPostfix() {
       if (expr_[i] == '-') operators.emplace(LType::op, Lexem::unary);
       ++i;
     } else if (std::isdigit(expr_[i]) || expr_[i] == '.' || expr_[i] == 'e') {
-      postfix_q_.emplace(LType::num, Lexem::num, extractDigit(expr_, i));
+      postfix_q_.emplace(LType::num, Lexem::num, extractDigit(i));
       unary_ind = false;
-    } else if (int func_type = detFunction(expr_, i)) {
+    } else if (int func_type = detFunction( i)) {
       operators.emplace(LType::func, static_cast<Lexem>(func_type));
       unary_ind = false;
     } else if (expr_[i] == '(') {
@@ -125,8 +147,13 @@ void s21::Model::infixToPostfix() {
   }
 }
 
+/**
+ * Converts operator to enum (Lexem class element)
+ * @param oper - char operator
+ * @return enum class operator
+ */
 s21::Model::Lexem s21::Model::charToLexem(const char &oper) {
-  Lexem lex = Lexem::braceOp;
+  Lexem lex;
   try {
     lex = operators_.at(oper);
   } catch (const std::out_of_range &e) {
@@ -137,11 +164,20 @@ s21::Model::Lexem s21::Model::charToLexem(const char &oper) {
   return lex;
 }
 
+/**
+ * transfer operator from stack to queue
+ * @param operators stack of operators
+ */
 void s21::Model::stackToQueue(std::stack<Token> &operators) {
   postfix_q_.push(operators.top());
   operators.pop();
 }
 
+/**
+ * Determine priorities of the Lexem
+ * @param lexem - enum class member
+ * @return math expression priority
+ */
 int s21::Model::getPriority(const Lexem &lexem) {
   int priority = -1;
   try {
@@ -152,15 +188,21 @@ int s21::Model::getPriority(const Lexem &lexem) {
   return priority;
 }
 
-int s21::Model::detFunction(const std::string &expr, size_t &pos) const {
-  if (pos + 4 < expr.length() && expr.substr(pos, pos + 5) == "log10") {
+/**
+ * Finds a function in a string starting from a given position.
+ * adds the number of characters to the position variable
+ * @param pos - start string position
+ * @return if function exists: function length, else 0
+ */
+int s21::Model::detFunction(size_t &pos) const {
+  if (pos + 4 < expr_.length() && expr_.substr(pos, pos + 5) == "log10") {
     pos += 5;
     return static_cast<int>(Lexem::log10);
   }
   for (const auto &function : functions_) {
     const std::string &func_str = function.first;
-    if (pos + func_str.length() <= expr.length()) {
-      if (expr.substr(pos, func_str.length()) == func_str) {
+    if (pos + func_str.length() <= expr_.length()) {
+      if (expr_.substr(pos, func_str.length()) == func_str) {
         pos += func_str.length();
         return static_cast<int>(function.second);
       }
@@ -169,6 +211,9 @@ int s21::Model::detFunction(const std::string &expr, size_t &pos) const {
   return 0;
 }
 
+/**
+ * Calculates postfix notation queue of tokens
+ */
 void s21::Model::postfixCalc() {
   if (status_.first % 10 == 0) return;
   std::stack<double> nums;
@@ -193,6 +238,10 @@ void s21::Model::postfixCalc() {
   doubleToString(nums.top());
 }
 
+/**
+ * Converts double to std::string with the specified accuracy
+ * @param num double value
+ */
 void s21::Model::doubleToString(const double &num) {
   std::ostringstream stream;
   stream.precision(8);
@@ -203,12 +252,22 @@ void s21::Model::doubleToString(const double &num) {
   expr_ = expr_.substr(0, ++iter);
 }
 
+/**
+ * Pushes number to calculation stack
+ * @param nums calculation numbers stack
+ * @param value number to push
+ */
 void s21::Model::pushNumToStack(std::stack<double> &nums, double value) {
   nums.pop();
   nums.push(value);
   postfix_q_.pop();
 }
 
+/**
+ * Calculates function
+ * @param num - function parameter
+ * @return result
+ */
 double s21::Model::calcFunctions(const double &num) {
   if (postfix_q_.front().getName() == Lexem::sqrt) {
     return std::sqrt(num);
@@ -233,6 +292,13 @@ double s21::Model::calcFunctions(const double &num) {
   }
 }
 
+/**
+ * Calculates numbers by a given operator
+ * @param lhs - left hand side number
+ * @param rhs - right hand side number
+ * @param op - operator
+ * @return result
+ */
 double s21::Model::calcOperators(const double &lhs, const double &rhs,
                                  const Lexem &op) {
   if (op == Lexem::plus) {
@@ -252,12 +318,22 @@ double s21::Model::calcOperators(const double &lhs, const double &rhs,
   }
 }
 
-double s21::Model::extractDigit(const std::string &expr, size_t &i) {
-  size_t start = i;
-  while (i < expr.length() && (std::isdigit(expr[i]) || expr[i] == '.')) ++i;
-  return std::stod(expr.substr(start, i - start));
+/**
+ * Extracts digit from std::string
+ * @param pos - string postition
+ * @return result
+ */
+double s21::Model::extractDigit(size_t &pos) {
+  size_t start = pos;
+  while (pos < expr_.length() && (std::isdigit(expr_[pos]) || expr_[pos] == '.')) ++pos;
+  return std::stod(expr_.substr(start, pos - start));
 }
 
+/**
+ * Replaces all occurrences of substring
+ * @param old_s - exist substring
+ * @param new_s - new substring
+ */
 void s21::Model::replace(const std::string &old_s, const std::string &new_s) {
   size_t pos = expr_.find(old_s);
   while (pos != std::string::npos) {

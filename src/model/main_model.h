@@ -78,13 +78,13 @@ class Model {
   Lexem charToLexem(const char &oper);
   void stackToQueue(std::stack<Token> &operators);
   int getPriority(const Lexem &lexem);
-  int detFunction(const std::string &expr, size_t &pos) const;
+  int detFunction(size_t &pos) const;
   void postfixCalc();
   void doubleToString(const double &num);
   void pushNumToStack(std::stack<double> &nums, double value);
   double calcFunctions(const double &num);
   double calcOperators(const double &lhs, const double &rhs, const Lexem &op);
-  double extractDigit(const std::string &expr, size_t &i);
+  double extractDigit(size_t &pos);
   void replace(const std::string &old_s, const std::string &new_s);
 };
 }  // namespace s21
