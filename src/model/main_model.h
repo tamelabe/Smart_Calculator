@@ -1,5 +1,5 @@
-#ifndef SRC_MODEL_MODEL_H_
-#define SRC_MODEL_MODEL_H_
+#ifndef SRC_MODEL_MAIN_MODEL_H_
+#define SRC_MODEL_MAIN_MODEL_H_
 
 #include <cmath>
 #include <queue>
@@ -11,32 +11,25 @@
 
 namespace s21 {
 class Model {
+  class Token;
   enum class Lexem;
   enum class LType;
-  class Token;
 
  public:
   Model();
 
+  /**
+   * Accessor of calculation state parameter
+   * @return
+   */
   std::pair<int, std::string> getStatus() { return status_; };
-  void setExpr(std::string &expr, std::string &x_expr);
+  void setExpr(std::string &expr, const std::string &x_expr);
   void prepareExpr();
   void validateExpr();
   void calculateExpr();
   void replaceStr();
 
  private:
-  std::pair<int, std::string> status_;
-
-  std::string expr_;
-  std::string x_expr_;
-  std::string *expr_address;
-
-  std::unordered_map<std::string, Lexem> functions_;
-  std::unordered_map<char, Lexem> operators_;
-  std::unordered_map<Lexem, int> priorities_;
-  std::queue<Token> postfix_q_;
-
   enum class Lexem : int {
     sin = 1,
     cos,
@@ -59,20 +52,34 @@ class Model {
     num
   };
   enum class LType : int { num, func, op };
+  /**
+   * Nested class with data for each calculation lexem
+   */
   class Token {
    public:
-    Token(LType type, Lexem name) : name_(name), type_(type), value_{} {}
+    Token(LType type, Lexem name) : type_(type), name_(name), value_{} {}
     Token(LType type, Lexem name, double value)
-        : name_(name), type_(type), value_(value) {}
-    [[nodiscard]] LType getType() const { return type_; }
-    [[nodiscard]] Lexem getName() const { return name_; }
-    [[nodiscard]] double getValue() const { return value_; }
+        : type_(type), name_(name), value_(value) {}
+    LType getType() const { return type_; }
+    Lexem getName() const { return name_; }
+    double getValue() const { return value_; }
 
    private:
     LType type_;
     Lexem name_;
     double value_;
   };
+
+  std::string expr_;
+  std::string *expr_address;
+  std::string x_expr_;
+
+  std::pair<int, std::string> status_;
+
+  std::unordered_map<std::string, Lexem> functions_;
+  std::unordered_map<char, Lexem> operators_;
+  std::unordered_map<Lexem, int> priorities_;
+  std::queue<Token> postfix_q_;
 
   void infixToPostfix();
   Lexem charToLexem(const char &oper);
@@ -89,4 +96,4 @@ class Model {
 };
 }  // namespace s21
 
-#endif  // SRC_MODEL_MODEL_H_
+#endif  // SRC_MODEL_MAIN_MODEL_H_

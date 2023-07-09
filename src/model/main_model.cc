@@ -19,11 +19,11 @@ s21::Model::Model() : expr_({}), expr_address(nullptr), x_expr_({}) {
 }
 
 /**
- * Expression setter
+ * Expression setter (mutator)
  * @param expr - main expression
  * @param x_expr - X field expression
  */
-void s21::Model::setExpr(std::string &expr, std::string &x_expr) {
+void s21::Model::setExpr(std::string &expr, const std::string &x_expr) {
   if (expr.empty()) {
     status_ = {10, "-Set:      Fail (empty string)"};
     return;
@@ -53,7 +53,7 @@ void s21::Model::prepareExpr() {
 }
 
 /**
- * Validates expression
+ * Validates expression via exprtk library
  */
 void s21::Model::validateExpr() {
   if (status_.first % 10 == 0) return;

@@ -1,13 +1,17 @@
 #ifndef SRC_CONTROLLER_CONTROLLER_H_
 #define SRC_CONTROLLER_CONTROLLER_H_
 
-#include "../model/model.h"
+#include "../model/main_model.h"
 
 namespace s21 {
 class Controller {
 public:
     void calculate(std::string &expr, const std::string &x_def) {
-        model_.calculate(expr, x_def);
+      model_.setExpr(expr, x_def);
+      model_.prepareExpr();
+      model_.validateExpr();
+      model_.calculateExpr();
+      model_.replaceStr();
     }
 private:
     Model model_;

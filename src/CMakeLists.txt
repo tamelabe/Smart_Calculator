@@ -22,7 +22,8 @@ set(PROJECT_SOURCES
         view/mainwindow.h
         view/mainwindow.ui
         controller/controller.h
-        model/model.h
+        model/main_model.cc
+        model/main_model.h
 )
 
 set(PROJECT_BUILD_OUTPUT ${CMAKE_SOURCE_DIR}/build/output/${PROJECT_ARCH_TARGET}/${CMAKE_BUILD_TYPE})
