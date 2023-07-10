@@ -1,6 +1,6 @@
 #include "main_model.h"
 
-s21::Model::Model() : expr_({}), expr_address(nullptr), x_expr_({}) {
+s21::Model::Model() {
   status_ = {0, "***Begin***\n-Init:      Success"};
   functions_ = {
       {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
@@ -19,17 +19,16 @@ s21::Model::Model() : expr_({}), expr_address(nullptr), x_expr_({}) {
 }
 
 /**
- * Expression setter (mutator)
+ * @brief Expression setter (mutator)
  * @param expr - main expression
  * @param x_expr - X field expression
  */
-void s21::Model::setExpr(std::string &expr, const std::string &x_expr) {
+void s21::Model::setExpr(const std::string &expr, const std::string &x_expr) {
   if (expr.empty()) {
     status_ = {10, "-Set:      Fail (empty string)"};
     return;
   }
   expr_ = expr;
-  expr_address = &expr;
   status_ = {11, "-Set:       Success (main string)"};
   if (!x_expr.empty()) {
     x_expr_ = x_expr;
@@ -38,25 +37,26 @@ void s21::Model::setExpr(std::string &expr, const std::string &x_expr) {
 }
 
 /**
- * Prepares expression:
+ * @brief Expression preparer:
  *  - replaces 'x' chars with an x field expression
- *  - replaces "log", "ln" functions and "mod" operator to validator understandable names
+ *  - substitutes "log", "ln" functions and "mod" operator to validator understandable names
  */
 void s21::Model::prepareExpr() {
-  if (status_.first % 10 == 0) return;
+  if (errCheck()) return;
   if (status_.first == 12) replace("x", x_expr_);
   expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
   replace("log", "log10");
   replace("ln", "log");
   replace("mod", "%");
+  replace("e", "*10^");
   status_ = {21, "-Prepare:   Success"};
 }
 
 /**
- * Validates expression via exprtk library
+ * @brief Expression validator based on exprtk library
  */
 void s21::Model::validateExpr() {
-  if (status_.first % 10 == 0) return;
+  if (errCheck()) return;
   exprtk::symbol_table<double> symbol_table;
   exprtk::expression<double> expression;
   exprtk::parser<double> parser;
@@ -70,39 +70,39 @@ void s21::Model::validateExpr() {
 }
 
 /**
- * Calculates expression as a method of translation and further calculation of the postfix notation
+ * @brief Expression calculator. Based on method of translation and further calculation of the postfix notation
  */
 void s21::Model::calculateExpr() {
-  if (status_.first % 10 == 0) return;
   infixToPostfix();
   postfixCalc();
-  if (status_.first % 10 != 0) {
-    if (expr_ == "inf") {
-      status_ = {30, "-Calculate: Fail (infinity)"};
-    } else if (expr_ == "nan") {
-      status_ = {30, "-Calculate: Fail (NaN)"};
-    } else {
-      status_ = {31, "-Calculate: Success"};
-    }
-  }
+  stringOutput();
 }
 
 /**
- * Assigns result to original string
+ * @brief Assigns result to original string
  */
-void s21::Model::replaceStr() {
-  if (status_.first % 10 == 0) {
-    *expr_address = "Error";
+void s21::Model::stringOutput() {
+  if (errCheck()) {
+    expr_ = "Error";
     return;
   }
-    *expr_address = expr_;
-    status_ = {41, "-Replace:   Success\n***Finish!***"};
+  doubleToString();
+  if (expr_ == "inf") {
+    status_ = {30, "-Calculate: Fail (infinity)"};
+    expr_ = "Error";
+  } else if (expr_ == "nan") {
+    status_ = {30, "-Calculate: Fail (NaN)"};
+    expr_ = "Error";
+  } else {
+    status_ = {31, "-Calculate: Success\n***Finish!***"};
+  }
 }
 
 /**
- * Converts infix math expression to postfix notation
+ * @brief Infix to postfix notation converter. Based on shunting yard algorithm
  */
 void s21::Model::infixToPostfix() {
+  if (errCheck()) return;
   std::unordered_map<Lexem, std::string> dec_map;
   std::stack<Token> operators;
   bool unary_ind = true;
@@ -111,7 +111,7 @@ void s21::Model::infixToPostfix() {
     if (unary_ind && (expr_[i] == '-' || expr_[i] == '+')) {
       if (expr_[i] == '-') operators.emplace(LType::op, Lexem::unary);
       ++i;
-    } else if (std::isdigit(expr_[i]) || expr_[i] == '.' || expr_[i] == 'e') {
+    } else if (std::isdigit(expr_[i]) || expr_[i] == '.') {
       postfix_q_.emplace(LType::num, Lexem::num, extractDigit(i));
       unary_ind = false;
     } else if (int func_type = detFunction( i)) {
@@ -148,7 +148,7 @@ void s21::Model::infixToPostfix() {
 }
 
 /**
- * Converts operator to enum (Lexem class element)
+ * @brief Operator to enum converter (Lexem class element)
  * @param oper - char operator
  * @return enum class operator
  */
@@ -165,7 +165,7 @@ s21::Model::Lexem s21::Model::charToLexem(const char &oper) {
 }
 
 /**
- * transfer operator from stack to queue
+ * @brief Stack to queue transition method
  * @param operators stack of operators
  */
 void s21::Model::stackToQueue(std::stack<Token> &operators) {
@@ -174,7 +174,7 @@ void s21::Model::stackToQueue(std::stack<Token> &operators) {
 }
 
 /**
- * Determine priorities of the Lexem
+ * @brief Priorities of the Lexem determinant
  * @param lexem - enum class member
  * @return math expression priority
  */
@@ -189,8 +189,8 @@ int s21::Model::getPriority(const Lexem &lexem) {
 }
 
 /**
- * Finds a function in a string starting from a given position.
- * adds the number of characters to the position variable
+ * @brief Function finder. Starts from a given position.
+ * Adds the number of characters to the position variable
  * @param pos - start string position
  * @return if function exists: function length, else 0
  */
@@ -212,10 +212,10 @@ int s21::Model::detFunction(size_t &pos) const {
 }
 
 /**
- * Calculates postfix notation queue of tokens
+ * @brief Postfix notation calculator. Works with stack of tokens
  */
 void s21::Model::postfixCalc() {
-  if (status_.first % 10 == 0) return;
+  if (errCheck()) return;
   std::stack<double> nums;
   while (!postfix_q_.empty()) {
     if (postfix_q_.front().getType() == LType::num) {
@@ -235,17 +235,16 @@ void s21::Model::postfixCalc() {
       }
     }
   }
-  doubleToString(nums.top());
+  result_ = nums.top();
 }
 
 /**
- * Converts double to std::string with the specified accuracy
- * @param num double value
+ * @brief Double to std::string converter with the specified accuracy
  */
-void s21::Model::doubleToString(const double &num) {
+void s21::Model::doubleToString() {
   std::ostringstream stream;
   stream.precision(8);
-  stream << std::fixed << num;
+  stream << std::fixed << result_;
   expr_ = stream.str();
   size_t iter = expr_.find_last_not_of('0');
   if (expr_[iter] == '.') --iter;
@@ -253,9 +252,9 @@ void s21::Model::doubleToString(const double &num) {
 }
 
 /**
- * Pushes number to calculation stack
- * @param nums calculation numbers stack
- * @param value number to push
+ * @brief Pushes number to calculation stack
+ * @param nums - calculation numbers stack
+ * @param value - number to push
  */
 void s21::Model::pushNumToStack(std::stack<double> &nums, double value) {
   nums.pop();
@@ -264,7 +263,7 @@ void s21::Model::pushNumToStack(std::stack<double> &nums, double value) {
 }
 
 /**
- * Calculates function
+ * @brief Functions calculator.
  * @param num - function parameter
  * @return result
  */
@@ -293,7 +292,7 @@ double s21::Model::calcFunctions(const double &num) {
 }
 
 /**
- * Calculates numbers by a given operator
+ * @brief Operators calculator
  * @param lhs - left hand side number
  * @param rhs - right hand side number
  * @param op - operator
@@ -312,14 +311,14 @@ double s21::Model::calcOperators(const double &lhs, const double &rhs,
   } else if (op == Lexem::mod) {
     return std::fmod(lhs, rhs);
   } else if (op == Lexem::deg) {
-    return pow(lhs, rhs);
+    return std::pow(lhs, rhs);
   } else {
     return 0;
   }
 }
 
 /**
- * Extracts digit from std::string
+ * @brief Digit extractor from std::string
  * @param pos - string postition
  * @return result
  */
@@ -330,7 +329,7 @@ double s21::Model::extractDigit(size_t &pos) {
 }
 
 /**
- * Replaces all occurrences of substring
+ * @brief Replaces all occurrences of substring
  * @param old_s - exist substring
  * @param new_s - new substring
  */
@@ -341,3 +340,9 @@ void s21::Model::replace(const std::string &old_s, const std::string &new_s) {
     pos = expr_.find(old_s, pos + 1);
   }
 }
+
+bool s21::Model::errCheck() {
+  return status_.first % 10 == 0;
+}
+
+

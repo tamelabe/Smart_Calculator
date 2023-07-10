@@ -6,12 +6,12 @@
 namespace s21 {
 class Controller {
 public:
-    void calculate(std::string &expr, const std::string &x_def) {
+    std::string calculate(const std::string &expr, const std::string &x_def) {
       model_.setExpr(expr, x_def);
       model_.prepareExpr();
       model_.validateExpr();
       model_.calculateExpr();
-      model_.replaceStr();
+      return model_.getResultS();
     }
 private:
     Model model_;

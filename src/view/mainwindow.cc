@@ -156,7 +156,7 @@ void s21::MainWindow::calculate() {
     ui_->label_result->setEnabled(true);
     std::string expr = ui_->label_result->text().toStdString();
     std::string expr_x = ui_->label_x->text().toStdString();
-    controller_.calculate(expr, expr_x);
+    expr = controller_.calculate(expr, expr_x);
     ui_->label_result->setText(QString::fromStdString(expr));
 
 }

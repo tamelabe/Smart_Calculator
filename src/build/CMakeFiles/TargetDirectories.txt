@@ -1,0 +1,16 @@
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles/TameCalc.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles/edit_cache.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles/rebuild_cache.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles/list_install_components.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles/install.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles/install/local.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles/install/strip.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles/TameCalc_autogen.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/resources/CMakeFiles/qcustomplot.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/resources/CMakeFiles/edit_cache.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/resources/CMakeFiles/rebuild_cache.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/resources/CMakeFiles/list_install_components.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/resources/CMakeFiles/install.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/resources/CMakeFiles/install/local.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/resources/CMakeFiles/install/strip.dir
+/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/resources/CMakeFiles/qcustomplot_autogen.dir

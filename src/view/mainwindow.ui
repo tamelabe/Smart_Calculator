@@ -366,7 +366,7 @@ QPushButton:pressed {
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;sqrt(&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>root</string>
+        <string>sqrt</string>
        </property>
        <property name="shortcut">
         <string>R</string>
