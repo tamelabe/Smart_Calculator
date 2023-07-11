@@ -50,7 +50,7 @@ gcov_report:
 	open ./report/index.html
 
 clean:
-	@rm -rf report *.txt
+	@rm -rf report
 	@rm -rf *.gcda *.gcno *.info *.gch *.dSYM
 	@rm -rf ../*.idea ../.run ../*.dSYM
 	@rm -rf *.a *.o

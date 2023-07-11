@@ -285,30 +285,6 @@ model/main_model.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/model/main_model.cc.s
 .PHONY : model/main_model.cc.s
 
-resources/qcustomplot.o: resources/qcustomplot.cpp.o
-.PHONY : resources/qcustomplot.o
-
-# target to build an object file
-resources/qcustomplot.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o
-.PHONY : resources/qcustomplot.cpp.o
-
-resources/qcustomplot.i: resources/qcustomplot.cpp.i
-.PHONY : resources/qcustomplot.i
-
-# target to preprocess a source file
-resources/qcustomplot.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.i
-.PHONY : resources/qcustomplot.cpp.i
-
-resources/qcustomplot.s: resources/qcustomplot.cpp.s
-.PHONY : resources/qcustomplot.s
-
-# target to generate assembly for a file
-resources/qcustomplot.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TameCalc.dir/build.make CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.s
-.PHONY : resources/qcustomplot.cpp.s
-
 view/mainwindow.o: view/mainwindow.cc.o
 .PHONY : view/mainwindow.o
 
@@ -358,9 +334,6 @@ help:
 	@echo "... model/main_model.o"
 	@echo "... model/main_model.i"
 	@echo "... model/main_model.s"
-	@echo "... resources/qcustomplot.o"
-	@echo "... resources/qcustomplot.i"
-	@echo "... resources/qcustomplot.s"
 	@echo "... view/mainwindow.o"
 	@echo "... view/mainwindow.i"
 	@echo "... view/mainwindow.s"

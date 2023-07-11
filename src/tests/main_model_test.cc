@@ -21,11 +21,11 @@ class MainCalc : public testing::Test {
 
   std::string error_ = "Error";
 
-
   std::string err_div_zero_ = "1/0";
   std::string err_sqrt_oppos_ = "sqrt(-1)";
   std::string err_abracadabra_ = "1234g43s;;";
   std::string err_empty_ = "";
+  std::string fail_lexem_ = "1;02941257";
 
   std::string multifold_ = "15/(7-(1+1))*3-(2+(1+1))*15/(7-(200+1))*3-(2+(1+1))*(15/(7-(1+1))*3-(2+(1+1))+15/(7-(1+1))*3-(2+(1+1)))";
   std::string multifold_res_ = "-30.07216495";
@@ -34,14 +34,21 @@ class MainCalc : public testing::Test {
   std::string folded_funcs_ = "(132+sin(asin(sqrt(ln(log(228.11)))))-4*5^6*(123))";
   std::string folded_funcs_res_ = "-7687367.07378458";
   std::string exp_notation_ = "2.5 * 10^3 + 1.8 * 10^-2 * (3.7e-5 + 2.1e2)";
-  std::string exp_notation_res_ = "2500.00037867";
+  std::string exp_notation_res_ = "2503.78000067";
   std::string exp_not_simple_ = "1.5e5";
   std::string exp_not_simple_res_ = "150000";
-//  std::string ;
-//  std::string ;
-//  std::string ;
-//  std::string ;
-//  std::string ;
+  std::string degree_hard_ = "2^3^4";
+  std::string degree_hard_res_ = "2417851639229258349412352";
+  std::string degree_funcs = "sin(.2)^(cos(1)+tan(1.1))^sin(.6)";
+  std::string degree_funcs_res = "0.06624972";
+  std::string x_str_main_ = "sqrt((7.2 + 3.5 - 2.8) / (5.6 * 4.2)) + x - cos(1.3)";
+  std::string x_str_ = "sin(0.8)";
+  std::string x_str_res_ = "1.02941257";
+  std::string mod_ = "((sin(2.3) * (sqrt(7.8) + cos(1.2))) mod 4.5) / (log(5.6) + atan(0.9))";
+  std::string mod_res_ = "1.588689";
+
+
+
 //  std::string ;
 //  std::string ;
 //  std::string ;
@@ -79,7 +86,6 @@ TEST_F(MainCalc, Folded_funcs) {
 
 TEST_F(MainCalc, Exp_notation) {
   calculate(exp_notation_, "");
-  std::cout << calc_.getResultD() << '\n';
   EXPECT_EQ(calc_.getResultS(), exp_notation_res_);
 }
 
@@ -87,6 +93,35 @@ TEST_F(MainCalc, expNSimple) {
   calculate(exp_not_simple_, "");
   EXPECT_EQ(calc_.getResultS(), exp_not_simple_res_);
 }
+
+TEST_F(MainCalc, degreeHard) {
+  calculate(degree_hard_, "");
+  EXPECT_EQ(calc_.getResultS(), degree_hard_res_);
+}
+
+TEST_F(MainCalc, degreeFuncs) {
+  calculate(degree_funcs, "");
+  EXPECT_EQ(calc_.getResultS(), degree_funcs_res);
+}
+
+TEST_F(MainCalc, xStrEnable) {
+  calculate(x_str_main_, x_str_);
+  EXPECT_EQ(calc_.getResultS(), x_str_res_);
+}
+
+TEST_F(MainCalc, modTest) {
+  calculate(mod_, "");
+  EXPECT_EQ(calc_.getResultS(), mod_res_);
+}
+
+TEST_F(MainCalc, failUnknownLex) {
+  calc_.setExpr(fail_lexem_, "");
+  calc_.calculateExpr();
+  EXPECT_EQ(calc_.getStatus().first, 30);
+  EXPECT_EQ(calc_.getResultS(), error_);
+}
+
+
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);

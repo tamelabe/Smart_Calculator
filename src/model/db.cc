@@ -3,9 +3,9 @@
 
 int main() {
   s21::Model a;
-  a.setExpr("10^-2 * 1000", "");
+  a.setExpr("((sin(2.3) * (sqrt(7.8) + cos(1.2))) mod 4.5) / (log(5.6) + atan(0.9))", "");
   a.prepareExpr();
-  a.validateExpr();
+//  a.validateExpr();
   a.calculateExpr();
   std::cout << a.getResultS() << '\n';
 

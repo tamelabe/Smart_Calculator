@@ -158,9 +158,9 @@ set(CMAKE_MAKEFILE_OUTPUTS
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
   "CMakeFiles/TameCalc_autogen.dir/AutogenInfo.json"
-  "../src/build/resources/TameCalc.app/Contents/MacOS"
-  "../src/build/resources/TameCalc.app/Contents/Info.plist"
-  "../src/build/resources/TameCalc.app/Contents/Info.plist"
+  "output/amd64/resources/TameCalc.app/Contents/MacOS"
+  "output/amd64/resources/TameCalc.app/Contents/Info.plist"
+  "output/amd64/resources/TameCalc.app/Contents/Info.plist"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   "../resources/config.h"
   "resources/CMakeFiles/qcustomplot_autogen.dir/AutogenInfo.json"

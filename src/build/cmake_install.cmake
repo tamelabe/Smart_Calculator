@@ -38,11 +38,11 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/." TYPE DIRECTORY FILES "/Volumes/89823065724/Projects/CPP3_SmartCalc/src/src/build/resources/TameCalc.app" USE_SOURCE_PERMISSIONS)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/." TYPE DIRECTORY FILES "/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/output/amd64/resources/TameCalc.app" USE_SOURCE_PERMISSIONS)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/./TameCalc.app/Contents/MacOS/TameCalc" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/./TameCalc.app/Contents/MacOS/TameCalc")
     execute_process(COMMAND /usr/bin/install_name_tool
-      -delete_rpath "/Volumes/89823065724/Projects/CPP3_SmartCalc/src/src/build/resources"
+      -delete_rpath "/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/output/amd64/resources"
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/./TameCalc.app/Contents/MacOS/TameCalc")
   endif()
 endif()

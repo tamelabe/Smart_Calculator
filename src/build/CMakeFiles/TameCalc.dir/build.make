@@ -125,49 +125,33 @@ CMakeFiles/TameCalc.dir/model/main_model.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TameCalc.dir/model/main_model.cc.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Volumes/89823065724/Projects/CPP3_SmartCalc/src/model/main_model.cc -o CMakeFiles/TameCalc.dir/model/main_model.cc.s
 
-CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o: CMakeFiles/TameCalc.dir/flags.make
-CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o: ../resources/qcustomplot.cpp
-CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o: CMakeFiles/TameCalc.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o -MF CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o.d -o CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o -c /Volumes/89823065724/Projects/CPP3_SmartCalc/src/resources/qcustomplot.cpp
-
-CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Volumes/89823065724/Projects/CPP3_SmartCalc/src/resources/qcustomplot.cpp > CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.i
-
-CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Volumes/89823065724/Projects/CPP3_SmartCalc/src/resources/qcustomplot.cpp -o CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.s
-
 # Object files for target TameCalc
 TameCalc_OBJECTS = \
 "CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o" \
 "CMakeFiles/TameCalc.dir/main.cc.o" \
 "CMakeFiles/TameCalc.dir/view/mainwindow.cc.o" \
-"CMakeFiles/TameCalc.dir/model/main_model.cc.o" \
-"CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o"
+"CMakeFiles/TameCalc.dir/model/main_model.cc.o"
 
 # External object files for target TameCalc
 TameCalc_EXTERNAL_OBJECTS =
 
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/main.cc.o
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/view/mainwindow.cc.o
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/model/main_model.cc.o
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/build.make
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: ../src/build/resources/libqcustomplot.2.1.1.1.dylib
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: /usr/local/lib/QtPrintSupport.framework/Versions/A/QtPrintSupport
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: /usr/local/lib/QtWidgets.framework/Versions/A/QtWidgets
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: /usr/local/lib/QtGui.framework/Versions/A/QtGui
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: /usr/local/lib/QtCore.framework/Versions/A/QtCore
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib/libcups.tbd
-../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable ../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc"
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/main.cc.o
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/view/mainwindow.cc.o
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/model/main_model.cc.o
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/build.make
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: output/amd64/resources/libqcustomplot.2.1.1.1.dylib
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: /usr/local/lib/QtPrintSupport.framework/Versions/A/QtPrintSupport
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: /usr/local/lib/QtWidgets.framework/Versions/A/QtWidgets
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: /usr/local/lib/QtGui.framework/Versions/A/QtGui
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: /usr/local/lib/QtCore.framework/Versions/A/QtCore
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib/libcups.tbd
+output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc: CMakeFiles/TameCalc.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/TameCalc.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-CMakeFiles/TameCalc.dir/build: ../src/build/resources/TameCalc.app/Contents/MacOS/TameCalc
+CMakeFiles/TameCalc.dir/build: output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc
 .PHONY : CMakeFiles/TameCalc.dir/build
 
 CMakeFiles/TameCalc.dir/clean:

@@ -10,12 +10,13 @@ s21::Model::Model() {
       {'^', Lexem::deg},     {'*', Lexem::mul},     {'/', Lexem::div},
       {'%', Lexem::mod},     {'+', Lexem::plus},    {'-', Lexem::minus},
       {')', Lexem::braceCl}, {'(', Lexem::braceOp}, {'~', Lexem::unary}};
-  priorities_ = {{Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
-                 {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
-                 {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
-                 {Lexem::braceOp, 1}, {Lexem::braceCl, 2}, {Lexem::deg, 3},
-                 {Lexem::mul, 4},     {Lexem::div, 4},     {Lexem::mod, 4},
-                 {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 5}};
+  priorities_ = {
+      {Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
+      {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
+      {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
+      {Lexem::braceOp, 1}, {Lexem::braceCl, 1}, {Lexem::deg, 3},
+      {Lexem::mul, 4},     {Lexem::div, 4},     {Lexem::mod, 4},
+      {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 2}};
 }
 
 /**
@@ -24,10 +25,6 @@ s21::Model::Model() {
  * @param x_expr - X field expression
  */
 void s21::Model::setExpr(const std::string &expr, const std::string &x_expr) {
-  if (expr.empty()) {
-    status_ = {10, "-Set:      Fail (empty string)"};
-    return;
-  }
   expr_ = expr;
   status_ = {11, "-Set:       Success (main string)"};
   if (!x_expr.empty()) {
@@ -63,9 +60,9 @@ void s21::Model::validateExpr() {
   symbol_table.add_constants();
   expression.register_symbol_table(symbol_table);
   if (parser.compile(expr_, expression)) {
-    status_ = {22, "-Validate:  Success"};
+    status_ = {32, "-Validate:  Success"};
   } else {
-    status_ = {20, "-Validate:  Fail"};
+    status_ = {30, "-Validate:  Fail"};
   }
 }
 
@@ -76,26 +73,6 @@ void s21::Model::calculateExpr() {
   infixToPostfix();
   postfixCalc();
   stringOutput();
-}
-
-/**
- * @brief Assigns result to original string
- */
-void s21::Model::stringOutput() {
-  if (errCheck()) {
-    expr_ = "Error";
-    return;
-  }
-  doubleToString();
-  if (expr_ == "inf") {
-    status_ = {30, "-Calculate: Fail (infinity)"};
-    expr_ = "Error";
-  } else if (expr_ == "nan") {
-    status_ = {30, "-Calculate: Fail (NaN)"};
-    expr_ = "Error";
-  } else {
-    status_ = {31, "-Calculate: Success\n***Finish!***"};
-  }
 }
 
 /**
@@ -145,6 +122,54 @@ void s21::Model::infixToPostfix() {
   while (!operators.empty()) {
     stackToQueue(operators);
   }
+  printQueueDebug();
+}
+
+/**
+ * @brief Postfix notation calculator. Works with stack of tokens
+ */
+void s21::Model::postfixCalc() {
+  if (errCheck()) return;
+  std::stack<double> nums;
+  while (!postfix_q_.empty()) {
+    if (postfix_q_.front().getType() == LType::num) {
+      nums.push(postfix_q_.front().getValue());
+      postfix_q_.pop();
+    } else if (postfix_q_.front().getType() == LType::func) {
+      pushNumToStack(nums, calcFunctions(nums.top()));
+    } else if (postfix_q_.front().getType() == LType::op) {
+      double top_num = nums.top();
+      if (postfix_q_.front().getName() == Lexem::unary) {
+        pushNumToStack(nums, top_num * -1);
+      } else if (nums.size() > 1) {
+        nums.pop();
+        double res =
+            calcOperators(nums.top(), top_num, postfix_q_.front().getName());
+        pushNumToStack(nums, res);
+      }
+    }
+  }
+  result_ = nums.top();
+}
+
+/**
+ * @brief Assigns result to original string
+ */
+void s21::Model::stringOutput() {
+  if (errCheck()) {
+    expr_ = "Error";
+    return;
+  }
+  doubleToString();
+  if (expr_ == "inf") {
+    status_ = {30, "-Calculate: Fail (infinity)"};
+    expr_ = "Error";
+  } else if (expr_ == "nan") {
+    status_ = {30, "-Calculate: Fail (NaN)"};
+    expr_ = "Error";
+  } else {
+    status_ = {31, "-Calculate: Success\n***Finish!***"};
+  }
 }
 
 /**
@@ -179,13 +204,7 @@ void s21::Model::stackToQueue(std::stack<Token> &operators) {
  * @return math expression priority
  */
 int s21::Model::getPriority(const Lexem &lexem) {
-  int priority = -1;
-  try {
-    priority = priorities_.at(lexem);
-  } catch (const std::exception &e) {
-    status_ = {30, "-Calculate: Fail (priority error)"};
-  }
-  return priority;
+  return priorities_.at(lexem);
 }
 
 /**
@@ -209,33 +228,6 @@ int s21::Model::detFunction(size_t &pos) const {
     }
   }
   return 0;
-}
-
-/**
- * @brief Postfix notation calculator. Works with stack of tokens
- */
-void s21::Model::postfixCalc() {
-  if (errCheck()) return;
-  std::stack<double> nums;
-  while (!postfix_q_.empty()) {
-    if (postfix_q_.front().getType() == LType::num) {
-      nums.push(postfix_q_.front().getValue());
-      postfix_q_.pop();
-    } else if (postfix_q_.front().getType() == LType::func) {
-      pushNumToStack(nums, calcFunctions(nums.top()));
-    } else if (postfix_q_.front().getType() == LType::op) {
-      double top_num = nums.top();
-      if (postfix_q_.front().getName() == Lexem::unary) {
-        pushNumToStack(nums, top_num * -1);
-      } else if (nums.size() > 1) {
-        nums.pop();
-        double res =
-            calcOperators(nums.top(), top_num, postfix_q_.front().getName());
-        pushNumToStack(nums, res);
-      }
-    }
-  }
-  result_ = nums.top();
 }
 
 /**
@@ -284,10 +276,8 @@ double s21::Model::calcFunctions(const double &num) {
     return std::asin(num);
   } else if (postfix_q_.front().getName() == Lexem::aCos) {
     return std::acos(num);
-  } else if (postfix_q_.front().getName() == Lexem::aTan) {
-    return std::atan(num);
   } else {
-    return 0;
+    return std::atan(num);
   }
 }
 
@@ -310,10 +300,8 @@ double s21::Model::calcOperators(const double &lhs, const double &rhs,
     return lhs / rhs;
   } else if (op == Lexem::mod) {
     return std::fmod(lhs, rhs);
-  } else if (op == Lexem::deg) {
+  } else {  // (op == Lexem::deg)
     return std::pow(lhs, rhs);
-  } else {
-    return 0;
   }
 }
 
