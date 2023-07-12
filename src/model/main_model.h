@@ -25,15 +25,10 @@ class Model {
    */
   std::pair<int, std::string> getStatus() { return status_; }
   /**
-   * @brief Accessor of calculation result
-   * @return result in double type
-   */
-  double getResultD() { return result_; }
-  /**
     * @brief Accessor of calculation result
-    * @return result in std::string type
+    * @return result
     */
-  std::string getResultS() { return expr_; }
+  std::string getResult() { return expr_; }
   void setExpr(const std::string &expr, const std::string &x_expr);
   void prepareExpr();
   void validateExpr();
@@ -106,43 +101,6 @@ class Model {
   double extractDigit(size_t &pos);
   void replace(const std::string &old_s, const std::string &new_s);
   bool errCheck();
-
-
- public:
-  std::string dTS(const double &num) {
-    std::ostringstream stream;
-    stream.precision(8);
-    stream << std::fixed << num;
-    std::string res = stream.str();
-    size_t iter = res.find_last_not_of('0');
-    if (res[iter] == '.') --iter;
-    res = res.substr(0, ++iter);
-    return res;
-  }
-  void printQueueDebug() {
-    std::unordered_map<Lexem, std::string> dec_map;
-    std::queue<Token> postf_cpy = postfix_q_;
-    for (const auto& pair : functions_) {
-      dec_map.emplace(pair.second, pair.first);
-    }
-    for (const auto& pair : operators_) {
-      dec_map.emplace(pair.second, std::string(1, pair.first));
-    }
-//    for (const auto& pair : dec_map) {
-//      std::cout << static_cast<int>(pair.first) << ": " << pair.second << std::endl;
-//    }
-    expr_.erase();
-    while (!postf_cpy.empty()) {
-      if (postf_cpy.front().getType() == LType::num) {
-        expr_.append(dTS(postf_cpy.front().getValue()));
-      } else {
-        expr_.append(dec_map.at(postf_cpy.front().getName()));
-      }
-      expr_.push_back(' ');
-      postf_cpy.pop();
-    }
-    std::cout << "Postfix:\n" << expr_ << '\n';
-  }
 };
 }  // namespace s21
 

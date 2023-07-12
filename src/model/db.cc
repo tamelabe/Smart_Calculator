@@ -7,7 +7,7 @@ int main() {
   a.prepareExpr();
 //  a.validateExpr();
   a.calculateExpr();
-  std::cout << a.getResultS() << '\n';
+  std::cout << a.getResult() << '\n';
 
 
   return 0;

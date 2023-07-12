@@ -119,10 +119,8 @@ void s21::Model::infixToPostfix() {
       unary_ind = true;
     }
   }
-  while (!operators.empty()) {
+  while (!operators.empty())
     stackToQueue(operators);
-  }
-  printQueueDebug();
 }
 
 /**
