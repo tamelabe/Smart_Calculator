@@ -7,11 +7,7 @@ s21::MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui_(new Ui::MainWindow)
 {
-    ui_->setupUi(this);
-    ui_->label_result->setText("0");
-    label_ = ui_->label_result;
-    ;
-    this->setFixedSize(760, 327);
+    initElements();
     QShortcut *sc_backspace = new QShortcut(QKeySequence(Qt::Key_Backspace), this);
     QShortcut *sc_space = new QShortcut(QKeySequence(Qt::Key_Space), this);
     QShortcut *sc_e = new QShortcut(QKeySequence(Qt::Key_E), this);
@@ -46,38 +42,89 @@ s21::MainWindow::MainWindow(QWidget *parent)
     connect(ui_->butt_log, SIGNAL(clicked()), this, SLOT(typeFunctions()));
     connect(ui_->butt_degree, SIGNAL(clicked()), this, SLOT(typeFunctions()));
     connect(ui_->butt_mod, SIGNAL(clicked()), this, SLOT(typeFunctions()));
+    connect(ui_->butt_op_result, SIGNAL(clicked()), this, SLOT(calculate()));
 
     connect(ui_->butt_ac, SIGNAL(clicked()), this, SLOT(clearInput()));
-    connect(ui_->butt_mode_graph, SIGNAL(clicked()), this, SLOT(initGraph()));
+    connect(ui_->butt_mode_graph, SIGNAL(clicked()), this, SLOT(createGraph()));
+    connect(ui_->butt_graph_hide, SIGNAL(clicked()), this, SLOT(hideGraph()));
     connect(sc_backspace, SIGNAL(activated()), this, SLOT(deleteLastSym()));
     connect(sc_space, SIGNAL(activated()), this, SLOT(addSpace()));
     connect(sc_e, SIGNAL(activated()), this, SLOT(addESym()));
 
-
     connect(ui_->label_activate, SIGNAL(clicked()), this, SLOT(activateLabel()));
     connect(ui_->label_x_activate, SIGNAL(clicked()), this, SLOT(activateLabelX()));
 
-    connect(ui_->butt_op_result, SIGNAL(clicked()), this, SLOT(calculate()));
+
 }
 
 s21::MainWindow::~MainWindow() {
     delete ui_;
 }
 
+void s21::MainWindow::initElements() {
+    ui_->setupUi(this);
+    ui_->label_result->setText("0");
+    label_ = ui_->label_result;
+    this->setFixedSize(760, 327);
+    scaleSpins(false);
+}
+
+void s21::MainWindow::activateSpins() {
+    ui_->label_result->setEnabled(false);
+    ui_->label_x->setEnabled(false);
+    scaleSpins(true);
+}
+
+void s21::MainWindow::scaleSpins(bool state) {
+    ui_->spinBox_XS->setEnabled(state);
+    ui_->spinBox_XF->setEnabled(state);
+    ui_->spinBox_YS->setEnabled(state);
+    ui_->spinBox_YF->setEnabled(state);
+}
+
 void s21::MainWindow::activateLabelX() {
     ui_->label_result->setEnabled(false);
     ui_->label_x->setEnabled(true);
+    scaleSpins(false);
     label_ = ui_->label_x;
 }
 
 void s21::MainWindow::activateLabel() {
     ui_->label_x->setEnabled(false);
     ui_->label_result->setEnabled(true);
+    scaleSpins(false);
     label_ = ui_->label_result;
 }
 
 void s21::MainWindow::initGraph() {
     this->setFixedSize(760, 700);
+    ui_->label_result->setEnabled(false);
+    ui_->label_x->setEnabled(false);
+    scaleSpins(true);
+}
+
+void s21::MainWindow::createGraph() {
+    std::string expr = ui_->label_result->text().toStdString();
+    if (!checkGraphFunc(expr)) {
+        return;
+    }
+    initGraph();
+    ui_->graph_window->clearGraphs();
+}
+
+bool s21::MainWindow::checkGraphFunc(const std::string &expr) {
+    controller_.setExpr(expr);
+    controller_.validateExpr();
+    if (controller_.getStatus().first % 10 != 0) {
+        return true;
+    } else {
+        ui_->label_result->setText(QString::fromStdString("Error"));
+        return false;
+    }
+}
+
+void s21::MainWindow::hideGraph() {
+    this->setFixedSize(760, 327);
 }
 
 void s21::MainWindow::typeChars() {
@@ -156,7 +203,12 @@ void s21::MainWindow::calculate() {
     ui_->label_result->setEnabled(true);
     std::string expr = ui_->label_result->text().toStdString();
     std::string expr_x = ui_->label_x->text().toStdString();
-    expr = controller_.calculate(expr, expr_x);
+    controller_.setExpr(expr);
+    controller_.setXField(expr_x);
+    controller_.validateExpr();
+    controller_.convertExpr();
+    controller_.calculateExpr();
+    expr = controller_.getResult();
     ui_->label_result->setText(QString::fromStdString(expr));
 
 }

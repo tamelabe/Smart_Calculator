@@ -24,6 +24,8 @@ set(PROJECT_SOURCES
         controller/controller.h
         model/main_model.cc
         model/main_model.h
+        resources/qcustomplot.cpp
+        resources/qcustomplot.h
         )
 
 set(PROJECT_BUILD_OUTPUT ${CMAKE_SOURCE_DIR}/build/output/${PROJECT_ARCH_TARGET}/${CMAKE_BUILD_TYPE})

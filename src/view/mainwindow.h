@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QShortcut>
 #include <string>
+#include "resources/qcustomplot.h"
 
 #include "../controller/controller.h"
 
@@ -26,18 +27,23 @@ private:
     Ui::MainWindow *ui_;
     QLabel *label_;
     Controller controller_;
-
+    void scaleSpins(bool state);
+    void initGraph();
+    bool checkGraphFunc(const std::string &expr);
 
 private slots:
+    void initElements();
     void activateLabelX();
     void activateLabel();
+    void activateSpins();
     void typeChars();
     void typeFunctions();
     void addSpace();
     void addESym();
     void deleteLastSym();
     void clearInput();
-    void initGraph();
+    void createGraph();
+    void hideGraph();
     void calculate();
 };
 } //namespace s21

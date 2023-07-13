@@ -2,12 +2,15 @@
 #include <iostream>
 
 int main() {
-  s21::Model a;
-  a.setExpr("((sin(2.3) * (sqrt(7.8) + cos(1.2))) mod 4.5) / (log(5.6) + atan(0.9))", "");
-  a.prepareExpr();
-//  a.validateExpr();
-  a.calculateExpr();
-  std::cout << a.getResult() << '\n';
+  s21::Model calc_;
+  calc_.setExpr("log(4)");
+//    std::cout << calc_.getStatus().second << '\n';
+  calc_.validateExpr();
+//    std::cout << calc_.getStatus().second << '\n';
+  calc_.convertExpr();
+//    std::cout << calc_.getStatus().second << '\n';
+  calc_.calculateExpr();
+//  std::cout << calc_.getResult() << '\n';
 
 
   return 0;

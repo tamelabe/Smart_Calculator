@@ -15,7 +15,9 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QWidget>
+#include "resources/qcustomplot.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -68,6 +70,16 @@ public:
     QPushButton *label_activate;
     QLabel *label_x;
     QPushButton *label_x_activate;
+    QCustomPlot *graph_window;
+    QPushButton *butt_graph_hide;
+    QSpinBox *spinBox_XS;
+    QSpinBox *spinBox_XF;
+    QSpinBox *spinBox_YS;
+    QSpinBox *spinBox_YF;
+    QLabel *label_size_3;
+    QLabel *label_size_4;
+    QLabel *label_size_5;
+    QLabel *label_size_6;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -437,6 +449,48 @@ public:
         label_x_activate->setObjectName(QString::fromUtf8("label_x_activate"));
         label_x_activate->setGeometry(QRect(545, 10, 186, 20));
         label_x_activate->setStyleSheet(QString::fromUtf8("background-color: transparent; border: 0px"));
+        graph_window = new QCustomPlot(centralwidget);
+        graph_window->setObjectName(QString::fromUtf8("graph_window"));
+        graph_window->setGeometry(QRect(190, 340, 521, 311));
+        butt_graph_hide = new QPushButton(centralwidget);
+        butt_graph_hide->setObjectName(QString::fromUtf8("butt_graph_hide"));
+        butt_graph_hide->setGeometry(QRect(30, 350, 61, 32));
+        spinBox_XS = new QSpinBox(centralwidget);
+        spinBox_XS->setObjectName(QString::fromUtf8("spinBox_XS"));
+        spinBox_XS->setGeometry(QRect(230, 660, 61, 31));
+        spinBox_XF = new QSpinBox(centralwidget);
+        spinBox_XF->setObjectName(QString::fromUtf8("spinBox_XF"));
+        spinBox_XF->setGeometry(QRect(660, 660, 61, 31));
+        spinBox_YS = new QSpinBox(centralwidget);
+        spinBox_YS->setObjectName(QString::fromUtf8("spinBox_YS"));
+        spinBox_YS->setGeometry(QRect(120, 620, 61, 31));
+        spinBox_YF = new QSpinBox(centralwidget);
+        spinBox_YF->setObjectName(QString::fromUtf8("spinBox_YF"));
+        spinBox_YF->setGeometry(QRect(120, 390, 61, 31));
+        label_size_3 = new QLabel(centralwidget);
+        label_size_3->setObjectName(QString::fromUtf8("label_size_3"));
+        label_size_3->setGeometry(QRect(60, 400, 51, 21));
+        sizePolicy1.setHeightForWidth(label_size_3->sizePolicy().hasHeightForWidth());
+        label_size_3->setSizePolicy(sizePolicy1);
+        label_size_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_size_4 = new QLabel(centralwidget);
+        label_size_4->setObjectName(QString::fromUtf8("label_size_4"));
+        label_size_4->setGeometry(QRect(60, 620, 51, 21));
+        sizePolicy1.setHeightForWidth(label_size_4->sizePolicy().hasHeightForWidth());
+        label_size_4->setSizePolicy(sizePolicy1);
+        label_size_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_size_5 = new QLabel(centralwidget);
+        label_size_5->setObjectName(QString::fromUtf8("label_size_5"));
+        label_size_5->setGeometry(QRect(170, 670, 51, 21));
+        sizePolicy1.setHeightForWidth(label_size_5->sizePolicy().hasHeightForWidth());
+        label_size_5->setSizePolicy(sizePolicy1);
+        label_size_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_size_6 = new QLabel(centralwidget);
+        label_size_6->setObjectName(QString::fromUtf8("label_size_6"));
+        label_size_6->setGeometry(QRect(600, 670, 51, 21));
+        sizePolicy1.setHeightForWidth(label_size_6->sizePolicy().hasHeightForWidth());
+        label_size_6->setSizePolicy(sizePolicy1);
+        label_size_6->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         MainWindow->setCentralWidget(centralwidget);
         label_result->raise();
         label_additional->raise();
@@ -447,6 +501,16 @@ public:
         label_activate->raise();
         label_x->raise();
         label_x_activate->raise();
+        graph_window->raise();
+        butt_graph_hide->raise();
+        spinBox_XS->raise();
+        spinBox_XF->raise();
+        spinBox_YS->raise();
+        spinBox_YF->raise();
+        label_size_3->raise();
+        label_size_4->raise();
+        label_size_5->raise();
+        label_size_6->raise();
 #if QT_CONFIG(shortcut)
         label_result->setBuddy(label_result);
         label_additional->setBuddy(label_result);
@@ -629,6 +693,11 @@ public:
         label_activate->setText(QString());
         label_x->setText(QString());
         label_x_activate->setText(QString());
+        butt_graph_hide->setText(QCoreApplication::translate("MainWindow", "hide", nullptr));
+        label_size_3->setText(QCoreApplication::translate("MainWindow", "Y max", nullptr));
+        label_size_4->setText(QCoreApplication::translate("MainWindow", "Y min", nullptr));
+        label_size_5->setText(QCoreApplication::translate("MainWindow", "X min", nullptr));
+        label_size_6->setText(QCoreApplication::translate("MainWindow", "X max", nullptr));
     } // retranslateUi
 
 };

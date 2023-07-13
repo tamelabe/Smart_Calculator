@@ -6,6 +6,7 @@
 #include <sstream>
 #include <stack>
 #include <unordered_map>
+#include <map>
 #include <iostream>
 
 #include "../resources/exprtk.hpp"
@@ -29,11 +30,13 @@ class Model {
     * @return result
     */
   std::string getResult() { return expr_; }
-  void setExpr(const std::string &expr, const std::string &x_expr);
-  void prepareExpr();
+  double getResultD() { return result_; }
+  void setExpr(const std::string &expr);
+  void setXValue(const std::string &x_value);
+  void setXValue(const double &x_value);
   void validateExpr();
+  void convertExpr();
   void calculateExpr();
-  void stringOutput();
 
  private:
   enum class Lexem : int {
@@ -55,7 +58,8 @@ class Model {
     minus,
     mod,
     unary,
-    num
+    num,
+    num_x
   };
   enum class LType : int { num, func, op };
   /**
@@ -78,7 +82,7 @@ class Model {
   };
 
   std::string expr_{};
-  std::string x_expr_{};
+  double x_value_{};
   double result_{};
 
   std::pair<int, std::string> status_;
@@ -88,13 +92,14 @@ class Model {
   std::unordered_map<Lexem, int> priorities_;
   std::queue<Token> postfix_q_{};
 
-  void infixToPostfix();
+  void substituteExpr();
   Lexem charToLexem(const char &oper);
   void stackToQueue(std::stack<Token> &operators);
   int getPriority(const Lexem &lexem);
   int detFunction(size_t &pos) const;
   void postfixCalc();
   void doubleToString();
+  void stringOutput();
   void pushNumToStack(std::stack<double> &nums, double value);
   double calcFunctions(const double &num);
   double calcOperators(const double &lhs, const double &rhs, const Lexem &op);

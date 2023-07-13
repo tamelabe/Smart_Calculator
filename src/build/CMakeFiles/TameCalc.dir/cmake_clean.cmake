@@ -8,6 +8,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/TameCalc.dir/main.cc.o.d"
   "CMakeFiles/TameCalc.dir/model/main_model.cc.o"
   "CMakeFiles/TameCalc.dir/model/main_model.cc.o.d"
+  "CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o"
+  "CMakeFiles/TameCalc.dir/resources/qcustomplot.cpp.o.d"
   "CMakeFiles/TameCalc.dir/view/mainwindow.cc.o"
   "CMakeFiles/TameCalc.dir/view/mainwindow.cc.o.d"
   "output/amd64/resources/TameCalc.app/Contents/MacOS/TameCalc"

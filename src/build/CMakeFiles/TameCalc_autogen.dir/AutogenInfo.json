@@ -302,6 +302,12 @@
 			null
 		],
 		[
+			"/Volumes/89823065724/Projects/CPP3_SmartCalc/src/resources/qcustomplot.h",
+			"MU",
+			"3YJK5W5UP7/moc_qcustomplot.cpp",
+			null
+		],
+		[
 			"/Volumes/89823065724/Projects/CPP3_SmartCalc/src/view/mainwindow.h",
 			"MU",
 			"OTUN7GXZT4/moc_mainwindow.cpp",
@@ -378,6 +384,11 @@
 		],
 		[
 			"/Volumes/89823065724/Projects/CPP3_SmartCalc/src/model/main_model.cc",
+			"MU",
+			null
+		],
+		[
+			"/Volumes/89823065724/Projects/CPP3_SmartCalc/src/resources/qcustomplot.cpp",
 			"MU",
 			null
 		],

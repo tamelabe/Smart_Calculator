@@ -5,18 +5,21 @@ s21::Model::Model() {
   functions_ = {
       {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
       {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
-      {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}};
+      {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}
+  };
   operators_ = {
       {'^', Lexem::deg},     {'*', Lexem::mul},     {'/', Lexem::div},
       {'%', Lexem::mod},     {'+', Lexem::plus},    {'-', Lexem::minus},
-      {')', Lexem::braceCl}, {'(', Lexem::braceOp}, {'~', Lexem::unary}};
+      {')', Lexem::braceCl}, {'(', Lexem::braceOp}, {'~', Lexem::unary}
+  };
   priorities_ = {
       {Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
       {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
       {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
       {Lexem::braceOp, 1}, {Lexem::braceCl, 1}, {Lexem::deg, 3},
       {Lexem::mul, 4},     {Lexem::div, 4},     {Lexem::mod, 4},
-      {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 2}};
+      {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 2}
+  };
 }
 
 /**
@@ -24,13 +27,38 @@ s21::Model::Model() {
  * @param expr - main expression
  * @param x_expr - X field expression
  */
-void s21::Model::setExpr(const std::string &expr, const std::string &x_expr) {
+void s21::Model::setExpr(const std::string &expr) {
   expr_ = expr;
   status_ = {11, "-Set:       Success (main string)"};
-  if (!x_expr.empty()) {
-    x_expr_ = x_expr;
-    status_ = {12, "-Set:       Success (main and x strings)"};
+  if (x_value_ != 0) {
+    status_ = {12, "-Set:       Success (main string and x value - str)"};
   }
+}
+
+/**
+ * @brief Sets X value param
+ * @param x_value - input string
+ */
+void s21::Model::setXValue(const std::string &x_value) {
+  try {
+    x_value_ = std::stod(x_value);
+  } catch (const std::exception &e) {
+    status_ = {10, "-Set:       Fail (x value is not a number)"};
+    return;
+  }
+  if (expr_.empty()) {
+    status_ = {10, "-Set:       In progress... (x value - str)"};
+  } else {
+    status_ = {12, "-Set:       Success (main string and x value - str)"};
+  }
+}
+
+/**
+ * @brief Sets X value param
+ * @param x_value - input double number
+ */
+void s21::Model::setXValue(const double &x_value) {
+  x_value_ = x_value;
 }
 
 /**
@@ -38,15 +66,13 @@ void s21::Model::setExpr(const std::string &expr, const std::string &x_expr) {
  *  - replaces 'x' chars with an x field expression
  *  - substitutes "log", "ln" functions and "mod" operator to validator understandable names
  */
-void s21::Model::prepareExpr() {
-  if (errCheck()) return;
-  if (status_.first == 12) replace("x", x_expr_);
+void s21::Model::substituteExpr() {
   expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
   replace("log", "log10");
   replace("ln", "log");
   replace("mod", "%");
   replace("e", "*10^");
-  status_ = {21, "-Prepare:   Success"};
+  status_ = {21, "-Substitute: Success"};
 }
 
 /**
@@ -54,43 +80,54 @@ void s21::Model::prepareExpr() {
  */
 void s21::Model::validateExpr() {
   if (errCheck()) return;
+  substituteExpr();
   exprtk::symbol_table<double> symbol_table;
   exprtk::expression<double> expression;
   exprtk::parser<double> parser;
   symbol_table.add_constants();
+  double x;
+  symbol_table.add_variable("x", x);
   expression.register_symbol_table(symbol_table);
   if (parser.compile(expr_, expression)) {
-    status_ = {32, "-Validate:  Success"};
+    status_ = {22, "-Validate:  Success"};
   } else {
-    status_ = {30, "-Validate:  Fail"};
+    status_ = {20, "-Validate:  Fail"};
   }
 }
+
 
 /**
  * @brief Expression calculator. Based on method of translation and further calculation of the postfix notation
  */
 void s21::Model::calculateExpr() {
-  infixToPostfix();
-  postfixCalc();
+  if (!postfix_q_.empty()) {
+    postfixCalc();
+  } else {
+    status_ = {30, "-Conversion: Fail (empty token queue)"};
+  }
   stringOutput();
 }
 
 /**
  * @brief Infix to postfix notation converter. Based on shunting yard algorithm
  */
-void s21::Model::infixToPostfix() {
+void s21::Model::convertExpr() {
   if (errCheck()) return;
   std::unordered_map<Lexem, std::string> dec_map;
   std::stack<Token> operators;
   bool unary_ind = true;
-  size_t expr_length = expr_.length();
-  for (size_t i = 0; i < expr_length && status_.first != 40;) {
+  size_t expr_length = expr_.length(), i = 0;
+  while (i < expr_length && status_.first != 40) {
     if (unary_ind && (expr_[i] == '-' || expr_[i] == '+')) {
       if (expr_[i] == '-') operators.emplace(LType::op, Lexem::unary);
       ++i;
     } else if (std::isdigit(expr_[i]) || expr_[i] == '.') {
       postfix_q_.emplace(LType::num, Lexem::num, extractDigit(i));
       unary_ind = false;
+    } else if (expr_[i] == 'x') {
+      postfix_q_.emplace(LType::num, Lexem::num_x);
+      unary_ind = false;
+      ++i;
     } else if (int func_type = detFunction( i)) {
       operators.emplace(LType::func, static_cast<Lexem>(func_type));
       unary_ind = false;
@@ -131,7 +168,11 @@ void s21::Model::postfixCalc() {
   std::stack<double> nums;
   while (!postfix_q_.empty()) {
     if (postfix_q_.front().getType() == LType::num) {
-      nums.push(postfix_q_.front().getValue());
+      if (postfix_q_.front().getName() == Lexem::num_x) {
+        nums.push(x_value_);
+      } else {
+        nums.push(postfix_q_.front().getValue());
+      }
       postfix_q_.pop();
     } else if (postfix_q_.front().getType() == LType::func) {
       pushNumToStack(nums, calcFunctions(nums.top()));
@@ -160,13 +201,15 @@ void s21::Model::stringOutput() {
   }
   doubleToString();
   if (expr_ == "inf") {
-    status_ = {30, "-Calculate: Fail (infinity)"};
+    status_ = {40, "-Calculate: Fail (infinity)"};
     expr_ = "Error";
+    result_ = 0;
   } else if (expr_ == "nan") {
-    status_ = {30, "-Calculate: Fail (NaN)"};
+    status_ = {40, "-Calculate: Fail (NaN)"};
     expr_ = "Error";
+    result_ = 0;
   } else {
-    status_ = {31, "-Calculate: Success\n***Finish!***"};
+    status_ = {41, "-Calculate: Success\n***Finish!***"};
   }
 }
 
