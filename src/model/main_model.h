@@ -106,6 +106,7 @@ class Model {
   double calcOperators(const double &lhs, const double &rhs, const Lexem &op);
   double extractDigit(size_t &pos);
   void replace(const std::string &old_s, const std::string &new_s);
+  double graphYCalculation(double &x_curr, const double &x_prev, const double &acc);
   bool errCheck();
 };
 }  // namespace s21

@@ -1,4 +1,5 @@
 #include "main_model.h"
+#include <iostream>
 
 s21::Model::Model() {
   status_ = {0, "***Begin***\n-Init:      Success"};
@@ -101,7 +102,7 @@ void s21::Model::calculateExpr() {
   } else {
     status_ = {30, "-Conversion: Fail (empty token queue)"};
   }
-  std::cout << "x_value = " << x_value_ << '\n';
+//  std::cout << "x_value = " << x_value_ << '\n';
   stringOutput();
 }
 
@@ -211,30 +212,48 @@ void s21::Model::stringOutput() {
 
 std::pair<std::vector<double>, std::vector<double>> s21::Model::getGraphVector(
     const double &XS, const double &XF, const double &YS, const double &YF) {
-  if (errCheck()) {
-    return {std::vector<double>{0}, std::vector<double>{0}};
-  }
   std::vector<double> XVector;
   std::vector<double> YVector;
-  double res = 0;
-  double i = XS, x_prev = XS, y_prev = YS;
-  double x_delta = std::abs(XF - XS);
-  double y_delta = std::abs(YF - YS);
-  double acc = x_delta < y_delta ? x_delta / 32768 : y_delta / 32768
-  for (; i <= XF; i += acc) {
-    setXValue(i);
-
-    calculateExpr();
-    status_ = {1, "Calculated"};
-    x_prev = res;
-    res = getResultD();
-    if (res != 0 && res >= YS - acc && res <= YF + acc) {
-
-      XVector.push_back(i);
-      YVector.push_back(res);
+  double x_delta = XF - XS;
+  double y_delta = YF - YS;
+  if (errCheck()) {
+    return {XVector, YVector};
+  } else if (x_delta <= 0 || y_delta <= 0) {
+    status_ = {70, "Graph: Fail (invalid axis range)"};
+    return {std::vector<double>{0}, std::vector<double>{0}};
+  }
+  double acc = x_delta / 340, dist = 0;
+  double x_curr = XS, y_curr = 0, x_prev = XS - acc, y_prev = YS;
+  while (x_curr <= XF) {
+    y_curr = graphYCalculation(x_curr, x_curr, acc);
+    if (y_curr != 0 && y_curr >= YS - acc && y_curr <= YF + acc) {
+      dist =
+          std::sqrt(std::pow((340 * (x_curr - x_prev) / x_delta), 2) + std::pow((190 * (y_curr - y_prev) / y_delta), 2));
+      while((dist > 2.0 && dist < 20 && acc > 1e-10) || dist < 1.9 ) {
+        if (dist > 2.0) {
+          acc /= 1.01;
+        } else {
+          acc *= 1.01;
+        }
+        y_curr = graphYCalculation(x_curr, x_prev, acc);
+        dist =
+            std::sqrt(std::pow((340 * (x_curr - x_prev) / x_delta), 2) + std::pow((190 * (y_curr - y_prev) / y_delta), 2));
+      }
+      x_prev = x_curr;
+      y_prev = y_curr;
+      XVector.push_back(x_curr);
+      YVector.push_back(y_curr);
     }
   }
   return {XVector, YVector};
+}
+
+double s21::Model::graphYCalculation(double &x_curr, const double &x_prev, const double &acc) {
+  x_curr = x_prev + acc;
+  setXValue(x_curr);
+  calculateExpr();
+  status_ = {1, "Graph: Calculated"};
+  return getResultD();
 }
 
 /**
