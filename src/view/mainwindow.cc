@@ -47,18 +47,32 @@ s21::MainWindow::MainWindow(QWidget *parent)
     connect(ui_->butt_ac, SIGNAL(clicked()), this, SLOT(clearInput()));
     connect(ui_->butt_mode_graph, SIGNAL(clicked()), this, SLOT(createGraph()));
     connect(ui_->butt_graph_hide, SIGNAL(clicked()), this, SLOT(hideGraph()));
+
     connect(sc_backspace, SIGNAL(activated()), this, SLOT(deleteLastSym()));
-    connect(sc_space, SIGNAL(activated()), this, SLOT(addSpace()));
-    connect(sc_e, SIGNAL(activated()), this, SLOT(addESym()));
+    connect(sc_space, SIGNAL(activated()), this, SLOT(addSymbol()));
+    connect(sc_e, SIGNAL(activated()), this, SLOT(addSymbol()));
 
     connect(ui_->label_activate, SIGNAL(clicked()), this, SLOT(activateLabel()));
     connect(ui_->label_x_activate, SIGNAL(clicked()), this, SLOT(activateLabelX()));
-
-
 }
 
 s21::MainWindow::~MainWindow() {
     delete ui_;
+}
+
+void s21::MainWindow::addSymbol() {
+    if ((ui_->label_size->text()) == "255" && label_ == ui_->label_result)
+        return;
+    if ((label_->text().size()) >= 22 && label_ == ui_->label_x)
+        return;
+    if (label_->text() == "0")
+        return;
+    QShortcut *button = qobject_cast<QShortcut*>(sender());
+    QString button_text = button->key().toString().toLower();
+    if (button_text == "space") button_text = " ";
+    QString new_result = label_->text() + button_text;
+    label_->setText(new_result);
+    ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
 }
 
 void s21::MainWindow::initElements() {
@@ -110,6 +124,21 @@ void s21::MainWindow::createGraph() {
     }
     initGraph();
     ui_->graph_window->clearGraphs();
+    controller_.convertExpr();
+    double x_begin = ui_->spinBox_XS->value();
+    double y_begin = ui_->spinBox_YS->value();
+    double x_end = ui_->spinBox_XF->value();
+    double y_end = ui_->spinBox_YF->value();
+    std::pair<std::vector<double>, std::vector<double>> vector = controller_.getGraphVector(x_begin, x_end, y_begin, y_end);
+    ui_->graph_window->xAxis->setRange(x_begin, x_end);
+    ui_->graph_window->yAxis->setRange(y_begin, y_end);
+    ui_->graph_window->addGraph();
+    QVector<double> vec_x(vector.first.begin(), vector.first.end());
+    QVector<double> vec_y(vector.second.begin(), vector.second.end());
+    ui_->graph_window->graph(0)->addData(vec_x, vec_y);
+    ui_->graph_window->replot();
+//    ui_->graph_window->graph(0)->addData(QVec)
+
 }
 
 bool s21::MainWindow::checkGraphFunc(const std::string &expr) {
@@ -153,30 +182,6 @@ void s21::MainWindow::typeFunctions() {
         return;
     if (label_->text() != "0")
         new_result = label_->text() + new_result;
-    label_->setText(new_result);
-    ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
-}
-
-void s21::MainWindow::addSpace() {
-    if ((ui_->label_size->text()) == "255" && label_ == ui_->label_result)
-        return;
-    if ((label_->text().size()) >= 22 && label_ == ui_->label_x)
-        return;
-    if (label_->text() == "0")
-        return;
-    QString new_result = label_->text() + " ";
-    label_->setText(new_result);
-    ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
-}
-
-void s21::MainWindow::addESym() {
-    if ((ui_->label_size->text()) == "255" && label_ == ui_->label_result)
-        return;
-    if ((label_->text().size()) >= 22 && label_ == ui_->label_x)
-        return;
-    if (label_->text() == "0")
-        return;
-    QString new_result = label_->text() + "e";
     label_->setText(new_result);
     ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
 }

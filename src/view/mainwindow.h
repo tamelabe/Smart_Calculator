@@ -38,13 +38,12 @@ private slots:
     void activateSpins();
     void typeChars();
     void typeFunctions();
-    void addSpace();
-    void addESym();
     void deleteLastSym();
     void clearInput();
     void createGraph();
     void hideGraph();
     void calculate();
+    void addSymbol();
 };
 } //namespace s21
 #endif // MAINWINDOW_H

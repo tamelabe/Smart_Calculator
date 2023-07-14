@@ -5,21 +5,17 @@ s21::Model::Model() {
   functions_ = {
       {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
       {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
-      {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}
-  };
+      {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}};
   operators_ = {
       {'^', Lexem::deg},     {'*', Lexem::mul},     {'/', Lexem::div},
       {'%', Lexem::mod},     {'+', Lexem::plus},    {'-', Lexem::minus},
-      {')', Lexem::braceCl}, {'(', Lexem::braceOp}, {'~', Lexem::unary}
-  };
-  priorities_ = {
-      {Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
-      {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
-      {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
-      {Lexem::braceOp, 1}, {Lexem::braceCl, 1}, {Lexem::deg, 3},
-      {Lexem::mul, 4},     {Lexem::div, 4},     {Lexem::mod, 4},
-      {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 2}
-  };
+      {')', Lexem::braceCl}, {'(', Lexem::braceOp}, {'~', Lexem::unary}};
+  priorities_ = {{Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
+                 {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
+                 {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
+                 {Lexem::braceOp, 1}, {Lexem::braceCl, 1}, {Lexem::deg, 3},
+                 {Lexem::mul, 4},     {Lexem::div, 4},     {Lexem::mod, 4},
+                 {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 2}};
 }
 
 /**
@@ -40,6 +36,7 @@ void s21::Model::setExpr(const std::string &expr) {
  * @param x_value - input string
  */
 void s21::Model::setXValue(const std::string &x_value) {
+  if (x_value.empty()) return;
   try {
     x_value_ = std::stod(x_value);
   } catch (const std::exception &e) {
@@ -57,14 +54,13 @@ void s21::Model::setXValue(const std::string &x_value) {
  * @brief Sets X value param
  * @param x_value - input double number
  */
-void s21::Model::setXValue(const double &x_value) {
-  x_value_ = x_value;
-}
+void s21::Model::setXValue(const double &x_value) { x_value_ = x_value; }
 
 /**
  * @brief Expression preparer:
  *  - replaces 'x' chars with an x field expression
- *  - substitutes "log", "ln" functions and "mod" operator to validator understandable names
+ *  - substitutes "log", "ln" functions and "mod" operator to validator
+ * understandable names
  */
 void s21::Model::substituteExpr() {
   expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
@@ -95,16 +91,18 @@ void s21::Model::validateExpr() {
   }
 }
 
-
 /**
- * @brief Expression calculator. Based on method of translation and further calculation of the postfix notation
+ * @brief Expression calculator. Based on method of translation and further
+ * calculation of the postfix notation
  */
 void s21::Model::calculateExpr() {
-  if (!postfix_q_.empty()) {
+  if (!postfix_v_.empty()) {
+    std::cout << "x_value = " << x_value_ << '\n';
     postfixCalc();
   } else {
     status_ = {30, "-Conversion: Fail (empty token queue)"};
   }
+  std::cout << "x_value = " << x_value_ << '\n';
   stringOutput();
 }
 
@@ -122,13 +120,13 @@ void s21::Model::convertExpr() {
       if (expr_[i] == '-') operators.emplace(LType::op, Lexem::unary);
       ++i;
     } else if (std::isdigit(expr_[i]) || expr_[i] == '.') {
-      postfix_q_.emplace(LType::num, Lexem::num, extractDigit(i));
+      postfix_v_.emplace_back(LType::num, Lexem::num, extractDigit(i));
       unary_ind = false;
     } else if (expr_[i] == 'x') {
-      postfix_q_.emplace(LType::num, Lexem::num_x);
+      postfix_v_.emplace_back(LType::num, Lexem::num_x);
       unary_ind = false;
       ++i;
-    } else if (int func_type = detFunction( i)) {
+    } else if (int func_type = detFunction(i)) {
       operators.emplace(LType::func, static_cast<Lexem>(func_type));
       unary_ind = false;
     } else if (expr_[i] == '(') {
@@ -156,8 +154,7 @@ void s21::Model::convertExpr() {
       unary_ind = true;
     }
   }
-  while (!operators.empty())
-    stackToQueue(operators);
+  while (!operators.empty()) stackToQueue(operators);
 }
 
 /**
@@ -166,24 +163,24 @@ void s21::Model::convertExpr() {
 void s21::Model::postfixCalc() {
   if (errCheck()) return;
   std::stack<double> nums;
-  while (!postfix_q_.empty()) {
-    if (postfix_q_.front().getType() == LType::num) {
-      if (postfix_q_.front().getName() == Lexem::num_x) {
+  for (size_t pos = 0; pos < postfix_v_.size(); ++pos) {
+    if (postfix_v_[pos].getType() == LType::num) {
+      if (postfix_v_[pos].getName() == Lexem::num_x) {
         nums.push(x_value_);
       } else {
-        nums.push(postfix_q_.front().getValue());
+        nums.push(postfix_v_[pos].getValue());
       }
-      postfix_q_.pop();
-    } else if (postfix_q_.front().getType() == LType::func) {
-      pushNumToStack(nums, calcFunctions(nums.top()));
-    } else if (postfix_q_.front().getType() == LType::op) {
+    } else if (postfix_v_[pos].getType() == LType::func) {
+      pushNumToStack(nums,
+                     calcFunctions(nums.top(), postfix_v_[pos].getName()));
+    } else if (postfix_v_[pos].getType() == LType::op) {
       double top_num = nums.top();
-      if (postfix_q_.front().getName() == Lexem::unary) {
+      if (postfix_v_[pos].getName() == Lexem::unary) {
         pushNumToStack(nums, top_num * -1);
       } else if (nums.size() > 1) {
         nums.pop();
         double res =
-            calcOperators(nums.top(), top_num, postfix_q_.front().getName());
+            calcOperators(nums.top(), top_num, postfix_v_[pos].getName());
         pushNumToStack(nums, res);
       }
     }
@@ -213,6 +210,28 @@ void s21::Model::stringOutput() {
   }
 }
 
+std::pair<std::vector<double>, std::vector<double>> s21::Model::getGraphVector(
+    const double &XS, const double &XF, const double &YS, const double &YF) {
+  if (errCheck()) {
+    return {std::vector<double>{0}, std::vector<double>{0}};
+  }
+  std::vector<double> XVector;
+  std::vector<double> YVector;
+  double res = 0;
+  double i = XS;
+  for (; i <= XF; i += 1) {
+    setXValue(i);
+    calculateExpr();
+    res = getResultD();
+    if (res >= YS && res <= YF) {
+      XVector.push_back(i);
+      YVector.push_back(res);
+      std::cout << XVector.back() << "    " << YVector.back() << '\n';
+    }
+  }
+  return {XVector, YVector};
+}
+
 /**
  * @brief Operator to enum converter (Lexem class element)
  * @param oper - char operator
@@ -235,7 +254,7 @@ s21::Model::Lexem s21::Model::charToLexem(const char &oper) {
  * @param operators stack of operators
  */
 void s21::Model::stackToQueue(std::stack<Token> &operators) {
-  postfix_q_.push(operators.top());
+  postfix_v_.push_back(operators.top());
   operators.pop();
 }
 
@@ -292,7 +311,6 @@ void s21::Model::doubleToString() {
 void s21::Model::pushNumToStack(std::stack<double> &nums, double value) {
   nums.pop();
   nums.push(value);
-  postfix_q_.pop();
 }
 
 /**
@@ -300,22 +318,22 @@ void s21::Model::pushNumToStack(std::stack<double> &nums, double value) {
  * @param num - function parameter
  * @return result
  */
-double s21::Model::calcFunctions(const double &num) {
-  if (postfix_q_.front().getName() == Lexem::sqrt) {
+double s21::Model::calcFunctions(const double &num, Lexem function) {
+  if (function == Lexem::sqrt) {
     return std::sqrt(num);
-  } else if (postfix_q_.front().getName() == Lexem::log) {
+  } else if (function == Lexem::log) {
     return std::log(num);
-  } else if (postfix_q_.front().getName() == Lexem::log10) {
+  } else if (function == Lexem::log10) {
     return std::log10(num);
-  } else if (postfix_q_.front().getName() == Lexem::sin) {
+  } else if (function == Lexem::sin) {
     return std::sin(num);
-  } else if (postfix_q_.front().getName() == Lexem::cos) {
+  } else if (function == Lexem::cos) {
     return std::cos(num);
-  } else if (postfix_q_.front().getName() == Lexem::tan) {
+  } else if (function == Lexem::tan) {
     return std::tan(num);
-  } else if (postfix_q_.front().getName() == Lexem::aSin) {
+  } else if (function == Lexem::aSin) {
     return std::asin(num);
-  } else if (postfix_q_.front().getName() == Lexem::aCos) {
+  } else if (function == Lexem::aCos) {
     return std::acos(num);
   } else {
     return std::atan(num);
@@ -353,7 +371,9 @@ double s21::Model::calcOperators(const double &lhs, const double &rhs,
  */
 double s21::Model::extractDigit(size_t &pos) {
   size_t start = pos;
-  while (pos < expr_.length() && (std::isdigit(expr_[pos]) || expr_[pos] == '.')) ++pos;
+  while (pos < expr_.length() &&
+         (std::isdigit(expr_[pos]) || expr_[pos] == '.'))
+    ++pos;
   return std::stod(expr_.substr(start, pos - start));
 }
 
@@ -370,8 +390,4 @@ void s21::Model::replace(const std::string &old_s, const std::string &new_s) {
   }
 }
 
-bool s21::Model::errCheck() {
-  return status_.first % 10 == 0;
-}
-
-
+bool s21::Model::errCheck() { return status_.first % 10 == 0; }

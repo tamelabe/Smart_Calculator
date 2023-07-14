@@ -30,6 +30,9 @@ public:
     std::pair<int, std::string> getStatus() {
       return model_.getStatus();
     }
+    std::pair<std::vector<double>, std::vector<double>> getGraphVector(const double &XS, const double &XF, const double &YS, const double &YF) {
+    return model_.getGraphVector(XS, XF, YS, YF);
+    }
 private:
     Model model_;
 };

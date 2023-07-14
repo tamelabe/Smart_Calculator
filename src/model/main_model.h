@@ -2,12 +2,12 @@
 #define SRC_MODEL_MAIN_MODEL_H_
 
 #include <cmath>
+#include <iostream>
 #include <queue>
 #include <sstream>
 #include <stack>
 #include <unordered_map>
-#include <map>
-#include <iostream>
+#include <vector>
 
 #include "../resources/exprtk.hpp"
 
@@ -26,11 +26,13 @@ class Model {
    */
   std::pair<int, std::string> getStatus() { return status_; }
   /**
-    * @brief Accessor of calculation result
-    * @return result
-    */
+   * @brief Accessor of calculation result
+   * @return result
+   */
   std::string getResult() { return expr_; }
   double getResultD() { return result_; }
+  std::pair<std::vector<double>, std::vector<double>> getGraphVector(
+      const double &XS, const double &XF, const double &YS, const double &YF);
   void setExpr(const std::string &expr);
   void setXValue(const std::string &x_value);
   void setXValue(const double &x_value);
@@ -74,7 +76,6 @@ class Model {
     Lexem getName() const { return name_; }
     double getValue() const { return value_; }
 
-
    private:
     LType type_{};
     Lexem name_{};
@@ -90,7 +91,7 @@ class Model {
   std::unordered_map<std::string, Lexem> functions_;
   std::unordered_map<char, Lexem> operators_;
   std::unordered_map<Lexem, int> priorities_;
-  std::queue<Token> postfix_q_{};
+  std::vector<Token> postfix_v_{};
 
   void substituteExpr();
   Lexem charToLexem(const char &oper);
@@ -101,7 +102,7 @@ class Model {
   void doubleToString();
   void stringOutput();
   void pushNumToStack(std::stack<double> &nums, double value);
-  double calcFunctions(const double &num);
+  double calcFunctions(const double &num, Lexem curr_lexem);
   double calcOperators(const double &lhs, const double &rhs, const Lexem &op);
   double extractDigit(size_t &pos);
   void replace(const std::string &old_s, const std::string &new_s);

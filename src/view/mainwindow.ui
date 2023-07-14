@@ -880,6 +880,15 @@ background-color : white;</string>
       <height>31</height>
      </rect>
     </property>
+    <property name="minimum">
+     <number>-1000</number>
+    </property>
+    <property name="maximum">
+     <number>1000</number>
+    </property>
+    <property name="value">
+     <number>-30</number>
+    </property>
    </widget>
    <widget class="QSpinBox" name="spinBox_XF">
     <property name="geometry">
@@ -889,6 +898,15 @@ background-color : white;</string>
       <width>61</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="minimum">
+     <number>-1000</number>
+    </property>
+    <property name="maximum">
+     <number>1000</number>
+    </property>
+    <property name="value">
+     <number>30</number>
     </property>
    </widget>
    <widget class="QSpinBox" name="spinBox_YS">
@@ -900,6 +918,15 @@ background-color : white;</string>
       <height>31</height>
      </rect>
     </property>
+    <property name="minimum">
+     <number>-1000</number>
+    </property>
+    <property name="maximum">
+     <number>1000</number>
+    </property>
+    <property name="value">
+     <number>-30</number>
+    </property>
    </widget>
    <widget class="QSpinBox" name="spinBox_YF">
     <property name="geometry">
@@ -909,6 +936,15 @@ background-color : white;</string>
       <width>61</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="minimum">
+     <number>-1000</number>
+    </property>
+    <property name="maximum">
+     <number>1000</number>
+    </property>
+    <property name="value">
+     <number>30</number>
     </property>
    </widget>
    <widget class="QLabel" name="label_size_3">

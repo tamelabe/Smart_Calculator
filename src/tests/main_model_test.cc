@@ -51,6 +51,13 @@ class MainCalc : public testing::Test {
   std::string x_str_res_ = "1.02941257";
   std::string mod_ = "((sin(2.3) * (sqrt(7.8) + cos(1.2))) mod 4.5) / (log(5.6) + atan(0.9))";
   std::string mod_res_ = "1.588689";
+  std::string graph_func_ = "x^2";
+  double x_begin_ = -30;
+  double y_begin_ = -30;
+  double x_end_ = 30;
+  double y_end_ = 900;
+  std::pair<std::vector<double>, std::vector<double>> vector_;
+  std::vector<double> XVector, YVector;
 };
 
 TEST_F(MainCalc, DivByZero) {
@@ -150,6 +157,25 @@ TEST_F(MainCalc, failXValue) {
   calc_.calculateExpr();
   EXPECT_EQ(calc_.getStatus().first, 10);
   EXPECT_EQ(calc_.getResult(), error_);
+}
+
+TEST_F(MainCalc, graphTest) {
+  calc_.setExpr(graph_func_);
+  calc_.validateExpr();
+  calc_.convertExpr();
+  vector_ = calc_.getGraphVector(x_begin_, x_end_, y_begin_, y_end_);
+  XVector = vector_.first;
+  YVector = vector_.second;
+  EXPECT_EQ(XVector.back(), 30);
+  EXPECT_EQ(YVector.back(), 900);
+}
+
+TEST_F(MainCalc, graphTestFail) {
+  vector_ = calc_.getGraphVector(x_begin_, x_end_, y_begin_, y_end_);
+  XVector = vector_.first;
+  YVector = vector_.second;
+  EXPECT_EQ(XVector.back(), 0);
+  EXPECT_EQ(YVector.back(), 0);
 }
 
 int main(int argc, char *argv[]) {
