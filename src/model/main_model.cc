@@ -97,7 +97,6 @@ void s21::Model::validateExpr() {
  */
 void s21::Model::calculateExpr() {
   if (!postfix_v_.empty()) {
-    std::cout << "x_value = " << x_value_ << '\n';
     postfixCalc();
   } else {
     status_ = {30, "-Conversion: Fail (empty token queue)"};
@@ -218,15 +217,21 @@ std::pair<std::vector<double>, std::vector<double>> s21::Model::getGraphVector(
   std::vector<double> XVector;
   std::vector<double> YVector;
   double res = 0;
-  double i = XS;
-  for (; i <= XF; i += 1) {
+  double i = XS, x_prev = XS, y_prev = YS;
+  double x_delta = std::abs(XF - XS);
+  double y_delta = std::abs(YF - YS);
+  double acc = x_delta < y_delta ? x_delta / 32768 : y_delta / 32768
+  for (; i <= XF; i += acc) {
     setXValue(i);
+
     calculateExpr();
+    status_ = {1, "Calculated"};
+    x_prev = res;
     res = getResultD();
-    if (res >= YS && res <= YF) {
+    if (res != 0 && res >= YS - acc && res <= YF + acc) {
+
       XVector.push_back(i);
       YVector.push_back(res);
-      std::cout << XVector.back() << "    " << YVector.back() << '\n';
     }
   }
   return {XVector, YVector};

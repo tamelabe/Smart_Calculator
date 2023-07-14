@@ -115,16 +115,16 @@ void s21::MainWindow::initGraph() {
     ui_->label_result->setEnabled(false);
     ui_->label_x->setEnabled(false);
     scaleSpins(true);
+    ui_->graph_window->xAxis->setRange(30, 30);
+    ui_->graph_window->yAxis->setRange(30, 30);
+    ui_->graph_window->addGraph();
 }
 
 void s21::MainWindow::createGraph() {
     std::string expr = ui_->label_result->text().toStdString();
-    if (!checkGraphFunc(expr)) {
-        return;
-    }
     initGraph();
+    if (!checkGraphFunc(expr)) return;
     ui_->graph_window->clearGraphs();
-    controller_.convertExpr();
     double x_begin = ui_->spinBox_XS->value();
     double y_begin = ui_->spinBox_YS->value();
     double x_end = ui_->spinBox_XF->value();
@@ -136,14 +136,15 @@ void s21::MainWindow::createGraph() {
     QVector<double> vec_x(vector.first.begin(), vector.first.end());
     QVector<double> vec_y(vector.second.begin(), vector.second.end());
     ui_->graph_window->graph(0)->addData(vec_x, vec_y);
+    ui_->graph_window->graph(0)->setLineStyle(QCPGraph::lsNone);
+    ui_->graph_window->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 3));
     ui_->graph_window->replot();
-//    ui_->graph_window->graph(0)->addData(QVec)
-
 }
 
 bool s21::MainWindow::checkGraphFunc(const std::string &expr) {
     controller_.setExpr(expr);
     controller_.validateExpr();
+    controller_.convertExpr();
     if (controller_.getStatus().first % 10 != 0) {
         return true;
     } else {

@@ -856,11 +856,11 @@ CMakeFiles/TameCalc.dir/TameCalc_autogen/mocs_compilation.cpp.o: \
   /Volumes/89823065724/Projects/CPP3_SmartCalc/src/resources/qcustomplot.h \
   /Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/TameCalc_autogen/OTUN7GXZT4/../../../view/../controller/controller.h \
   /Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/TameCalc_autogen/OTUN7GXZT4/../../../view/../controller/../model/main_model.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iostream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/queue \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/sstream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/unordered_map \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__hash_table \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iostream \
   /Volumes/89823065724/Projects/CPP3_SmartCalc/src/build/TameCalc_autogen/OTUN7GXZT4/../../../view/../controller/../model/../resources/exprtk.hpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/set \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/sys/time.h \
