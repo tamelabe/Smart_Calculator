@@ -8,6 +8,14 @@ s21::MainWindow::MainWindow(QWidget *parent)
     , ui_(new Ui::MainWindow)
 {
     initElements();
+    connectSlots();
+}
+
+s21::MainWindow::~MainWindow() {
+    delete ui_;
+}
+
+void s21::MainWindow::connectSlots() {
     QShortcut *sc_backspace = new QShortcut(QKeySequence(Qt::Key_Backspace), this);
     QShortcut *sc_space = new QShortcut(QKeySequence(Qt::Key_Space), this);
     QShortcut *sc_e = new QShortcut(QKeySequence(Qt::Key_E), this);
@@ -54,10 +62,6 @@ s21::MainWindow::MainWindow(QWidget *parent)
 
     connect(ui_->label_activate, SIGNAL(clicked()), this, SLOT(activateLabel()));
     connect(ui_->label_x_activate, SIGNAL(clicked()), this, SLOT(activateLabelX()));
-}
-
-s21::MainWindow::~MainWindow() {
-    delete ui_;
 }
 
 void s21::MainWindow::addSymbol() {

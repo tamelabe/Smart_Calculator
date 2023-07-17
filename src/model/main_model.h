@@ -2,7 +2,6 @@
 #define SRC_MODEL_MAIN_MODEL_H_
 
 #include <cmath>
-#include <iostream>
 #include <queue>
 #include <sstream>
 #include <stack>

@@ -30,6 +30,7 @@ private:
     void scaleSpins(bool state);
     void initGraph();
     bool checkGraphFunc(const std::string &expr);
+    void connectSlots();
 
 private slots:
     void initElements();

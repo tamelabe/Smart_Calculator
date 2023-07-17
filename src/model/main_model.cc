@@ -242,8 +242,9 @@ std::pair<std::vector<double>, std::vector<double>> s21::Model::getGraphVector(
     if (y_curr != 0 && y_curr >= YS && y_curr <= YF) {
       dist = std::sqrt(std::pow((340 * (x_curr - x_prev) / x_delta), 2) +
                        std::pow((190 * (y_curr - y_prev) / y_delta), 2));
-      while ((dist > 2.0 && dist < 20 && acc > 1e-10) || dist < 1.90) {
-        if (dist > 2.0) {
+      while ((dist > 2.7 && dist < 100 && acc > 1e-10) || dist < 2.6) {
+        std::cout << dist << '\n';
+        if (dist > 2.7) {
           acc /= 1.01;
         } else {
           acc *= 1.01;
