@@ -1,22 +1,10 @@
 #include "main_model.h"
+
 #include <iostream>
 
 s21::Model::Model() {
   status_ = {0, "***Begin***\n-Init:      Success"};
-  functions_ = {
-      {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
-      {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
-      {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}};
-  operators_ = {
-      {'^', Lexem::deg},     {'*', Lexem::mul},     {'/', Lexem::div},
-      {'%', Lexem::mod},     {'+', Lexem::plus},    {'-', Lexem::minus},
-      {')', Lexem::braceCl}, {'(', Lexem::braceOp}, {'~', Lexem::unary}};
-  priorities_ = {{Lexem::sin, 0},     {Lexem::cos, 0},     {Lexem::tan, 0},
-                 {Lexem::aSin, 0},    {Lexem::aCos, 0},    {Lexem::aTan, 0},
-                 {Lexem::sqrt, 0},    {Lexem::log, 0},     {Lexem::log10, 0},
-                 {Lexem::braceOp, 1}, {Lexem::braceCl, 1}, {Lexem::deg, 3},
-                 {Lexem::mul, 4},     {Lexem::div, 4},     {Lexem::mod, 4},
-                 {Lexem::plus, 5},    {Lexem::minus, 5},   {Lexem::unary, 2}};
+  mapsObjectsInit();
 }
 
 /**
@@ -37,11 +25,16 @@ void s21::Model::setExpr(const std::string &expr) {
  * @param x_value - input string
  */
 void s21::Model::setXValue(const std::string &x_value) {
-  if (x_value.empty()) return;
+  if (x_value.empty()) {
+    x_status_ = false;
+    return;
+  }
   try {
     x_value_ = std::stod(x_value);
+    x_status_ = true;
   } catch (const std::exception &e) {
     status_ = {10, "-Set:       Fail (x value is not a number)"};
+    x_status_ = false;
     return;
   }
   if (expr_.empty()) {
@@ -55,7 +48,15 @@ void s21::Model::setXValue(const std::string &x_value) {
  * @brief Sets X value param
  * @param x_value - input double number
  */
-void s21::Model::setXValue(const double &x_value) { x_value_ = x_value; }
+void s21::Model::setXValue(const double &x_value) {
+  if (expr_.empty()) {
+    status_ = {10, "-Set:       In progress... (x value - str)"};
+  } else {
+    status_ = {12, "-Set:       Success (main string and x value - str)"};
+  }
+  x_value_ = x_value;
+  x_status_ = true;
+}
 
 /**
  * @brief Expression preparer:
@@ -102,7 +103,7 @@ void s21::Model::calculateExpr() {
   } else {
     status_ = {30, "-Conversion: Fail (empty token queue)"};
   }
-//  std::cout << "x_value = " << x_value_ << '\n';
+  //  std::cout << "x_value = " << x_value_ << '\n';
   stringOutput();
 }
 
@@ -163,9 +164,10 @@ void s21::Model::convertExpr() {
 void s21::Model::postfixCalc() {
   if (errCheck()) return;
   std::stack<double> nums;
-  for (size_t pos = 0; pos < postfix_v_.size(); ++pos) {
+  for (size_t pos = 0; pos < postfix_v_.size() && !errCheck(); ++pos) {
     if (postfix_v_[pos].getType() == LType::num) {
       if (postfix_v_[pos].getName() == Lexem::num_x) {
+        if (!x_status_) status_ = {50, "Calculation: Fail (x is not set)"};
         nums.push(x_value_);
       } else {
         nums.push(postfix_v_[pos].getValue());
@@ -210,34 +212,45 @@ void s21::Model::stringOutput() {
   }
 }
 
+/**
+ * @brief Calculates an arrays of coordinates for plotting in QCustomPlot
+ * @param XS - Lower X board on the graph
+ * @param XF - Upper X board on the graph
+ * @param YS - Lower Y board on the graph
+ * @param YF - Upper Y board on the graph
+ * @return - pair of X and Y vectors
+ */
 std::pair<std::vector<double>, std::vector<double>> s21::Model::getGraphVector(
     const double &XS, const double &XF, const double &YS, const double &YF) {
+  // Initialization to avoid duplication
   std::vector<double> XVector;
   std::vector<double> YVector;
   double x_delta = XF - XS;
   double y_delta = YF - YS;
+  // Error processing
   if (errCheck()) {
     return {XVector, YVector};
   } else if (x_delta <= 0 || y_delta <= 0) {
     status_ = {70, "Graph: Fail (invalid axis range)"};
-    return {std::vector<double>{0}, std::vector<double>{0}};
+    return {XVector, YVector};
   }
+  // Equal points distribution method
   double acc = x_delta / 340, dist = 0;
   double x_curr = XS, y_curr = 0, x_prev = XS - acc, y_prev = YS;
   while (x_curr <= XF) {
     y_curr = graphYCalculation(x_curr, x_curr, acc);
-    if (y_curr != 0 && y_curr >= YS - acc && y_curr <= YF + acc) {
-      dist =
-          std::sqrt(std::pow((340 * (x_curr - x_prev) / x_delta), 2) + std::pow((190 * (y_curr - y_prev) / y_delta), 2));
-      while((dist > 2.0 && dist < 20 && acc > 1e-10) || dist < 1.9 ) {
+    if (y_curr != 0 && y_curr >= YS && y_curr <= YF) {
+      dist = std::sqrt(std::pow((340 * (x_curr - x_prev) / x_delta), 2) +
+                       std::pow((190 * (y_curr - y_prev) / y_delta), 2));
+      while ((dist > 2.0 && dist < 20 && acc > 1e-10) || dist < 1.90) {
         if (dist > 2.0) {
           acc /= 1.01;
         } else {
           acc *= 1.01;
         }
         y_curr = graphYCalculation(x_curr, x_prev, acc);
-        dist =
-            std::sqrt(std::pow((340 * (x_curr - x_prev) / x_delta), 2) + std::pow((190 * (y_curr - y_prev) / y_delta), 2));
+        dist = std::sqrt(std::pow((340 * (x_curr - x_prev) / x_delta), 2) +
+                         std::pow((190 * (y_curr - y_prev) / y_delta), 2));
       }
       x_prev = x_curr;
       y_prev = y_curr;
@@ -248,11 +261,19 @@ std::pair<std::vector<double>, std::vector<double>> s21::Model::getGraphVector(
   return {XVector, YVector};
 }
 
-double s21::Model::graphYCalculation(double &x_curr, const double &x_prev, const double &acc) {
+/**
+ * @brief Сalculates the y coordinate and offsets x by the given accuracy
+ * @param x_curr - current X value
+ * @param x_prev - previous X value
+ * @param acc - accuracy
+ * @return - new Y coordinate
+ */
+double s21::Model::graphYCalculation(double &x_curr, const double &x_prev,
+                                     const double &acc) {
   x_curr = x_prev + acc;
   setXValue(x_curr);
   calculateExpr();
-  status_ = {1, "Graph: Calculated"};
+  status_ = {81, "Graph: Calculated"};
   return getResultD();
 }
 
@@ -415,3 +436,22 @@ void s21::Model::replace(const std::string &old_s, const std::string &new_s) {
 }
 
 bool s21::Model::errCheck() { return status_.first % 10 == 0; }
+
+/**
+ * @brief Initialize function, operators and priorities unordered maps
+ */
+void s21::Model::mapsObjectsInit() {
+  functions_ = {
+      {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
+      {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
+      {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}};
+  operators_ = {
+      {'^', Lexem::deg}, {'*', Lexem::mul},  {'/', Lexem::div},
+                {'%', Lexem::mod}, {'+', Lexem::plus}, {'-', Lexem::minus}};
+  priorities_ = {{Lexem::sin, 0},   {Lexem::cos, 0},  {Lexem::tan, 0},
+                 {Lexem::aSin, 0},  {Lexem::aCos, 0}, {Lexem::aTan, 0},
+                 {Lexem::sqrt, 0},  {Lexem::log, 0},  {Lexem::log10, 0},
+                 {Lexem::unary, 2}, {Lexem::deg, 3},  {Lexem::mul, 4},
+                 {Lexem::div, 4},   {Lexem::mod, 4},  {Lexem::plus, 5},
+                 {Lexem::minus, 5}};
+}

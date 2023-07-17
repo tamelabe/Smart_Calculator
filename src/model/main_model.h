@@ -82,17 +82,19 @@ class Model {
     double value_{};
   };
 
-  std::string expr_{};
-  double x_value_{};
-  double result_{};
-
   std::pair<int, std::string> status_;
+  bool x_status_{};
 
   std::unordered_map<std::string, Lexem> functions_;
   std::unordered_map<char, Lexem> operators_;
   std::unordered_map<Lexem, int> priorities_;
-  std::vector<Token> postfix_v_{};
 
+  std::string expr_{};
+  std::vector<Token> postfix_v_{};
+  double x_value_{};
+  double result_{};
+
+  void mapsObjectsInit();
   void substituteExpr();
   Lexem charToLexem(const char &oper);
   void stackToQueue(std::stack<Token> &operators);
@@ -106,7 +108,8 @@ class Model {
   double calcOperators(const double &lhs, const double &rhs, const Lexem &op);
   double extractDigit(size_t &pos);
   void replace(const std::string &old_s, const std::string &new_s);
-  double graphYCalculation(double &x_curr, const double &x_prev, const double &acc);
+  double graphYCalculation(double &x_curr, const double &x_prev,
+                           const double &acc);
   bool errCheck();
 };
 }  // namespace s21
