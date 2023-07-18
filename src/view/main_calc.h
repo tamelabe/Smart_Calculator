@@ -1,32 +1,33 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAIN_CALC_H
+#define MAIN_CALC_H
 
 #include "QtWidgets/qlabel.h"
-#include <QMainWindow>
+#include <QWidget>
 #include <QShortcut>
 #include <string>
-#include "resources/qcustomplot.h"
 
-#include "../controller/controller.h"
+#include "../controller/main_controller.h"
+#include "./credit_calc.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui { class MainCalc; }
 QT_END_NAMESPACE
 
 namespace s21 {
 
-class MainWindow : public QMainWindow
+class MainCalc : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    MainCalc(QWidget *parent = nullptr);
+    ~MainCalc();
 
 private:
-    Ui::MainWindow *ui_;
+    Ui::MainCalc *ui_;
     QLabel *label_;
-    Controller controller_;
+    MainController controller_;
+    CreditCalc credit_;
     void scaleSpins(bool state);
     void initGraph();
     bool checkGraphFunc(const std::string &expr);
@@ -45,6 +46,7 @@ private slots:
     void hideGraph();
     void calculate();
     void addSymbol();
+    void openCredit();
 };
 } //namespace s21
-#endif // MAINWINDOW_H
+#endif // MAIN_CALC_H

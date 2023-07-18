@@ -1,24 +1,25 @@
-#include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "main_calc.h"
+#include "./ui_main_calc.h"
 
-//using namespace s21;
 
-s21::MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui_(new Ui::MainWindow)
+s21::MainCalc::MainCalc(QWidget *parent)
+    : QWidget(parent)
+    , ui_(new Ui::MainCalc)
 {
     initElements();
     connectSlots();
 }
 
-s21::MainWindow::~MainWindow() {
+s21::MainCalc::~MainCalc() {
     delete ui_;
 }
 
-void s21::MainWindow::connectSlots() {
+void s21::MainCalc::connectSlots() {
     QShortcut *sc_backspace = new QShortcut(QKeySequence(Qt::Key_Backspace), this);
     QShortcut *sc_space = new QShortcut(QKeySequence(Qt::Key_Space), this);
     QShortcut *sc_e = new QShortcut(QKeySequence(Qt::Key_E), this);
+
+    connect(ui_->butt_mode_credit, SIGNAL(clicked()), this, SLOT(openCredit()));
 
     connect(ui_->butt_num_0, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_num_1, SIGNAL(clicked()), this, SLOT(typeChars()));
@@ -37,7 +38,6 @@ void s21::MainWindow::connectSlots() {
     connect(ui_->butt_bracket_op, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_bracket_cl, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_point, SIGNAL(clicked()), this, SLOT(typeChars()));
-
     connect(ui_->butt_fn_op_x, SIGNAL(clicked()), this, SLOT(typeChars()));
     connect(ui_->butt_fn_cos, SIGNAL(clicked()), this, SLOT(typeFunctions()));
     connect(ui_->butt_fn_sin, SIGNAL(clicked()), this, SLOT(typeFunctions()));
@@ -64,7 +64,15 @@ void s21::MainWindow::connectSlots() {
     connect(ui_->label_x_activate, SIGNAL(clicked()), this, SLOT(activateLabelX()));
 }
 
-void s21::MainWindow::addSymbol() {
+void s21::MainCalc::openCredit() {
+    if (credit_.isVisible()) {
+        credit_.hide();
+    } else {
+        credit_.show();
+    }
+}
+
+void s21::MainCalc::addSymbol() {
     if ((ui_->label_size->text()) == "255" && label_ == ui_->label_result)
         return;
     if ((label_->text().size()) >= 22 && label_ == ui_->label_x)
@@ -79,7 +87,7 @@ void s21::MainWindow::addSymbol() {
     ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
 }
 
-void s21::MainWindow::initElements() {
+void s21::MainCalc::initElements() {
     ui_->setupUi(this);
     ui_->label_result->setText("0");
     label_ = ui_->label_result;
@@ -87,34 +95,34 @@ void s21::MainWindow::initElements() {
     scaleSpins(false);
 }
 
-void s21::MainWindow::activateSpins() {
+void s21::MainCalc::activateSpins() {
     ui_->label_result->setEnabled(false);
     ui_->label_x->setEnabled(false);
     scaleSpins(true);
 }
 
-void s21::MainWindow::scaleSpins(bool state) {
+void s21::MainCalc::scaleSpins(bool state) {
     ui_->spinBox_XS->setEnabled(state);
     ui_->spinBox_XF->setEnabled(state);
     ui_->spinBox_YS->setEnabled(state);
     ui_->spinBox_YF->setEnabled(state);
 }
 
-void s21::MainWindow::activateLabelX() {
+void s21::MainCalc::activateLabelX() {
     ui_->label_result->setEnabled(false);
     ui_->label_x->setEnabled(true);
     scaleSpins(false);
     label_ = ui_->label_x;
 }
 
-void s21::MainWindow::activateLabel() {
+void s21::MainCalc::activateLabel() {
     ui_->label_x->setEnabled(false);
     ui_->label_result->setEnabled(true);
     scaleSpins(false);
     label_ = ui_->label_result;
 }
 
-void s21::MainWindow::initGraph() {
+void s21::MainCalc::initGraph() {
     this->setFixedSize(760, 700);
     ui_->label_result->setEnabled(false);
     ui_->label_x->setEnabled(false);
@@ -124,7 +132,7 @@ void s21::MainWindow::initGraph() {
     ui_->graph_window->addGraph();
 }
 
-void s21::MainWindow::createGraph() {
+void s21::MainCalc::createGraph() {
     std::string expr = ui_->label_result->text().toStdString();
     initGraph();
     if (!checkGraphFunc(expr)) return;
@@ -145,7 +153,7 @@ void s21::MainWindow::createGraph() {
     ui_->graph_window->replot();
 }
 
-bool s21::MainWindow::checkGraphFunc(const std::string &expr) {
+bool s21::MainCalc::checkGraphFunc(const std::string &expr) {
     controller_.setExpr(expr);
     controller_.validateExpr();
     controller_.convertExpr();
@@ -157,11 +165,11 @@ bool s21::MainWindow::checkGraphFunc(const std::string &expr) {
     }
 }
 
-void s21::MainWindow::hideGraph() {
+void s21::MainCalc::hideGraph() {
     this->setFixedSize(760, 327);
 }
 
-void s21::MainWindow::typeChars() {
+void s21::MainCalc::typeChars() {
     if ((ui_->label_size->text()) == "255" && label_ == ui_->label_result)
         return;
     if ((label_->text().size()) >= 22 && label_ == ui_->label_x)
@@ -177,7 +185,7 @@ void s21::MainWindow::typeChars() {
 }
 
 
-void s21::MainWindow::typeFunctions() {
+void s21::MainCalc::typeFunctions() {
     QPushButton *button = (QPushButton *)sender();
     QString new_result = button->toolTip();
     QTextDocument doc;
@@ -191,7 +199,7 @@ void s21::MainWindow::typeFunctions() {
     ui_->label_size->setText(QString::number(ui_->label_result->text().size()));
 }
 
-void s21::MainWindow::deleteLastSym() {
+void s21::MainCalc::deleteLastSym() {
     if (label_->text() == "0" || label_->text() == "")
         return;
     QString new_result = label_->text();
@@ -202,7 +210,7 @@ void s21::MainWindow::deleteLastSym() {
         ui_->label_result->setText("0");
 }
 
-void s21::MainWindow::calculate() {
+void s21::MainCalc::calculate() {
     if (ui_->label_result->text() == "0")
         return;
     if (ui_->label_result->text() == "Error") {
@@ -223,7 +231,7 @@ void s21::MainWindow::calculate() {
 
 }
 
-void s21::MainWindow::clearInput() {
+void s21::MainCalc::clearInput() {
     ui_->label_result->setText("0");
     ui_->label_x->setText("");
     ui_->label_size->setText("0");

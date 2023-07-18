@@ -103,7 +103,6 @@ void s21::Model::calculateExpr() {
   } else {
     status_ = {30, "-Conversion: Fail (empty token queue)"};
   }
-  //  std::cout << "x_value = " << x_value_ << '\n';
   stringOutput();
 }
 
@@ -243,7 +242,6 @@ std::pair<std::vector<double>, std::vector<double>> s21::Model::getGraphVector(
       dist = std::sqrt(std::pow((340 * (x_curr - x_prev) / x_delta), 2) +
                        std::pow((190 * (y_curr - y_prev) / y_delta), 2));
       while ((dist > 2.7 && dist < 100 && acc > 1e-10) || dist < 2.6) {
-        std::cout << dist << '\n';
         if (dist > 2.7) {
           acc /= 1.01;
         } else {

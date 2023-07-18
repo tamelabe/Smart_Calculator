@@ -4,7 +4,7 @@
 #include "../model/main_model.h"
 
 namespace s21 {
-class Controller {
+class MainController {
 public:
     void setExpr(const std::string &expr) {
       model_.setExpr(expr);
