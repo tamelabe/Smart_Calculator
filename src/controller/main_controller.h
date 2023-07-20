@@ -1,5 +1,5 @@
-#ifndef SRC_CONTROLLER_CONTROLLER_H_
-#define SRC_CONTROLLER_CONTROLLER_H_
+#ifndef SRC_CONTROLLER_MAIN_CONTROLLER_H_
+#define SRC_CONTROLLER_MAIN_CONTROLLER_H_
 
 #include "../model/main_model.h"
 
@@ -31,11 +31,11 @@ public:
       return model_.getStatus();
     }
     std::pair<std::vector<double>, std::vector<double>> getGraphVector(const double &XS, const double &XF, const double &YS, const double &YF) {
-    return model_.getGraphVector(XS, XF, YS, YF);
+      return model_.getGraphVector(XS, XF, YS, YF);
     }
 private:
-    Model model_;
+    MainModel model_;
 };
 }
 
-#endif  // SRC_CONTROLLER_CONTROLLER_H_
+#endif  // SRC_CONTROLLER_MAIN_CONTROLLER_H_

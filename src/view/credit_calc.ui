@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>500</width>
     <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Credit calculator</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="bt_calculate">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -44,7 +44,7 @@
     <string>Credit calculator</string>
    </property>
   </widget>
-  <widget class="QDoubleSpinBox" name="doubleSpinBox">
+  <widget class="QDoubleSpinBox" name="box_loan">
    <property name="geometry">
     <rect>
      <x>90</x>
@@ -70,8 +70,11 @@
    <property name="maximum">
     <double>100000000000000000000.000000000000000</double>
    </property>
+   <property name="value">
+    <double>1000000.000000000000000</double>
+   </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox">
+  <widget class="QSpinBox" name="box_period">
    <property name="geometry">
     <rect>
      <x>90</x>
@@ -93,6 +96,9 @@
    </property>
    <property name="maximum">
     <number>999999999</number>
+   </property>
+   <property name="value">
+    <number>12</number>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -149,7 +155,7 @@
     <string>Rate</string>
    </property>
   </widget>
-  <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+  <widget class="QDoubleSpinBox" name="box_rate">
    <property name="geometry">
     <rect>
      <x>90</x>
@@ -169,13 +175,16 @@
     height: 0px;
 }</string>
    </property>
+   <property name="value">
+    <double>15.000000000000000</double>
+   </property>
   </widget>
-  <widget class="QComboBox" name="comboBox">
+  <widget class="QComboBox" name="box_type">
    <property name="geometry">
     <rect>
      <x>90</x>
      <y>80</y>
-     <width>151</width>
+     <width>131</width>
      <height>21</height>
     </rect>
    </property>
@@ -271,12 +280,12 @@ QComboBox { background-color: #212121; }</string>
     <string>Total payout</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_9">
+  <widget class="QLabel" name="label_total_pay">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>400</y>
-     <width>161</width>
+     <width>200</width>
      <height>21</height>
     </rect>
    </property>
@@ -292,12 +301,12 @@ QComboBox { background-color: #212121; }</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_10">
+  <widget class="QLabel" name="label_overpay">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>340</y>
-     <width>161</width>
+     <width>200</width>
      <height>21</height>
     </rect>
    </property>
@@ -313,12 +322,12 @@ QComboBox { background-color: #212121; }</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_11">
+  <widget class="QLabel" name="label_month_pay">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>280</y>
-     <width>161</width>
+     <width>200</width>
      <height>21</height>
     </rect>
    </property>
@@ -332,6 +341,69 @@ QComboBox { background-color: #212121; }</string>
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>40</y>
+     <width>160</width>
+     <height>410</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QTableWidget::item {
+    border-bottom: 1px solid white;
+    border-right: 1px solid white;
+}</string>
+   </property>
+   <property name="showGrid">
+    <bool>true</bool>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+   <property name="cornerButtonEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="rowCount">
+    <number>5</number>
+   </property>
+   <property name="columnCount">
+    <number>2</number>
+   </property>
+   <attribute name="horizontalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="horizontalHeaderDefaultSectionSize">
+    <number>79</number>
+   </attribute>
+   <attribute name="verticalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="verticalHeaderDefaultSectionSize">
+    <number>30</number>
+   </attribute>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <column/>
+   <column/>
+  </widget>
+  <widget class="QPushButton" name="bt_hide">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>460</y>
+     <width>51</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Hide</string>
    </property>
   </widget>
  </widget>

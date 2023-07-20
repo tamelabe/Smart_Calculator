@@ -5,7 +5,7 @@ CPPFLAGS = -ggdb -std=c++17 -pedantic -Wall -Werror -Wextra -lstdc++
 TEST_FLAGS = -lgtest --coverage
 LINUX_FLAGS = -lrt -lpthread -lm -lsubunit
 VG_FLAGS = CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all --verbose
-TESTS = ./tests/main_model_test.cc ./model/main_model.cc
+TESTS = ./tests/model_test.cc ./model/main_model.cc ./model/credit_model.cc
 CURRENT_DIR := $(abspath $(CURDIR))
 
 OS := $(shell uname -s)
@@ -47,12 +47,13 @@ leaks_linux:
 
 gcov_report:
 	lcov -t "test"  -o s21_test.info -c -d ./ --no-external --exclude '$(CURRENT_DIR)/resources/*'
-	#lcov --remove s21_test.info $(CURRENT_DIR)/resources/* -o s21_test_filtered.info
 	genhtml ./s21_test.info --output-directory ./report/
 	open ./report/index.html
 
 clean:
 	@rm -rf report
-	@rm -rf *.gcda *.gcno *.info *.gch *.dSYM
+	@rm -rf *.gcda *.gcno *.info *.gch *.dSYM .DS_Store
 	@rm -rf ../*.idea ../.run ../*.dSYM
 	@rm -rf *.a *.o
+	@rm -rf build/*
+	@rm -rf *.user

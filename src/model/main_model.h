@@ -11,13 +11,13 @@
 #include "../resources/exprtk.hpp"
 
 namespace s21 {
-class Model {
+class MainModel {
   class Token;
   enum class Lexem;
   enum class LType;
 
  public:
-  Model();
+  MainModel();
 
   /**
    * @brief Accessor of calculation state parameter

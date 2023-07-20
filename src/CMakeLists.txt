@@ -18,12 +18,18 @@ set(PROJECT_ARCH_TARGET "amd64")
 
 set(PROJECT_SOURCES
         main.cc
-        view/mainwindow.cc
-        view/mainwindow.h
-        view/mainwindow.ui
-        controller/controller.h
+        view/main_calc.cc
+        view/main_calc.h
+        view/main_calc.ui
+        view/credit_calc.cc
+        view/credit_calc.h
+        view/credit_calc.ui
+        controller/main_controller.h
+        controller/credit_controller.h
         model/main_model.cc
         model/main_model.h
+        model/credit_model.cc
+        model/credit_model.h
         resources/qcustomplot.cpp
         resources/qcustomplot.h
         )

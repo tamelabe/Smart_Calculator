@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-s21::Model::Model() {
+s21::MainModel::MainModel() {
   status_ = {0, "***Begin***\n-Init:      Success"};
   mapsObjectsInit();
 }
@@ -12,8 +12,9 @@ s21::Model::Model() {
  * @param expr - main expression
  * @param x_expr - X field expression
  */
-void s21::Model::setExpr(const std::string &expr) {
+void s21::MainModel::setExpr(const std::string &expr) {
   expr_ = expr;
+  postfix_v_.clear();
   status_ = {11, "-Set:       Success (main string)"};
   if (x_value_ != 0) {
     status_ = {12, "-Set:       Success (main string and x value - str)"};
@@ -24,7 +25,7 @@ void s21::Model::setExpr(const std::string &expr) {
  * @brief Sets X value param
  * @param x_value - input string
  */
-void s21::Model::setXValue(const std::string &x_value) {
+void s21::MainModel::setXValue(const std::string &x_value) {
   if (x_value.empty()) {
     x_status_ = false;
     return;
@@ -48,7 +49,7 @@ void s21::Model::setXValue(const std::string &x_value) {
  * @brief Sets X value param
  * @param x_value - input double number
  */
-void s21::Model::setXValue(const double &x_value) {
+void s21::MainModel::setXValue(const double &x_value) {
   if (expr_.empty()) {
     status_ = {10, "-Set:       In progress... (x value - str)"};
   } else {
@@ -64,7 +65,7 @@ void s21::Model::setXValue(const double &x_value) {
  *  - substitutes "log", "ln" functions and "mod" operator to validator
  * understandable names
  */
-void s21::Model::substituteExpr() {
+void s21::MainModel::substituteExpr() {
   expr_.erase(std::remove(expr_.begin(), expr_.end(), ' '), expr_.end());
   replace("log", "log10");
   replace("ln", "log");
@@ -76,7 +77,7 @@ void s21::Model::substituteExpr() {
 /**
  * @brief Expression validator based on exprtk library
  */
-void s21::Model::validateExpr() {
+void s21::MainModel::validateExpr() {
   if (errCheck()) return;
   substituteExpr();
   exprtk::symbol_table<double> symbol_table;
@@ -97,7 +98,7 @@ void s21::Model::validateExpr() {
  * @brief Expression calculator. Based on method of translation and further
  * calculation of the postfix notation
  */
-void s21::Model::calculateExpr() {
+void s21::MainModel::calculateExpr() {
   if (!postfix_v_.empty()) {
     postfixCalc();
   } else {
@@ -109,7 +110,7 @@ void s21::Model::calculateExpr() {
 /**
  * @brief Infix to postfix notation converter. Based on shunting yard algorithm
  */
-void s21::Model::convertExpr() {
+void s21::MainModel::convertExpr() {
   if (errCheck()) return;
   std::unordered_map<Lexem, std::string> dec_map;
   std::stack<Token> operators;
@@ -160,7 +161,7 @@ void s21::Model::convertExpr() {
 /**
  * @brief Postfix notation calculator. Works with stack of tokens
  */
-void s21::Model::postfixCalc() {
+void s21::MainModel::postfixCalc() {
   if (errCheck()) return;
   std::stack<double> nums;
   for (size_t pos = 0; pos < postfix_v_.size() && !errCheck(); ++pos) {
@@ -186,13 +187,17 @@ void s21::Model::postfixCalc() {
       }
     }
   }
-  result_ = nums.top();
+  if (nums.size() == 1) {
+    result_ = nums.top();
+  } else {
+    status_ = {50, "Calculation: Fail"};
+  }
 }
 
 /**
  * @brief Assigns result to original string
  */
-void s21::Model::stringOutput() {
+void s21::MainModel::stringOutput() {
   if (errCheck()) {
     expr_ = "Error";
     return;
@@ -219,7 +224,7 @@ void s21::Model::stringOutput() {
  * @param YF - Upper Y board on the graph
  * @return - pair of X and Y vectors
  */
-std::pair<std::vector<double>, std::vector<double>> s21::Model::getGraphVector(
+std::pair<std::vector<double>, std::vector<double>> s21::MainModel::getGraphVector(
     const double &XS, const double &XF, const double &YS, const double &YF) {
   // Initialization to avoid duplication
   std::vector<double> XVector;
@@ -267,7 +272,7 @@ std::pair<std::vector<double>, std::vector<double>> s21::Model::getGraphVector(
  * @param acc - accuracy
  * @return - new Y coordinate
  */
-double s21::Model::graphYCalculation(double &x_curr, const double &x_prev,
+double s21::MainModel::graphYCalculation(double &x_curr, const double &x_prev,
                                      const double &acc) {
   x_curr = x_prev + acc;
   setXValue(x_curr);
@@ -281,7 +286,7 @@ double s21::Model::graphYCalculation(double &x_curr, const double &x_prev,
  * @param oper - char operator
  * @return enum class operator
  */
-s21::Model::Lexem s21::Model::charToLexem(const char &oper) {
+s21::MainModel::Lexem s21::MainModel::charToLexem(const char &oper) {
   Lexem lex;
   try {
     lex = operators_.at(oper);
@@ -297,7 +302,7 @@ s21::Model::Lexem s21::Model::charToLexem(const char &oper) {
  * @brief Stack to queue transition method
  * @param operators stack of operators
  */
-void s21::Model::stackToQueue(std::stack<Token> &operators) {
+void s21::MainModel::stackToQueue(std::stack<Token> &operators) {
   postfix_v_.push_back(operators.top());
   operators.pop();
 }
@@ -307,7 +312,7 @@ void s21::Model::stackToQueue(std::stack<Token> &operators) {
  * @param lexem - enum class member
  * @return math expression priority
  */
-int s21::Model::getPriority(const Lexem &lexem) {
+int s21::MainModel::getPriority(const Lexem &lexem) {
   return priorities_.at(lexem);
 }
 
@@ -317,7 +322,7 @@ int s21::Model::getPriority(const Lexem &lexem) {
  * @param pos - start string position
  * @return if function exists: function length, else 0
  */
-int s21::Model::detFunction(size_t &pos) const {
+int s21::MainModel::detFunction(size_t &pos) const {
   if (pos + 4 < expr_.length() && expr_.substr(pos, pos + 5) == "log10") {
     pos += 5;
     return static_cast<int>(Lexem::log10);
@@ -337,7 +342,7 @@ int s21::Model::detFunction(size_t &pos) const {
 /**
  * @brief Double to std::string converter with the specified accuracy
  */
-void s21::Model::doubleToString() {
+void s21::MainModel::doubleToString() {
   std::ostringstream stream;
   stream.precision(8);
   stream << std::fixed << result_;
@@ -352,7 +357,7 @@ void s21::Model::doubleToString() {
  * @param nums - calculation numbers stack
  * @param value - number to push
  */
-void s21::Model::pushNumToStack(std::stack<double> &nums, double value) {
+void s21::MainModel::pushNumToStack(std::stack<double> &nums, double value) {
   nums.pop();
   nums.push(value);
 }
@@ -362,7 +367,7 @@ void s21::Model::pushNumToStack(std::stack<double> &nums, double value) {
  * @param num - function parameter
  * @return result
  */
-double s21::Model::calcFunctions(const double &num, Lexem function) {
+double s21::MainModel::calcFunctions(const double &num, Lexem function) {
   if (function == Lexem::sqrt) {
     return std::sqrt(num);
   } else if (function == Lexem::log) {
@@ -391,7 +396,7 @@ double s21::Model::calcFunctions(const double &num, Lexem function) {
  * @param op - operator
  * @return result
  */
-double s21::Model::calcOperators(const double &lhs, const double &rhs,
+double s21::MainModel::calcOperators(const double &lhs, const double &rhs,
                                  const Lexem &op) {
   if (op == Lexem::plus) {
     return lhs + rhs;
@@ -413,7 +418,7 @@ double s21::Model::calcOperators(const double &lhs, const double &rhs,
  * @param pos - string postition
  * @return result
  */
-double s21::Model::extractDigit(size_t &pos) {
+double s21::MainModel::extractDigit(size_t &pos) {
   size_t start = pos;
   while (pos < expr_.length() &&
          (std::isdigit(expr_[pos]) || expr_[pos] == '.'))
@@ -426,7 +431,7 @@ double s21::Model::extractDigit(size_t &pos) {
  * @param old_s - exist substring
  * @param new_s - new substring
  */
-void s21::Model::replace(const std::string &old_s, const std::string &new_s) {
+void s21::MainModel::replace(const std::string &old_s, const std::string &new_s) {
   size_t pos = expr_.find(old_s);
   while (pos != std::string::npos) {
     expr_.replace(pos, old_s.length(), new_s);
@@ -434,12 +439,12 @@ void s21::Model::replace(const std::string &old_s, const std::string &new_s) {
   }
 }
 
-bool s21::Model::errCheck() { return status_.first % 10 == 0; }
+bool s21::MainModel::errCheck() { return status_.first % 10 == 0; }
 
 /**
  * @brief Initialize function, operators and priorities unordered maps
  */
-void s21::Model::mapsObjectsInit() {
+void s21::MainModel::mapsObjectsInit() {
   functions_ = {
       {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
       {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
