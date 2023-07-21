@@ -222,8 +222,9 @@ void s21::MainModel::stringOutput() {
  * @param YF - Upper Y board on the graph
  * @return - pair of X and Y vectors
  */
-std::pair<std::vector<double>, std::vector<double>> s21::MainModel::getGraphVector(
-    const double &XS, const double &XF, const double &YS, const double &YF) {
+std::pair<std::vector<double>, std::vector<double>>
+s21::MainModel::getGraphVector(const double &XS, const double &XF,
+                               const double &YS, const double &YF) {
   // Initialization to avoid duplication
   std::vector<double> XVector;
   std::vector<double> YVector;
@@ -271,7 +272,7 @@ std::pair<std::vector<double>, std::vector<double>> s21::MainModel::getGraphVect
  * @return - new Y coordinate
  */
 double s21::MainModel::graphYCalculation(double &x_curr, const double &x_prev,
-                                     const double &acc) {
+                                         const double &acc) {
   x_curr = x_prev + acc;
   setXValue(x_curr);
   calculateExpr();
@@ -395,7 +396,7 @@ double s21::MainModel::calcFunctions(const double &num, Lexem function) {
  * @return result
  */
 double s21::MainModel::calcOperators(const double &lhs, const double &rhs,
-                                 const Lexem &op) {
+                                     const Lexem &op) {
   if (op == Lexem::plus) {
     return lhs + rhs;
   } else if (op == Lexem::minus) {
@@ -429,7 +430,8 @@ double s21::MainModel::extractDigit(size_t &pos) {
  * @param old_s - exist substring
  * @param new_s - new substring
  */
-void s21::MainModel::replace(const std::string &old_s, const std::string &new_s) {
+void s21::MainModel::replace(const std::string &old_s,
+                             const std::string &new_s) {
   size_t pos = expr_.find(old_s);
   while (pos != std::string::npos) {
     expr_.replace(pos, old_s.length(), new_s);
@@ -447,8 +449,7 @@ void s21::MainModel::mapsObjectsInit() {
       {"sin", Lexem::sin},   {"cos", Lexem::cos},   {"tan", Lexem::tan},
       {"asin", Lexem::aSin}, {"acos", Lexem::aCos}, {"atan", Lexem::aTan},
       {"sqrt", Lexem::sqrt}, {"log", Lexem::log},   {"log10", Lexem::log10}};
-  operators_ = {
-      {'^', Lexem::deg}, {'*', Lexem::mul},  {'/', Lexem::div},
+  operators_ = {{'^', Lexem::deg}, {'*', Lexem::mul},  {'/', Lexem::div},
                 {'%', Lexem::mod}, {'+', Lexem::plus}, {'-', Lexem::minus}};
   priorities_ = {{Lexem::sin, 0},   {Lexem::cos, 0},  {Lexem::tan, 0},
                  {Lexem::aSin, 0},  {Lexem::aCos, 0}, {Lexem::aTan, 0},

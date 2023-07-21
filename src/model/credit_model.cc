@@ -17,8 +17,8 @@ void s21::CreditModel::setParams(CreditParams params) {
 }
 
 /**
-   * @brief Calculates set params
-   */
+ * @brief Calculates set params
+ */
 void s21::CreditModel::calculate() {
   if (status_.first % 10 == 0) return;
   month_pay_.clear();
@@ -36,7 +36,8 @@ void s21::CreditModel::calculate() {
  */
 void s21::CreditModel::calculateAnnuity() {
   double month_rate = params_.rate / 12 * 0.01;
-  double month_pay = (params_.loan * month_rate) / (1 - std::pow((1 + month_rate), (params_.period * -1)));
+  double month_pay = (params_.loan * month_rate) /
+                     (1 - std::pow((1 + month_rate), (params_.period * -1)));
   month_pay = std::round(month_pay * 100) / 100;
   month_pay_.push_back(month_pay);
   total_pay_ = month_pay_.front() * params_.period;
@@ -51,7 +52,7 @@ void s21::CreditModel::calculateDifferentiated() {
   double month_pay{};
   total_pay_ = 0;
   double avg_pay = params_.loan / params_.period;
-  for(int i = 0; i < params_.period; ++i) {
+  for (int i = 0; i < params_.period; ++i) {
     month_pay = avg_pay + (params_.loan - i * avg_pay) * month_rate;
     total_pay_ += month_pay;
     month_pay_.push_back(month_pay);

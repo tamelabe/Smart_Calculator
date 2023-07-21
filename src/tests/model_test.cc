@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
+
 #include <cmath>
 
+#include "../model/credit_model.h"
 #include "../model/main_model.h"
 #include "../resources/contain_objects.h"
-#include "../model/credit_model.h"
 
 using namespace s21;
 
@@ -21,16 +22,21 @@ class MainCalc : public testing::Test {
   std::string err_sqrt_oppos_ = "sqrt(-1)";
   std::string err_abracadabra_ = "1234g43s;;";
   std::string err_empty_ = "";
+  std::string fail_expr_ = "1x";
   std::string fail_lexem_ = "1;02941257";
   std::string fail_x_lexem_ = "qwerty";
   std::string fail_x_lexem_expr_ = "sin(x)";
   std::string simple_log_ = "log(4)";
   std::string simple_log_res_ = "0.60205999";
-  std::string multifold_ = "15/(7-(1+1))*3-(2+(1+1))*15/(7-(200+1))*3-(2+(1+1))*(15/(7-(1+1))*3-(2+(1+1))+15/(7-(1+1))*3-(2+(1+1)))";
+  std::string multifold_ =
+      "15/(7-(1+1))*3-(2+(1+1))*15/(7-(200+1))*3-(2+(1+1))*(15/"
+      "(7-(1+1))*3-(2+(1+1))+15/(7-(1+1))*3-(2+(1+1)))";
   std::string multifold_res_ = "-30.07216495";
-  std::string functions_t_ = "sin(1)+cos(1)+asin(1)+acos(1)+atan(1)+tan(1)+sqrt(16)+ln(10)+log(10)";
+  std::string functions_t_ =
+      "sin(1)+cos(1)+asin(1)+acos(1)+atan(1)+tan(1)+sqrt(16)+ln(10)+log(10)";
   std::string functions_res_ = "12.5979606";
-  std::string folded_funcs_ = "(132+sin(asin(sqrt(ln(log(228.11)))))-4*5^6*(123))";
+  std::string folded_funcs_ =
+      "(132+sin(asin(sqrt(ln(log(228.11)))))-4*5^6*(123))";
   std::string folded_funcs_res_ = "-7687367.07378458";
   std::string exp_notation_ = "2.5 * 10^3 + 1.8 * 10^-2 * (3.7e-5 + 2.1e2)";
   std::string exp_notation_res_ = "2503.78000067";
@@ -40,11 +46,13 @@ class MainCalc : public testing::Test {
   std::string degree_hard_res_ = "2417851639229258349412352";
   std::string degree_funcs = "sin(.2)^(cos(1)+tan(1.1))^sin(.6)";
   std::string degree_funcs_res = "0.06624972";
-  std::string x_str_main_ = "sqrt((7.2 + 3.5 - 2.8) / (5.6 * 4.2)) + sin(x) - cos(1.3)";
+  std::string x_str_main_ =
+      "sqrt((7.2 + 3.5 - 2.8) / (5.6 * 4.2)) + sin(x) - cos(1.3)";
   std::string x_str_ = "0.8";
   double x_str_d_ = 0.8;
   std::string x_str_res_ = "1.02941257";
-  std::string mod_ = "((sin(2.3) * (sqrt(7.8) + cos(1.2))) mod 4.5) / (log(5.6) + atan(0.9))";
+  std::string mod_ =
+      "((sin(2.3) * (sqrt(7.8) + cos(1.2))) mod 4.5) / (log(5.6) + atan(0.9))";
   std::string mod_res_ = "1.588689";
   std::string graph_func_ = "x^2";
   double x_begin_ = -30;
@@ -60,6 +68,7 @@ class CreditCalc : public testing::Test {
   CreditModel credit_calc_;
   CreditParams params_annuity_{"Annuity", 1000000, 12, 15};
   CreditParams params_diff_{"Differentiated", 1000000, 12, 15};
+  CreditParams params_fail_{"Differentiated", 0, 12, 15};
   std::vector<std::string> res_month_pay_;
   std::string res_overpay;
   std::string res_total_pay;
@@ -154,6 +163,15 @@ TEST_F(MainCalc, failUnknownLex) {
   EXPECT_EQ(calc_.getResult(), error_);
 }
 
+TEST_F(MainCalc, failEmptyXLex) {
+  calc_.setExpr(degree_hard_);
+  calc_.setXValue("");
+  calc_.validateExpr();
+  calc_.convertExpr();
+  calc_.calculateExpr();
+  EXPECT_EQ(calc_.getResult(), degree_hard_res_);
+}
+
 TEST_F(MainCalc, failXValue) {
   calc_.setExpr(fail_x_lexem_expr_);
   calc_.validateExpr();
@@ -183,6 +201,28 @@ TEST_F(MainCalc, graphTestFail) {
   EXPECT_TRUE(XVector.empty());
 }
 
+TEST_F(MainCalc, graphAxisFail) {
+  calc_.setExpr(graph_func_);
+  calc_.validateExpr();
+  calc_.convertExpr();
+  vector_ = calc_.getGraphVector(x_end_, x_begin_, y_begin_, y_end_);
+  XVector = vector_.first;
+  YVector = vector_.second;
+  EXPECT_EQ(calc_.getStatus().first, 70);
+  EXPECT_TRUE(XVector.empty());
+  EXPECT_TRUE(XVector.empty());
+}
+
+TEST_F(MainCalc, lexemFail) {
+  calc_.setExpr(fail_expr_);
+  calc_.setXValue(x_str_);
+  calc_.validateExpr();
+  calc_.convertExpr();
+  calc_.calculateExpr();
+  EXPECT_EQ(calc_.getStatus().first, 50);
+  EXPECT_EQ(calc_.getResult(), error_);
+}
+
 TEST_F(CreditCalc, Annuity) {
   credit_calc_.setParams(params_annuity_);
   credit_calc_.calculate();
@@ -205,6 +245,13 @@ TEST_F(CreditCalc, Differentiated) {
   EXPECT_EQ(res_month_pay_.back(), "84375.00");
   EXPECT_EQ(res_overpay, "81250.00");
   EXPECT_EQ(res_total_pay, "1081250.00");
+}
+
+TEST_F(CreditCalc, FailParams) {
+  credit_calc_.setParams(params_fail_);
+  credit_calc_.calculate();
+  int status = credit_calc_.getStatus().first;
+  EXPECT_TRUE(status % 10 == 0);
 }
 
 int main(int argc, char *argv[]) {

@@ -1,10 +1,11 @@
 #ifndef SRC_MODEL_CREDIT_MODEL_H_
 #define SRC_MODEL_CREDIT_MODEL_H_
 
-#include "../resources/contain_objects.h"
 #include <cmath>
 #include <sstream>
 #include <utility>
+
+#include "../resources/contain_objects.h"
 
 namespace s21 {
 class CreditModel {
@@ -28,7 +29,7 @@ class CreditModel {
   std::vector<double> month_pay_{};
   double overpay_{};
   double total_pay_{};
-  std::pair <int, std::string> status_;
+  std::pair<int, std::string> status_;
 
   void calculateAnnuity();
   void calculateDifferentiated();

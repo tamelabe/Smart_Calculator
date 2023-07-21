@@ -11,7 +11,7 @@ INSTALL_DIR ?= $(HOME)/Desktop
 
 OS := $(shell uname -s)
 
-all: clean install
+all: clean install open
 
 install: clean
 	mkdir build
