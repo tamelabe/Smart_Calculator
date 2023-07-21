@@ -1,7 +1,5 @@
 #include "main_model.h"
 
-#include <iostream>
-
 s21::MainModel::MainModel() {
   status_ = {0, "***Begin***\n-Init:      Success"};
   mapsObjectsInit();

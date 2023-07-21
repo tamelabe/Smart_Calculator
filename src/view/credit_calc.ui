@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
+    <width>550</width>
     <height>500</height>
    </rect>
   </property>
@@ -67,6 +67,9 @@
    <property name="decimals">
     <number>2</number>
    </property>
+   <property name="minimum">
+    <double>0.000000000000000</double>
+   </property>
    <property name="maximum">
     <double>100000000000000000000.000000000000000</double>
    </property>
@@ -93,6 +96,9 @@
     width: 0px;
     height: 0px;
 }</string>
+   </property>
+   <property name="minimum">
+    <number>0</number>
    </property>
    <property name="maximum">
     <number>999999999</number>
@@ -174,6 +180,12 @@
     width: 0px;
     height: 0px;
 }</string>
+   </property>
+   <property name="minimum">
+    <double>0.000000000000000</double>
+   </property>
+   <property name="maximum">
+    <double>999999.989999999990687</double>
    </property>
    <property name="value">
     <double>15.000000000000000</double>
@@ -295,7 +307,7 @@ QComboBox { background-color: #212121; }</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: black;</string>
+    <string notr="true">background-color: #212121;</string>
    </property>
    <property name="text">
     <string/>
@@ -316,7 +328,7 @@ QComboBox { background-color: #212121; }</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: black;</string>
+    <string notr="true">background-color: #212121;</string>
    </property>
    <property name="text">
     <string/>
@@ -337,7 +349,7 @@ QComboBox { background-color: #212121; }</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: black;</string>
+    <string notr="true">background-color: #212121;</string>
    </property>
    <property name="text">
     <string/>
@@ -346,16 +358,19 @@ QComboBox { background-color: #212121; }</string>
   <widget class="QTableWidget" name="tableWidget">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>289</x>
      <y>40</y>
-     <width>160</width>
+     <width>241</width>
      <height>410</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QTableWidget::item {
-    border-bottom: 1px solid white;
-    border-right: 1px solid white;
+    <string notr="true">QTableWidget {
+ background-color:  #38393a; color: white; 
+}
+QTableWidget::item {
+    border-bottom: 1px solid black;
+    border-right: 0px solid black;
 }</string>
    </property>
    <property name="showGrid">
@@ -374,7 +389,7 @@ QComboBox { background-color: #212121; }</string>
     <number>2</number>
    </property>
    <attribute name="horizontalHeaderVisible">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
    <attribute name="horizontalHeaderDefaultSectionSize">
     <number>79</number>

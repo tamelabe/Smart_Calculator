@@ -19,12 +19,19 @@ all:
 	@echo "Unsupported operating system: $(OS)"
 endif
 
+install: clean
+	mkdir build
+	cd build && cmake ../CMakeLists.txt && make && cp TameCalc.app ~/Desktop/
+
+uninstall:
+	rm -f ~/Desktop/TameCalc.app
+
 check:
 	cp ../materials/linters/.clang-format .
 	find . -type f \( -name "*.cc" -o -name "*.h" \) -exec clang-format -n --style="Google" {} \;
 	rm -f .clang-format
 
-tests: clean
+test: clean
 	$(CC) $(CPPFLAGS) $(TESTS) -o test.o $(TEST_FLAGS);
 	./test.o
 

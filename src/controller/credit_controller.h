@@ -15,6 +15,9 @@ class CreditController {
   CreditParams getResult() {
     return model_.getResult();
   }
+  std::pair<int, std::string> getStatus() {
+    return model_.getStatus();
+  }
  private:
   CreditModel model_;
 };

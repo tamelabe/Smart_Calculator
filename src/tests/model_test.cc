@@ -183,29 +183,29 @@ TEST_F(MainCalc, graphTestFail) {
   EXPECT_TRUE(XVector.empty());
 }
 
-//TEST_F(CreditCalc, Annuity) {
-//  credit_calc_.setParams(params_annuity_);
-//  credit_calc_.calculate();
-//  res_month_pay_ = credit_calc_.getResult().month_pay;
-//  res_overpay = credit_calc_.getResult().overpay;
-//  res_total_pay = credit_calc_.getResult().total_pay;
-//  EXPECT_EQ(res_month_pay_.front(), "90258.31");
-//  EXPECT_EQ(res_overpay, "83099.72");
-//  EXPECT_EQ(res_total_pay, "1083099.72");
-//}
-//
-//TEST_F(CreditCalc, Differentiated) {
-//  credit_calc_.setParams(params_diff_);
-//  credit_calc_.calculate();
-//  res_month_pay_ = credit_calc_.getResult().month_pay;
-//  res_overpay = credit_calc_.getResult().overpay;
-//  res_total_pay = credit_calc_.getResult().total_pay;
-//
-//  EXPECT_EQ(res_month_pay_.front(), "95833.33");
-//  EXPECT_EQ(res_month_pay_.back(), "84375.00");
-//  EXPECT_EQ(res_overpay, "81250.00");
-//  EXPECT_EQ(res_total_pay, "1081250.00");
-//}
+TEST_F(CreditCalc, Annuity) {
+  credit_calc_.setParams(params_annuity_);
+  credit_calc_.calculate();
+  res_month_pay_ = credit_calc_.getResult().month_pay;
+  res_overpay = credit_calc_.getResult().overpay;
+  res_total_pay = credit_calc_.getResult().total_pay;
+  EXPECT_EQ(res_month_pay_.front(), "90258.31");
+  EXPECT_EQ(res_overpay, "83099.72");
+  EXPECT_EQ(res_total_pay, "1083099.72");
+}
+
+TEST_F(CreditCalc, Differentiated) {
+  credit_calc_.setParams(params_diff_);
+  credit_calc_.calculate();
+  res_month_pay_ = credit_calc_.getResult().month_pay;
+  res_overpay = credit_calc_.getResult().overpay;
+  res_total_pay = credit_calc_.getResult().total_pay;
+
+  EXPECT_EQ(res_month_pay_.front(), "95833.33");
+  EXPECT_EQ(res_month_pay_.back(), "84375.00");
+  EXPECT_EQ(res_overpay, "81250.00");
+  EXPECT_EQ(res_total_pay, "1081250.00");
+}
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
