@@ -1,4 +1,4 @@
-.PHONY : clean check tests leaks tests_linux leaks_linux gcov_report
+.PHONY : install uninstall clean dvi dist tests gcov_report check leaks leaks_linux leaks_macos
 
 CC = gcc
 CPPFLAGS = -ggdb -std=c++17 -pedantic -Wall -Werror -Wextra -lstdc++
@@ -7,60 +7,84 @@ LINUX_FLAGS = -lrt -lpthread -lm -lsubunit
 VG_FLAGS = CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all --verbose
 TESTS = ./tests/model_test.cc ./model/main_model.cc ./model/credit_model.cc
 CURRENT_DIR := $(abspath $(CURDIR))
+INSTALL_DIR ?= ~/Desktop/
 
 OS := $(shell uname -s)
 
-ifeq ($(OS), Darwin)
-all: clean check tests leaks gcov_report
-else ifeq ($(OS), Linux)
-all: clean check tests_linux leaks_linux gcov_report
-else
-all:
-	@echo "Unsupported operating system: $(OS)"
-endif
+all: clean install
 
 install: clean
 	mkdir build
-	cd build && cmake ../CMakeLists.txt && make && cp TameCalc.app ~/Desktop/
+	cd build && cmake ../CMakeLists.txt && make
+	ifeq ($(OS),Darwin)
+		mv TameCalc.app "$(INSTALL_DIR)"
+	else
+		mv TameCalc "$(INSTALL_DIR)"
 
 uninstall:
-	rm -f ~/Desktop/TameCalc.app
+	ifeq ($(OS),Darwin)
+		rm -f "$(INSTALL_DIR)TameCalc.app"
+	else
+		rm -f "$(INSTALL_DIR)TameCalc"
+	endif
+
+clean:
+	@rm -rf report build
+	@rm -rf *.gcda *.gcno *.info *.gch *.dSYM .DS_Store
+	@rm -rf ../*.idea ../.run ../*.dSYM
+	@rm -rf *.a *.o
+	@rm -rf build/*
+	@rm -rf *.user
+
+dvi:
+	ifeq ($(OS),Darwin)
+		open ./dvi.html
+	else
+		xdg-open ./dvi.html
+	endif
+
+dist: clean
+	mkdir SmartCalc/
+	mkdir SmartCalc/src
+	cp -r ./* SmartCalc/src
+	tar -cvzf SmartCalc.tar.gz SmartCalc
+	rm -rf SmartCalc
+
+tests:
+	ifeq ($(OS),Darwin)
+		$(CC) $(CPPFLAGS) $(TESTS) -o test.o $(TEST_FLAGS);
+	else
+		$(CC) $(TESTS) $(CPPFLAGS) $(TEST_FLAGS) -o test.o $(LINUX_FLAGS);
+	endif
+	./test.o
+
+gcov_report: tests
+	lcov -t "test"  -o s21_test.info -c -d ./ --no-external --exclude '$(CURRENT_DIR)/resources/*'
+	genhtml ./s21_test.info --output-directory ./report/
+	ifeq ($(OS),Darwin)
+		open ./report/index.html
+	else
+		xdg-open ./report/index.html
+	endif
 
 check:
 	cp ../materials/linters/.clang-format .
 	find . -type f \( -name "*.cc" -o -name "*.h" \) -exec clang-format -n --style="Google" {} \;
 	rm -f .clang-format
 
-test: clean
-	$(CC) $(CPPFLAGS) $(TESTS) -o test.o $(TEST_FLAGS);
-	./test.o
-
-tests_linux:
-
-
 leaks:
-	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
-   		base_name=$$(basename $$file); \
-        file_name=$$(echo $${base_name%_test.o} | tr '[:lower:]' '[:upper:]'); \
-   		leaks -atExit --  $$file > ./RESULT_$$file_name.txt; \
-    done
+	ifeq ($(OS),Darwin)
+		leaks_macos
+	else
+		leaks_linux
+	endif
+
+leaks_macos:
+	leaks -atExit -- ./test.o
 
 leaks_linux:
-	for file in $(shell find . -maxdepth 1 -type f -name "*.o"); do \
-    		base_name=$$(basename $$file); \
-    		file_name=$$(echo $${base_name%_test.o} | tr '[:lower:]' '[:upper:]'); \
-    		$(VG_FLAGS) --log-file=RESULT_$$file_name.txt $$file; \
-    done
+	$(VG_FLAGS) --log-file=RESULT_VALGRIND.txt ./test.o
 
-gcov_report:
-	lcov -t "test"  -o s21_test.info -c -d ./ --no-external --exclude '$(CURRENT_DIR)/resources/*'
-	genhtml ./s21_test.info --output-directory ./report/
-	open ./report/index.html
 
-clean:
-	@rm -rf report
-	@rm -rf *.gcda *.gcno *.info *.gch *.dSYM .DS_Store
-	@rm -rf ../*.idea ../.run ../*.dSYM
-	@rm -rf *.a *.o
-	@rm -rf build/*
-	@rm -rf *.user
+
+
