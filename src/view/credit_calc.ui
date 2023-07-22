@@ -207,7 +207,7 @@
    </property>
    <property name="styleSheet">
     <string notr="true">QComboBox { border-radius: 0px; }
-QComboBox { background-color: #212121; }</string>
+QComboBox { background-color: grey; }</string>
    </property>
    <item>
     <property name="text">
@@ -296,9 +296,9 @@ QComboBox { background-color: #212121; }</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>400</y>
+     <y>390</y>
      <width>200</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="font">
@@ -307,7 +307,8 @@ QComboBox { background-color: #212121; }</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: #212121;</string>
+    <string notr="true">border: 2px solid black;
+            padding: 0px;</string>
    </property>
    <property name="text">
     <string/>
@@ -317,9 +318,9 @@ QComboBox { background-color: #212121; }</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>340</y>
+     <y>330</y>
      <width>200</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <property name="font">
@@ -328,7 +329,8 @@ QComboBox { background-color: #212121; }</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: #212121;</string>
+    <string notr="true">border: 2px solid black;
+            padding: 0px;</string>
    </property>
    <property name="text">
     <string/>
@@ -338,9 +340,9 @@ QComboBox { background-color: #212121; }</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>280</y>
+     <y>270</y>
      <width>200</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="font">
@@ -349,7 +351,8 @@ QComboBox { background-color: #212121; }</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: #212121;</string>
+    <string notr="true">border: 2px solid black;
+            padding: 0px;</string>
    </property>
    <property name="text">
     <string/>
